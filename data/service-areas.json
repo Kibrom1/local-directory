@@ -1,6 +1,542 @@
 [
-  { "id": "sa_placeholder_a_columbus", "company_id": "co_placeholder_a", "geography_id": "geo_columbus", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01", "placeholder": true },
-  { "id": "sa_placeholder_a_dublin", "company_id": "co_placeholder_a", "geography_id": "geo_dublin", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01", "placeholder": true },
-  { "id": "sa_placeholder_b_columbus", "company_id": "co_placeholder_b", "geography_id": "geo_columbus", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01", "placeholder": true },
-  { "id": "sa_placeholder_c_columbus", "company_id": "co_placeholder_c", "geography_id": "geo_columbus", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01", "placeholder": true }
+  {
+    "id": "sa_co_001_columbus",
+    "company_id": "co_001",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_rlpmg",
+    "source_url": "https://rlpmg.com/about/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Own site says \"serving Columbus and Central Ohio\"; separate Areas Served page not read"
+  },
+  {
+    "id": "sa_co_002_columbus",
+    "company_id": "co_002",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_liveoakwood",
+    "source_url": "https://www.liveoakwood.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Listed as Downtown Columbus/University"
+  },
+  {
+    "id": "sa_co_002_dublin",
+    "company_id": "co_002",
+    "geography_id": "geo_dublin",
+    "source_id": "src_site_liveoakwood",
+    "source_url": "https://www.liveoakwood.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_002_hilliard",
+    "company_id": "co_002",
+    "geography_id": "geo_hilliard",
+    "source_id": "src_site_liveoakwood",
+    "source_url": "https://www.liveoakwood.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_002_grove_city",
+    "company_id": "co_002",
+    "geography_id": "geo_grove_city",
+    "source_id": "src_site_liveoakwood",
+    "source_url": "https://www.liveoakwood.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Listed as Grove City/Galloway"
+  },
+  {
+    "id": "sa_co_002_new_albany",
+    "company_id": "co_002",
+    "geography_id": "geo_new_albany",
+    "source_id": "src_site_liveoakwood",
+    "source_url": "https://www.liveoakwood.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_002_powell",
+    "company_id": "co_002",
+    "geography_id": "geo_powell",
+    "source_id": "src_site_liveoakwood",
+    "source_url": "https://www.liveoakwood.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_002_westerville",
+    "company_id": "co_002",
+    "geography_id": "geo_westerville",
+    "source_id": "src_site_liveoakwood",
+    "source_url": "https://www.liveoakwood.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_002_reynoldsburg",
+    "company_id": "co_002",
+    "geography_id": "geo_reynoldsburg",
+    "source_id": "src_site_liveoakwood",
+    "source_url": "https://www.liveoakwood.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_002_delaware",
+    "company_id": "co_002",
+    "geography_id": "geo_delaware",
+    "source_id": "src_site_liveoakwood",
+    "source_url": "https://www.liveoakwood.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Listed as Delaware/Sunbury; read as the city of Delaware"
+  },
+  {
+    "id": "sa_co_003_columbus",
+    "company_id": "co_003",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_allcountyprop",
+    "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Columbus location page; also lists Columbus neighborhoods"
+  },
+  {
+    "id": "sa_co_003_bexley",
+    "company_id": "co_003",
+    "geography_id": "geo_bexley",
+    "source_id": "src_site_allcountyprop",
+    "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_003_dublin",
+    "company_id": "co_003",
+    "geography_id": "geo_dublin",
+    "source_id": "src_site_allcountyprop",
+    "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_003_gahanna",
+    "company_id": "co_003",
+    "geography_id": "geo_gahanna",
+    "source_id": "src_site_allcountyprop",
+    "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_003_grandview_heights",
+    "company_id": "co_003",
+    "geography_id": "geo_grandview_heights",
+    "source_id": "src_site_allcountyprop",
+    "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_003_hilliard",
+    "company_id": "co_003",
+    "geography_id": "geo_hilliard",
+    "source_id": "src_site_allcountyprop",
+    "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_003_upper_arlington",
+    "company_id": "co_003",
+    "geography_id": "geo_upper_arlington",
+    "source_id": "src_site_allcountyprop",
+    "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_003_worthington",
+    "company_id": "co_003",
+    "geography_id": "geo_worthington",
+    "source_id": "src_site_allcountyprop",
+    "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_004_columbus_metro",
+    "company_id": "co_004",
+    "geography_id": "geo_columbus_metro",
+    "source_id": "src_site_sbs",
+    "source_url": "https://sbs.management/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Own site: \"Greater Columbus\""
+  },
+  {
+    "id": "sa_co_005_columbus",
+    "company_id": "co_005",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_ihrepm",
+    "source_url": "https://www.ihrepm.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Own site: \"Columbus metro\" incl. Columbus neighborhoods"
+  },
+  {
+    "id": "sa_co_005_worthington",
+    "company_id": "co_005",
+    "geography_id": "geo_worthington",
+    "source_id": "src_site_ihrepm",
+    "source_url": "https://www.ihrepm.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_005_westerville",
+    "company_id": "co_005",
+    "geography_id": "geo_westerville",
+    "source_id": "src_site_ihrepm",
+    "source_url": "https://www.ihrepm.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_005_dublin",
+    "company_id": "co_005",
+    "geography_id": "geo_dublin",
+    "source_id": "src_site_ihrepm",
+    "source_url": "https://www.ihrepm.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_005_hilliard",
+    "company_id": "co_005",
+    "geography_id": "geo_hilliard",
+    "source_id": "src_site_ihrepm",
+    "source_url": "https://www.ihrepm.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_005_delaware",
+    "company_id": "co_005",
+    "geography_id": "geo_delaware",
+    "source_id": "src_site_ihrepm",
+    "source_url": "https://www.ihrepm.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_005_powell",
+    "company_id": "co_005",
+    "geography_id": "geo_powell",
+    "source_id": "src_site_ihrepm",
+    "source_url": "https://www.ihrepm.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_006_columbus",
+    "company_id": "co_006",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_housepitality",
+    "source_url": "https://www.housepitality.io/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_006_delaware",
+    "company_id": "co_006",
+    "geography_id": "geo_delaware",
+    "source_id": "src_site_housepitality",
+    "source_url": "https://www.housepitality.io/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_006_westerville",
+    "company_id": "co_006",
+    "geography_id": "geo_westerville",
+    "source_id": "src_site_housepitality",
+    "source_url": "https://www.housepitality.io/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_006_gahanna",
+    "company_id": "co_006",
+    "geography_id": "geo_gahanna",
+    "source_id": "src_site_housepitality",
+    "source_url": "https://www.housepitality.io/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_006_dublin",
+    "company_id": "co_006",
+    "geography_id": "geo_dublin",
+    "source_id": "src_site_housepitality",
+    "source_url": "https://www.housepitality.io/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_007_columbus",
+    "company_id": "co_007",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_rpmmidwest",
+    "source_url": "https://www.rpmmidwest.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Own site: \"Serving Cincinnati, Dayton, Columbus\""
+  },
+  {
+    "id": "sa_co_008_columbus",
+    "company_id": "co_008",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_evernest_columbus",
+    "source_url": "https://www.columbuspropertymanagement.co/pricing",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Columbus market page and brand name \"Evernest Columbus\"; no area list on the pages read"
+  },
+  {
+    "id": "sa_co_014_columbus",
+    "company_id": "co_014",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_northpointam",
+    "source_url": "https://northpointam.com/property-management/columbusoh/columbus/services/property-management",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Columbus services page"
+  },
+  {
+    "id": "sa_co_014_westerville",
+    "company_id": "co_014",
+    "geography_id": "geo_westerville",
+    "source_id": "src_site_northpointam",
+    "source_url": "https://northpointam.com/property-management/columbusoh/westerville/services/property-management",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Westerville services page"
+  },
+  {
+    "id": "sa_co_015_columbus",
+    "company_id": "co_015",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_realsolutionsrentals",
+    "source_url": "https://realsolutionsrentals.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Columbus office listed without an address"
+  },
+  {
+    "id": "sa_co_017_columbus",
+    "company_id": "co_017",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_westerville",
+    "company_id": "co_017",
+    "geography_id": "geo_westerville",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_reynoldsburg",
+    "company_id": "co_017",
+    "geography_id": "geo_reynoldsburg",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_canal_winchester",
+    "company_id": "co_017",
+    "geography_id": "geo_canal_winchester",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_hilliard",
+    "company_id": "co_017",
+    "geography_id": "geo_hilliard",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_worthington",
+    "company_id": "co_017",
+    "geography_id": "geo_worthington",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_gahanna",
+    "company_id": "co_017",
+    "geography_id": "geo_gahanna",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_powell",
+    "company_id": "co_017",
+    "geography_id": "geo_powell",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_dublin",
+    "company_id": "co_017",
+    "geography_id": "geo_dublin",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_grove_city",
+    "company_id": "co_017",
+    "geography_id": "geo_grove_city",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_lancaster",
+    "company_id": "co_017",
+    "geography_id": "geo_lancaster",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_upper_arlington",
+    "company_id": "co_017",
+    "geography_id": "geo_upper_arlington",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_pickerington",
+    "company_id": "co_017",
+    "geography_id": "geo_pickerington",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_delaware",
+    "company_id": "co_017",
+    "geography_id": "geo_delaware",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_017_newark",
+    "company_id": "co_017",
+    "geography_id": "geo_newark",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": null
+  },
+  {
+    "id": "sa_co_022_columbus",
+    "company_id": "co_022",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_mynd",
+    "source_url": "https://mynd.co/locations/ohio/columbus-property-management",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Columbus market page"
+  },
+  {
+    "id": "sa_co_023_columbus",
+    "company_id": "co_023",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_purehomeriver",
+    "source_url": "https://purehomeriver.com/locations/ohio/columbus/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Columbus market page"
+  },
+  {
+    "id": "sa_co_024_columbus",
+    "company_id": "co_024",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_roostrealestateco",
+    "source_url": "https://roostrealestateco.com/monthly-property-management-fees-flat-vs-percentage-based/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11",
+    "note": "Fee page states Columbus rates"
+  }
 ]

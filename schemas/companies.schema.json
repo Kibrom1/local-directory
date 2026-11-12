@@ -6,12 +6,13 @@
   "items": {
     "type": "object",
     "additionalProperties": false,
-    "description": "Top-level source_id/captured_date/last_verified_date cover the identity and contact fields (name, website, phone, address). License, services and property types carry their own provenance.",
-    "required": ["id", "slug", "name", "source_id", "captured_date", "last_verified_date"],
+    "description": "Top-level source_id/source_url/captured_date/last_verified_date cover the identity and contact fields (name, website, phone, address). License, services and property types carry their own provenance. evidence_level says how well the company's existence is confirmed; only own_site_confirmed companies can be published.",
+    "required": ["id", "slug", "name", "evidence_level", "tier", "source_id", "captured_date", "last_verified_date"],
     "properties": {
       "id": { "$ref": "common.schema.json#/definitions/companyId" },
       "slug": { "$ref": "common.schema.json#/definitions/slug" },
       "name": { "type": "string", "minLength": 1 },
+      "legal_name": { "type": ["string", "null"], "description": "Only when stated on the company's own site." },
       "website": { "type": ["string", "null"], "format": "uri" },
       "phone": { "type": ["string", "null"] },
       "address": {
@@ -24,11 +25,20 @@
             "properties": {
               "street": { "type": ["string", "null"] },
               "city": { "type": ["string", "null"] },
+              "county": { "type": ["string", "null"], "description": "County name without the word County, only when certain." },
               "state": { "type": ["string", "null"], "pattern": "^[A-Z]{2}$" },
               "zip": { "type": ["string", "null"], "pattern": "^\\d{5}(-\\d{4})?$" }
             }
           }
         ]
+      },
+      "evidence_level": {
+        "enum": ["own_site_confirmed", "third_party_directory_only", "unverified_lead"],
+        "description": "own_site_confirmed: the company's own public site was read and confirms it. third_party_directory_only: seen only on a third-party directory (not published, not counted). unverified_lead: seen only in a search result or list (not published, not counted)."
+      },
+      "tier": {
+        "enum": ["A", "B", "unconfirmed"],
+        "description": "A: own-site confirmed with an office in Phase 1 geography (counts toward the company threshold). B: own-site confirmed, serves the area, no local office confirmed (not counted). unconfirmed: evidence_level is not own_site_confirmed."
       },
       "license": {
         "anyOf": [
@@ -36,12 +46,14 @@
           {
             "type": "object",
             "additionalProperties": false,
-            "required": ["status", "number", "issuing_body", "source_id", "captured_date", "last_verified_date"],
+            "required": ["status", "number", "issuing_body", "claim_text", "source_id", "source_url", "captured_date", "last_verified_date"],
             "properties": {
-              "status": { "enum": ["active", "inactive", "none_found"] },
+              "status": { "enum": ["unverified", "self_stated", "active", "inactive", "none_found"], "description": "unverified: nothing stated or checked. self_stated: the company's own site states a license (claim_text); not checked against the state record. active/inactive/none_found: checked against the state licensee record." },
               "number": { "type": ["string", "null"] },
               "issuing_body": { "type": ["string", "null"] },
+              "claim_text": { "type": ["string", "null"], "maxLength": 300, "description": "Exact wording of the company's own claim, for self_stated." },
               "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
+              "source_url": { "$ref": "common.schema.json#/definitions/url" },
               "captured_date": { "$ref": "common.schema.json#/definitions/date" },
               "last_verified_date": { "$ref": "common.schema.json#/definitions/date" }
             }
@@ -57,6 +69,7 @@
           "properties": {
             "service": { "enum": ["full-service-management", "leasing-only", "tenant-placement", "rent-collection", "maintenance-coordination", "eviction-handling", "hoa-management", "short-term-rental-management"] },
             "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
+            "source_url": { "anyOf": [{ "$ref": "common.schema.json#/definitions/url" }, { "type": "null" }] },
             "captured_date": { "$ref": "common.schema.json#/definitions/date" },
             "last_verified_date": { "$ref": "common.schema.json#/definitions/date" }
           }
@@ -71,12 +84,15 @@
           "properties": {
             "property_type_id": { "$ref": "common.schema.json#/definitions/propertyTypeId" },
             "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
+            "source_url": { "anyOf": [{ "$ref": "common.schema.json#/definitions/url" }, { "type": "null" }] },
             "captured_date": { "$ref": "common.schema.json#/definitions/date" },
             "last_verified_date": { "$ref": "common.schema.json#/definitions/date" }
           }
         }
       },
+      "internal_notes": { "type": ["string", "null"], "maxLength": 600, "description": "Maintainer notes (not rendered): conflicts, downgrades, open verification items." },
       "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
+      "source_url": { "anyOf": [{ "$ref": "common.schema.json#/definitions/url" }, { "type": "null" }] },
       "captured_date": { "$ref": "common.schema.json#/definitions/date" },
       "last_verified_date": { "$ref": "common.schema.json#/definitions/date" },
       "placeholder": { "type": "boolean" }

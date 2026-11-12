@@ -6,15 +6,55 @@
   "items": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "company_id", "geography_id", "source_id", "captured_date", "last_verified_date"],
+    "required": [
+      "id",
+      "company_id",
+      "geography_id",
+      "source_id",
+      "captured_date",
+      "last_verified_date"
+    ],
     "properties": {
-      "id": { "type": "string", "pattern": "^sa_[a-z0-9_]+$" },
-      "company_id": { "$ref": "common.schema.json#/definitions/companyId" },
-      "geography_id": { "$ref": "common.schema.json#/definitions/geographyId" },
-      "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
-      "captured_date": { "$ref": "common.schema.json#/definitions/date" },
-      "last_verified_date": { "$ref": "common.schema.json#/definitions/date" },
-      "placeholder": { "type": "boolean" }
+      "id": {
+        "type": "string",
+        "pattern": "^sa_[a-z0-9_]+$"
+      },
+      "company_id": {
+        "$ref": "common.schema.json#/definitions/companyId"
+      },
+      "geography_id": {
+        "$ref": "common.schema.json#/definitions/geographyId"
+      },
+      "source_id": {
+        "$ref": "common.schema.json#/definitions/sourceId"
+      },
+      "captured_date": {
+        "$ref": "common.schema.json#/definitions/date"
+      },
+      "last_verified_date": {
+        "$ref": "common.schema.json#/definitions/date"
+      },
+      "placeholder": {
+        "type": "boolean"
+      },
+      "source_url": {
+        "anyOf": [
+          {
+            "$ref": "common.schema.json#/definitions/url"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "note": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "maxLength": 200,
+        "description": "How the area was derived when the company does not list it as a city (for example via named neighborhoods)."
+      }
     }
   }
 }

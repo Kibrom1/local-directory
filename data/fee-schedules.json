@@ -1,30 +1,518 @@
 [
   {
-    "id": "fee_placeholder_a_sf",
-    "company_id": "co_placeholder_a",
-    "property_type": "pt_single_family",
-    "management_pct": 8,
-    "flat_fee": null,
-    "leasing_fee": { "type": "pct_of_monthly_rent", "value": 50 },
-    "renewal_fee": null,
-    "minimums": { "monthly_usd": 95, "other": null },
-    "source_id": "src_placeholder_001",
-    "captured_date": "2026-11-01",
-    "last_verified_date": "2026-11-01",
-    "placeholder": true
+    "id": "fee_co_022_all",
+    "company_id": "co_022",
+    "property_type": null,
+    "management_pct": null,
+    "flat_fee": {
+      "type": "flat_usd",
+      "period": "monthly",
+      "plans": [
+        {
+          "name": null,
+          "condition": "1 home",
+          "value": 129
+        },
+        {
+          "name": null,
+          "condition": "2 homes",
+          "value": 119
+        },
+        {
+          "name": null,
+          "condition": "3-10 homes",
+          "value": 109
+        }
+      ],
+      "notes": "Page does not say whether the monthly amount is per home or total."
+    },
+    "leasing_fee": {
+      "type": "pct_of_monthly_rent",
+      "period": "one_time",
+      "value": 50,
+      "basis": "one month's rent"
+    },
+    "renewal_fee": {
+      "type": "flat_usd",
+      "value": 299,
+      "period": "one_time"
+    },
+    "minimums": null,
+    "other_fees": [],
+    "verification_status": "verified_own_site",
+    "notes": null,
+    "source_id": "src_site_mynd",
+    "source_urls": [
+      "https://mynd.co/locations/ohio/columbus-property-management"
+    ],
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
   },
   {
-    "id": "fee_placeholder_b_mf",
-    "company_id": "co_placeholder_b",
-    "property_type": "pt_small_multifamily",
-    "management_pct": null,
-    "flat_fee": 100,
-    "leasing_fee": null,
+    "id": "fee_co_008_single_family",
+    "company_id": "co_008",
+    "property_type": "pt_single_family",
+    "management_pct": {
+      "type": "pct_of_rent",
+      "value": 6,
+      "basis": "single-family only; rate basis not stated"
+    },
+    "flat_fee": null,
+    "leasing_fee": {
+      "type": "pct_of_monthly_rent",
+      "period": "one_time",
+      "value": 50,
+      "basis": "one month's rent",
+      "minimum_usd": 500
+    },
+    "renewal_fee": {
+      "type": "flat_usd",
+      "value": 250,
+      "period": "one_time"
+    },
+    "minimums": {
+      "monthly_usd": null,
+      "other": "$500 minimum on leasing fee"
+    },
+    "other_fees": [],
+    "verification_status": "verified_own_site",
+    "notes": "Condos and small multifamily are managed but not priced on the page. Conflicts with third-party roundups (8-10%); company Columbus page recorded.",
+    "source_id": "src_site_evernest_columbus",
+    "source_urls": [
+      "https://www.columbuspropertymanagement.co/pricing"
+    ],
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "fee_co_023_all",
+    "company_id": "co_023",
+    "property_type": null,
+    "management_pct": {
+      "type": "pct_of_rent",
+      "value": null,
+      "min": 7,
+      "max": 10,
+      "basis": "rate basis not stated"
+    },
+    "flat_fee": null,
+    "leasing_fee": {
+      "type": "pct_of_monthly_rent",
+      "period": "one_time",
+      "value": 50,
+      "basis": "first month's rent"
+    },
     "renewal_fee": null,
     "minimums": null,
-    "source_id": "src_placeholder_001",
-    "captured_date": "2026-11-01",
-    "last_verified_date": "2026-11-01",
-    "placeholder": true
+    "other_fees": [],
+    "verification_status": "verified_own_site",
+    "notes": null,
+    "source_id": "src_site_purehomeriver",
+    "source_urls": [
+      "https://purehomeriver.com/locations/ohio/columbus/"
+    ],
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "fee_co_024_single_family",
+    "company_id": "co_024",
+    "property_type": "pt_single_family",
+    "management_pct": null,
+    "flat_fee": {
+      "type": "flat_usd",
+      "period": "per_unit_monthly",
+      "plans": [
+        {
+          "name": null,
+          "condition": "1 unit",
+          "value": 105
+        },
+        {
+          "name": null,
+          "condition": "2-19 units",
+          "value": 100
+        },
+        {
+          "name": null,
+          "condition": "20+ units",
+          "value": 90
+        }
+      ]
+    },
+    "leasing_fee": {
+      "type": "pct_of_monthly_rent",
+      "period": "one_time",
+      "basis": "first month's rent",
+      "plans": [
+        {
+          "name": null,
+          "condition": "1 unit",
+          "value": 100
+        },
+        {
+          "name": null,
+          "condition": "2-19 units",
+          "value": 75
+        },
+        {
+          "name": null,
+          "condition": "20+ units",
+          "value": 50
+        }
+      ]
+    },
+    "renewal_fee": {
+      "type": "flat_usd",
+      "value": 275,
+      "period": "one_time"
+    },
+    "minimums": null,
+    "other_fees": [],
+    "verification_status": "verified_own_site",
+    "notes": "Row covers ROOST single-home pricing (Columbus).",
+    "source_id": "src_site_roostrealestateco",
+    "source_urls": [
+      "https://roostrealestateco.com/monthly-property-management-fees-flat-vs-percentage-based/"
+    ],
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "fee_co_024_multifamily",
+    "company_id": "co_024",
+    "property_type": "pt_multifamily",
+    "management_pct": null,
+    "flat_fee": {
+      "type": "flat_usd",
+      "period": "per_unit_monthly",
+      "plans": [
+        {
+          "name": null,
+          "condition": "1 unit",
+          "value": 90
+        },
+        {
+          "name": null,
+          "condition": "2-19 units",
+          "value": 85
+        },
+        {
+          "name": null,
+          "condition": "20+ units",
+          "value": 75
+        }
+      ]
+    },
+    "leasing_fee": {
+      "type": "pct_of_monthly_rent",
+      "period": "one_time",
+      "basis": "first month's rent",
+      "plans": [
+        {
+          "name": null,
+          "condition": "1 unit",
+          "value": 100
+        },
+        {
+          "name": null,
+          "condition": "2-19 units",
+          "value": 75
+        },
+        {
+          "name": null,
+          "condition": "20+ units",
+          "value": 50
+        }
+      ]
+    },
+    "renewal_fee": {
+      "type": "flat_usd",
+      "value": 275,
+      "period": "one_time"
+    },
+    "minimums": null,
+    "other_fees": [],
+    "verification_status": "verified_own_site",
+    "notes": "Row covers ROOST multi-unit pricing (Columbus).",
+    "source_id": "src_site_roostrealestateco",
+    "source_urls": [
+      "https://roostrealestateco.com/monthly-property-management-fees-flat-vs-percentage-based/"
+    ],
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "fee_co_020_all",
+    "company_id": "co_020",
+    "property_type": null,
+    "management_pct": null,
+    "flat_fee": {
+      "type": "flat_usd",
+      "period": "monthly",
+      "plans": [
+        {
+          "name": "Passive",
+          "value": 85,
+          "label_confirmed": false
+        },
+        {
+          "name": "Standard",
+          "value": 95,
+          "label_confirmed": false
+        },
+        {
+          "name": "Premium",
+          "value": 145,
+          "label_confirmed": false
+        }
+      ]
+    },
+    "leasing_fee": {
+      "type": "pct_of_monthly_rent",
+      "period": "one_time",
+      "min": 25,
+      "max": 100,
+      "basis": "first month's rent, depends on plan"
+    },
+    "renewal_fee": {
+      "type": "flat_usd",
+      "value": null,
+      "period": "one_time",
+      "min": 200,
+      "max": 300,
+      "basis": "depends on plan"
+    },
+    "minimums": {
+      "monthly_usd": null,
+      "other": "$650 minimum on standalone leasing fee (75% of first month's rent)"
+    },
+    "other_fees": [
+      {
+        "kind": "standalone_management",
+        "label": "Standalone management fee",
+        "amount": {
+          "type": "flat_usd",
+          "value": 75,
+          "period": "monthly"
+        }
+      },
+      {
+        "kind": "standalone_renewal",
+        "label": "Standalone renewal fee",
+        "amount": {
+          "type": "flat_usd",
+          "value": 125,
+          "period": "one_time"
+        }
+      },
+      {
+        "kind": "standalone_leasing",
+        "label": "Standalone leasing fee",
+        "amount": {
+          "type": "pct_of_monthly_rent",
+          "period": "one_time",
+          "value": 75,
+          "basis": "first month's rent",
+          "minimum_usd": 650
+        }
+      }
+    ],
+    "verification_status": "verified_own_site",
+    "notes": "Pricing page has an unlabeled fifth column. Flat plan names are mapped by column order and are not confirmed next to the values; leasing and renewal are kept as ranges with no plan mapping. Standalone prices are shown on the page separately from the plan tables.",
+    "source_id": "src_site_10xpropertymanagers",
+    "source_urls": [
+      "https://www.10xpropertymanagers.com/pricing"
+    ],
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "fee_co_025_all",
+    "company_id": "co_025",
+    "property_type": null,
+    "management_pct": {
+      "type": "pct_of_rent",
+      "value": 9,
+      "basis": "gross rents",
+      "minimum_usd": 75
+    },
+    "flat_fee": null,
+    "leasing_fee": {
+      "type": "pct_of_monthly_rent",
+      "period": "one_time",
+      "value": 100,
+      "basis": "one month's rent for a vacant unit"
+    },
+    "renewal_fee": {
+      "type": "flat_usd",
+      "value": 150,
+      "period": "one_time"
+    },
+    "minimums": {
+      "monthly_usd": 75,
+      "other": "Greater of 9% of gross rents or $75 per month per unit"
+    },
+    "other_fees": [],
+    "verification_status": "verified_own_site",
+    "notes": "Monthly-fee and leasing pages read separately; property types are not stated on either page.",
+    "source_id": "src_site_reafco_ohio_elite",
+    "source_urls": [
+      "https://sites.google.com/view/ohio-elite-management/fees/monthly-management-fee",
+      "https://sites.google.com/view/ohio-elite-management/fees/leasing-fee"
+    ],
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "fee_co_014_all",
+    "company_id": "co_014",
+    "property_type": null,
+    "management_pct": {
+      "type": "pct_of_rent",
+      "value": 10,
+      "basis": "collected rent"
+    },
+    "flat_fee": null,
+    "leasing_fee": {
+      "type": "pct_of_monthly_rent",
+      "period": "one_time",
+      "value": 75,
+      "basis": "first month's rent"
+    },
+    "renewal_fee": {
+      "type": "pct_of_monthly_rent",
+      "period": "one_time",
+      "value": 25,
+      "basis": "one month's rent"
+    },
+    "minimums": null,
+    "other_fees": [
+      {
+        "kind": "onboarding",
+        "label": "One-time onboarding / property setup fee",
+        "amount": {
+          "type": "flat_usd",
+          "value": 300,
+          "period": "one_time"
+        }
+      }
+    ],
+    "verification_status": "verified_own_site",
+    "notes": "Pricing page is network-wide (25+ markets), not Columbus-specific. Page also lists 10% of maintenance invoices (not recorded).",
+    "source_id": "src_site_northpointam",
+    "source_urls": [
+      "https://northpointam.com/pricing",
+      "https://northpointam.com/property-management/columbusoh/columbus/services/property-management"
+    ],
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "fee_co_019_all",
+    "company_id": "co_019",
+    "property_type": null,
+    "management_pct": {
+      "type": "pct_of_rent",
+      "plans": [
+        {
+          "name": "Core",
+          "value": 8,
+          "minimum_usd": 100,
+          "label_confirmed": true
+        },
+        {
+          "name": "Signature",
+          "value": 10,
+          "minimum_usd": 120,
+          "label_confirmed": true
+        }
+      ]
+    },
+    "flat_fee": null,
+    "leasing_fee": {
+      "type": "pct_of_monthly_rent",
+      "period": "one_time",
+      "basis": "one month's rent, greater of percent or dollar floor",
+      "plans": [
+        {
+          "name": "Core",
+          "value": 75,
+          "minimum_usd": 800
+        },
+        {
+          "name": "Signature",
+          "value": 50,
+          "minimum_usd": 660
+        }
+      ]
+    },
+    "renewal_fee": {
+      "type": "pct_of_monthly_rent",
+      "period": "one_time",
+      "basis": "one month's rent, greater of percent or dollar floor",
+      "plans": [
+        {
+          "name": "Core",
+          "value": 33.33,
+          "minimum_usd": 500
+        },
+        {
+          "name": "Signature",
+          "value": 25,
+          "minimum_usd": 350
+        }
+      ],
+      "notes": "Core renewal is one third of a month; 33.33 is rounded."
+    },
+    "minimums": {
+      "monthly_usd": null,
+      "other": "Management fee minimum $100 (Core) / $120 (Signature)"
+    },
+    "other_fees": [
+      {
+        "kind": "onboarding",
+        "label": "Onboarding fee",
+        "amount": {
+          "type": "flat_usd",
+          "value": 250,
+          "period": "one_time"
+        }
+      }
+    ],
+    "verification_status": "verified_own_site",
+    "notes": "Recorded as published: the higher-percentage plan (Signature, 10%) has the lower leasing fee.",
+    "source_id": "src_site_swisspmg",
+    "source_urls": [
+      "https://www.swisspmg.com/pricing"
+    ],
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "fee_co_007_all",
+    "company_id": "co_007",
+    "property_type": null,
+    "management_pct": {
+      "type": "pct_of_rent",
+      "value": 8.5,
+      "basis": "rent collected"
+    },
+    "flat_fee": null,
+    "leasing_fee": null,
+    "renewal_fee": null,
+    "minimums": {
+      "monthly_usd": null,
+      "other": "Page says minimums and maximums may apply; no amounts given"
+    },
+    "other_fees": [],
+    "verification_status": "verified_own_site",
+    "notes": null,
+    "source_id": "src_site_rpmmidwest",
+    "source_urls": [
+      "https://www.rpmmidwest.com/pricing/"
+    ],
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
   }
 ]

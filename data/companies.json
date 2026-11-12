@@ -1,55 +1,797 @@
 [
   {
-    "id": "co_placeholder_a",
-    "slug": "placeholder-company-a",
-    "name": "Placeholder Company A (fake)",
-    "website": "https://example.com/a",
+    "id": "co_001",
+    "slug": "rl-property-management-group",
+    "name": "RL Property Management Group",
+    "legal_name": "RL Property Management, Inc.",
+    "website": "https://rlpmg.com",
     "phone": null,
-    "address": { "street": null, "city": "Columbus", "state": "OH", "zip": null },
-    "license": { "status": "active", "number": "PLACEHOLDER-0001", "issuing_body": "Placeholder Board", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01" },
-    "services": [
-      { "service": "full-service-management", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01" }
-    ],
-    "property_types_served": [
-      { "property_type_id": "pt_single_family", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01" }
-    ],
-    "source_id": "src_placeholder_001",
-    "captured_date": "2026-11-01",
-    "last_verified_date": "2026-11-01",
-    "placeholder": true
+    "address": {
+      "street": "750 Cross Pointe Rd. STE B",
+      "city": "Columbus",
+      "county": "Franklin",
+      "state": "OH",
+      "zip": "43230"
+    },
+    "evidence_level": "own_site_confirmed",
+    "tier": "A",
+    "license": {
+      "status": "self_stated",
+      "number": null,
+      "issuing_body": null,
+      "claim_text": "Licensed Real Estate Brokerage in the State of OH",
+      "source_id": "src_site_rlpmg",
+      "source_url": "https://rlpmg.com/about/",
+      "captured_date": "2026-11-11",
+      "last_verified_date": "2026-11-11"
+    },
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Fees blank: pricing domain rlpropertymanagementgroup.com refused fetching (robots). Fees seen only in conflicting third-party roundups.",
+    "source_id": "src_site_rlpmg",
+    "source_url": "https://rlpmg.com/about/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
   },
   {
-    "id": "co_placeholder_b",
-    "slug": "placeholder-company-b",
-    "name": "Placeholder Company B (fake)",
-    "website": "https://example.com/b",
+    "id": "co_002",
+    "slug": "oakwood-management-company",
+    "name": "Oakwood Management Company",
+    "legal_name": null,
+    "website": "https://www.liveoakwood.com",
     "phone": null,
-    "address": null,
-    "license": null,
-    "services": [
-      { "service": "leasing-only", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01" }
-    ],
+    "address": {
+      "street": "6950-B Americana Pkwy",
+      "city": "Reynoldsburg",
+      "county": null,
+      "state": "OH",
+      "zip": "43068"
+    },
+    "evidence_level": "own_site_confirmed",
+    "tier": "A",
+    "license": {
+      "status": "unverified",
+      "number": null,
+      "issuing_body": null,
+      "claim_text": null,
+      "source_id": "src_site_liveoakwood",
+      "source_url": "https://www.liveoakwood.com/",
+      "captured_date": "2026-11-11",
+      "last_verified_date": "2026-11-11"
+    },
+    "services": [],
     "property_types_served": [
-      { "property_type_id": "pt_small_multifamily", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01" }
+      {
+        "property_type_id": "pt_multifamily",
+        "source_id": "src_site_liveoakwood",
+        "source_url": "https://www.liveoakwood.com/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      }
     ],
-    "source_id": "src_placeholder_001",
-    "captured_date": "2026-11-01",
-    "last_verified_date": "2026-11-01",
-    "placeholder": true
+    "internal_notes": "Mainly apartment communities (64 stated) plus residential management for investors. County left blank: Reynoldsburg spans three counties and the county was not confirmed from a county source (verifier D5).",
+    "source_id": "src_site_liveoakwood",
+    "source_url": "https://www.liveoakwood.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
   },
   {
-    "id": "co_placeholder_c",
-    "slug": "placeholder-company-c",
-    "name": "Placeholder Company C (fake, thin record)",
+    "id": "co_003",
+    "slug": "all-county-neo-portfolio-property-management",
+    "name": "All County NEO Portfolio Property Management",
+    "legal_name": null,
+    "website": "https://allcountyprop.com",
+    "phone": null,
+    "address": {
+      "street": "1733 W. Lane Ave.",
+      "city": "Columbus",
+      "county": "Franklin",
+      "state": "OH",
+      "zip": "43221"
+    },
+    "evidence_level": "own_site_confirmed",
+    "tier": "A",
+    "license": {
+      "status": "unverified",
+      "number": null,
+      "issuing_body": null,
+      "claim_text": null,
+      "source_id": "src_site_allcountyprop",
+      "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+      "captured_date": "2026-11-11",
+      "last_verified_date": "2026-11-11"
+    },
+    "services": [],
+    "property_types_served": [
+      {
+        "property_type_id": "pt_single_family",
+        "source_id": "src_site_allcountyprop",
+        "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      },
+      {
+        "property_type_id": "pt_multifamily",
+        "source_id": "src_site_allcountyprop",
+        "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      },
+      {
+        "property_type_id": "pt_condo_townhome",
+        "source_id": "src_site_allcountyprop",
+        "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      }
+    ],
+    "internal_notes": "Franchise; legal entity not shown. Site spells Hilliard as \"Hillard\".",
+    "source_id": "src_site_allcountyprop",
+    "source_url": "https://allcountyprop.com/locations/ohio/columbus/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_004",
+    "slug": "sbs-property-management",
+    "name": "SBS Property Management",
+    "legal_name": "SBS Property Management, LLC",
+    "website": "https://sbs.management",
+    "phone": null,
+    "address": {
+      "street": "4872 Cemetery Rd",
+      "city": "Hilliard",
+      "county": "Franklin",
+      "state": "OH",
+      "zip": "43026"
+    },
+    "evidence_level": "own_site_confirmed",
+    "tier": "A",
+    "license": {
+      "status": "unverified",
+      "number": null,
+      "issuing_body": null,
+      "claim_text": null,
+      "source_id": "src_site_sbs",
+      "source_url": "https://sbs.management/",
+      "captured_date": "2026-11-11",
+      "last_verified_date": "2026-11-11"
+    },
+    "services": [
+      {
+        "service": "hoa-management",
+        "source_id": "src_site_sbs",
+        "source_url": "https://sbs.management/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      }
+    ],
+    "property_types_served": [
+      {
+        "property_type_id": "pt_hoa_community",
+        "source_id": "src_site_sbs",
+        "source_url": "https://sbs.management/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      }
+    ],
+    "internal_notes": "HOA and condominium associations only. \"Delaware and Central Ohio\" in the site text is ambiguous (city or county) so no Delaware area is recorded.",
+    "source_id": "src_site_sbs",
+    "source_url": "https://sbs.management/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_005",
+    "slug": "i-heart-real-estate-property-management",
+    "name": "I Heart Real Estate Property Management",
+    "legal_name": null,
+    "website": "https://www.ihrepm.com",
+    "phone": null,
+    "address": {
+      "street": "6385 Shier Rings Road Suite 1",
+      "city": "Dublin",
+      "county": null,
+      "state": "OH",
+      "zip": "43016"
+    },
+    "evidence_level": "own_site_confirmed",
+    "tier": "A",
+    "license": {
+      "status": "self_stated",
+      "number": "Rec. 2023000049",
+      "issuing_body": null,
+      "claim_text": "An Ohio Real Estate Brokerage ... License No. Rec. 2023000049",
+      "source_id": "src_site_ihrepm",
+      "source_url": "https://www.ihrepm.com/",
+      "captured_date": "2026-11-11",
+      "last_verified_date": "2026-11-11"
+    },
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Fees NOT recorded: sister domain iheartrealestatepm.com disallowed fetching (robots); PRD rule keeps fees blank. Own-site tiers seen by verifier (Flex $99/Core $139/Total $199; leasing 75%/50%/0 with $750/$500 minimums) are available for a manual-lookup entry once approved. County left blank: Dublin spans Franklin, Delaware and Union.",
+    "source_id": "src_site_ihrepm",
+    "source_url": "https://www.ihrepm.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_006",
+    "slug": "housepitality",
+    "name": "Housepitality",
+    "legal_name": "Housepitality LLC",
+    "website": "https://www.housepitality.io",
+    "phone": null,
+    "address": {
+      "street": "797 Busch Ct.",
+      "city": "Columbus",
+      "county": "Franklin",
+      "state": "OH",
+      "zip": "43229"
+    },
+    "evidence_level": "own_site_confirmed",
+    "tier": "A",
+    "license": {
+      "status": "self_stated",
+      "number": null,
+      "issuing_body": null,
+      "claim_text": "fully licensed property management company",
+      "source_id": "src_site_housepitality",
+      "source_url": "https://www.housepitality.io/",
+      "captured_date": "2026-11-11",
+      "last_verified_date": "2026-11-11"
+    },
+    "services": [
+      {
+        "service": "short-term-rental-management",
+        "source_id": "src_site_housepitality",
+        "source_url": "https://www.housepitality.io/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      }
+    ],
+    "property_types_served": [
+      {
+        "property_type_id": "pt_short_term_rental",
+        "source_id": "src_site_housepitality",
+        "source_url": "https://www.housepitality.io/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      },
+      {
+        "property_type_id": "pt_multifamily",
+        "source_id": "src_site_housepitality",
+        "source_url": "https://www.housepitality.io/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      }
+    ],
+    "internal_notes": "Long-term, short-term furnished, multifamily and commercial. No fee amounts on the page read.",
+    "source_id": "src_site_housepitality",
+    "source_url": "https://www.housepitality.io/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_007",
+    "slug": "real-property-management-midwest",
+    "name": "Real Property Management Midwest",
+    "legal_name": null,
+    "website": "https://www.rpmmidwest.com",
+    "phone": null,
+    "address": {
+      "street": "261 W. Johnstown Rd Suite 207",
+      "city": "Columbus",
+      "county": "Franklin",
+      "state": "OH",
+      "zip": "43230"
+    },
+    "evidence_level": "own_site_confirmed",
+    "tier": "A",
+    "license": {
+      "status": "unverified",
+      "number": null,
+      "issuing_body": null,
+      "claim_text": null,
+      "source_id": "src_site_rpmmidwest",
+      "source_url": "https://www.rpmmidwest.com/",
+      "captured_date": "2026-11-11",
+      "last_verified_date": "2026-11-11"
+    },
+    "services": [],
+    "property_types_served": [
+      {
+        "property_type_id": "pt_single_family",
+        "source_id": "src_site_rpmmidwest",
+        "source_url": "https://www.rpmmidwest.com/pricing/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      },
+      {
+        "property_type_id": "pt_multifamily",
+        "source_id": "src_site_rpmmidwest",
+        "source_url": "https://www.rpmmidwest.com/pricing/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      }
+    ],
+    "internal_notes": "Verifier D1: own-site address replaces the directory address (2720 Airport Dr, 43219). Legal name \"Real Property Management Midwest LLC (d.b.a. Midwest Realty)\" came from a directory and was not confirmed on the own site, so legal_name is blank.",
+    "source_id": "src_site_rpmmidwest",
+    "source_url": "https://www.rpmmidwest.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_008",
+    "slug": "evernest-columbus",
+    "name": "Evernest Columbus",
+    "legal_name": null,
+    "website": "https://www.columbuspropertymanagement.co",
+    "phone": null,
+    "address": {
+      "street": "3040 Riverside Dr., Suite 223",
+      "city": "Upper Arlington",
+      "county": "Franklin",
+      "state": "OH",
+      "zip": "43221"
+    },
+    "evidence_level": "own_site_confirmed",
+    "tier": "A",
+    "license": {
+      "status": "unverified",
+      "number": null,
+      "issuing_body": null,
+      "claim_text": null,
+      "source_id": "src_site_evernest_columbus",
+      "source_url": "https://www.columbuspropertymanagement.co/",
+      "captured_date": "2026-11-11",
+      "last_verified_date": "2026-11-11"
+    },
+    "services": [],
+    "property_types_served": [
+      {
+        "property_type_id": "pt_single_family",
+        "source_id": "src_site_evernest_columbus",
+        "source_url": "https://www.columbuspropertymanagement.co/pricing",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      },
+      {
+        "property_type_id": "pt_condo_townhome",
+        "source_id": "src_site_evernest_columbus",
+        "source_url": "https://www.columbuspropertymanagement.co/pricing",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      },
+      {
+        "property_type_id": "pt_multifamily",
+        "source_id": "src_site_evernest_columbus",
+        "source_url": "https://www.columbuspropertymanagement.co/pricing",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      }
+    ],
+    "internal_notes": "Pricing page conflicts with third-party roundups (8-10%); only the company page is recorded. Condos and \"small multifamily\" are managed but unpriced; small multifamily is mapped to the unsized multifamily type.",
+    "source_id": "src_site_evernest_columbus",
+    "source_url": "https://www.columbuspropertymanagement.co/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_009",
+    "slug": "the-wallick-companies",
+    "name": "The Wallick Companies",
+    "legal_name": null,
     "website": null,
     "phone": null,
-    "address": null,
+    "address": {
+      "street": "7490 Blacks Rd SW",
+      "city": "Pataskala",
+      "county": "Licking",
+      "state": "OH",
+      "zip": "43062"
+    },
+    "evidence_level": "third_party_directory_only",
+    "tier": "unconfirmed",
     "license": null,
     "services": [],
     "property_types_served": [],
-    "source_id": "src_placeholder_001",
-    "captured_date": "2026-11-01",
-    "last_verified_date": "2026-11-01",
-    "placeholder": true
+    "internal_notes": "Researcher seed row counted this as Tier A on a directory page alone. Downgraded: third-party directory only (terms unchecked), no own site found. Not published, not counted. Affordable multifamily, 11,000+ units stated; likely not a fit for single-family owners.",
+    "source_id": "src_simplifyem",
+    "source_url": "https://www.simplifyem.com/property-management-companies/company/the-wallick-companies-pataskala-ohio",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_010",
+    "slug": "maier-hoey-associates-realtors",
+    "name": "Maier-Hoey Associates Realtors",
+    "legal_name": null,
+    "website": null,
+    "phone": null,
+    "address": {
+      "street": "25 E Church St",
+      "city": "Newark",
+      "county": "Licking",
+      "state": "OH",
+      "zip": "43055"
+    },
+    "evidence_level": "third_party_directory_only",
+    "tier": "unconfirmed",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Researcher seed row counted this as Tier A on a directory page alone. Downgraded: third-party directory only (terms unchecked), no own site found. Not published, not counted. No own site found by search (verifier).",
+    "source_id": "src_simplifyem",
+    "source_url": "https://www.simplifyem.com/property-management-companies/company/maier-hoey-associates-realtors-newark-ohio",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_011",
+    "slug": "knoll-group-management",
+    "name": "Knoll Group Management",
+    "legal_name": null,
+    "website": null,
+    "phone": null,
+    "address": {
+      "street": "2034 Cherry Valley Rd",
+      "city": "Newark",
+      "county": "Licking",
+      "state": "OH",
+      "zip": "43055"
+    },
+    "evidence_level": "third_party_directory_only",
+    "tier": "unconfirmed",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Researcher seed row counted this as Tier A on a directory page alone. Downgraded: third-party directory only (terms unchecked), no own site found. Not published, not counted. Not checked by the verifier.",
+    "source_id": "src_simplifyem",
+    "source_url": "https://www.simplifyem.com/property-management-companies/company/knoll-group-management-newark-ohio",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_012",
+    "slug": "focus-realty-and-management",
+    "name": "Focus Realty and Management",
+    "legal_name": null,
+    "website": null,
+    "phone": null,
+    "address": {
+      "street": "117 W Main St Suite 207",
+      "city": "Lancaster",
+      "county": "Fairfield",
+      "state": "OH",
+      "zip": "43130"
+    },
+    "evidence_level": "third_party_directory_only",
+    "tier": "unconfirmed",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Researcher seed row counted this as Tier A on a directory page alone. Downgraded: third-party directory only (terms unchecked), no own site found. Not published, not counted. Legal name on directory: Focus Realty and Management, LLC (unconfirmed).",
+    "source_id": "src_managemyproperty",
+    "source_url": "https://www.managemyproperty.com/companies/focus-realty-and-management-7826",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_013",
+    "slug": "westerville-realty",
+    "name": "Westerville Realty",
+    "legal_name": null,
+    "website": null,
+    "phone": null,
+    "address": {
+      "street": "168 Dorchester Sq",
+      "city": "Westerville",
+      "county": null,
+      "state": "OH",
+      "zip": "43081"
+    },
+    "evidence_level": "third_party_directory_only",
+    "tier": "unconfirmed",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Researcher seed row counted this as Tier A on a directory page alone. Downgraded: third-party directory only (terms unchecked), no own site found. Not published, not counted. No own site found by search (verifier).",
+    "source_id": "src_simplifyem",
+    "source_url": "https://www.simplifyem.com/property-management-companies/company/westerville-realty-westerville-ohio",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_014",
+    "slug": "northpoint-asset-management",
+    "name": "NorthPoint Asset Management",
+    "legal_name": "Northpoint AM Intermediate, Inc.",
+    "website": "https://northpointam.com",
+    "phone": null,
+    "address": {
+      "street": null,
+      "city": "Austin",
+      "county": null,
+      "state": "TX",
+      "zip": null
+    },
+    "evidence_level": "own_site_confirmed",
+    "tier": "B",
+    "license": null,
+    "services": [],
+    "property_types_served": [
+      {
+        "property_type_id": "pt_single_family",
+        "source_id": "src_site_northpointam",
+        "source_url": "https://northpointam.com/property-management/columbusoh/columbus/services/property-management",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      },
+      {
+        "property_type_id": "pt_multifamily",
+        "source_id": "src_site_northpointam",
+        "source_url": "https://northpointam.com/property-management/columbusoh/columbus/services/property-management",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      }
+    ],
+    "internal_notes": "Tier B: the only office address shown is Austin, TX (address recorded as that office, not a Columbus office). Fees are on a network-wide /pricing page (25+ markets), not Columbus-specific. Seed also lists Powell, Hilliard, Groveport, Newark, Lancaster, Canal Winchester and Grove City service pages seen only in search results; not recorded. Small multifamily here means typically 85 units or fewer, mapped to the unsized multifamily type.",
+    "source_id": "src_site_northpointam",
+    "source_url": "https://northpointam.com/property-management/columbusoh/columbus/services/property-management",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_015",
+    "slug": "real-solutions-rentals",
+    "name": "Real Solutions Rentals",
+    "legal_name": null,
+    "website": "https://realsolutionsrentals.com",
+    "phone": null,
+    "address": null,
+    "evidence_level": "own_site_confirmed",
+    "tier": "B",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Sister: ERA Real Solutions Realty. Ohio and Florida. No license statement or fees shown.",
+    "source_id": "src_site_realsolutionsrentals",
+    "source_url": "https://realsolutionsrentals.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_016",
+    "slug": "intempus-property-management",
+    "name": "Intempus Property Management",
+    "legal_name": "Intempus Parent Company, Inc.",
+    "website": "https://intempuspropertymanagement.com",
+    "phone": null,
+    "address": null,
+    "evidence_level": "own_site_confirmed",
+    "tier": "B",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Formerly FYVE (the fyve.com Columbus page redirects here). Ohio among 10 states; no Columbus office or area confirmed. Says flat monthly fee, no amount.",
+    "source_id": "src_site_intempus",
+    "source_url": "https://intempuspropertymanagement.com/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_017",
+    "slug": "pmi-columbus",
+    "name": "PMI Columbus",
+    "legal_name": null,
+    "website": "https://www.propertymanagementinc.com/pmi-columbus/",
+    "phone": null,
+    "address": null,
+    "evidence_level": "own_site_confirmed",
+    "tier": "B",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Also known as PMI Crossroads. Franchise; office city and legal name not stated; no fees shown. Circleville, London and Marysville in the area list are outside Phase 1 and not recorded.",
+    "source_id": "src_site_pmi_columbus",
+    "source_url": "https://www.propertymanagementinc.com/pmi-columbus/residential/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_018",
+    "slug": "towne-properties",
+    "name": "Towne Properties",
+    "legal_name": null,
+    "website": "https://www.towneproperties.com",
+    "phone": null,
+    "address": {
+      "street": null,
+      "city": "Cincinnati",
+      "county": null,
+      "state": "OH",
+      "zip": null
+    },
+    "evidence_level": "unverified_lead",
+    "tier": "unconfirmed",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Lead only. HQ Cincinnati; Columbus operations not confirmed on its own site. Not published, not counted.",
+    "source_id": "src_lead_unverified",
+    "source_url": null,
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_019",
+    "slug": "swiss-property-management-group",
+    "name": "Swiss Property Management Group",
+    "legal_name": null,
+    "website": "https://www.swisspmg.com",
+    "phone": null,
+    "address": null,
+    "evidence_level": "own_site_confirmed",
+    "tier": "B",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Seed row was a lead (search result only). Upgraded to own_site_confirmed because its own pricing page was read and verified. Service-area heading says \"Apartments & Houses in OH\"; Columbus service and local office are NOT confirmed, so no service area is recorded.",
+    "source_id": "src_site_swisspmg",
+    "source_url": "https://www.swisspmg.com/pricing",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_020",
+    "slug": "10x-property-management",
+    "name": "10X Property Management",
+    "legal_name": null,
+    "website": "https://www.10xpropertymanagers.com",
+    "phone": null,
+    "address": null,
+    "evidence_level": "own_site_confirmed",
+    "tier": "B",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Seed row was a lead (propertymanagement.com listing titled Columbus). Upgraded to own_site_confirmed because its own pricing page was read and verified. Columbus service and local office NOT confirmed on the own site; no service area recorded.",
+    "source_id": "src_site_10xpropertymanagers",
+    "source_url": "https://www.10xpropertymanagers.com/pricing",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_021",
+    "slug": "fairfield-homes",
+    "name": "Fairfield Homes",
+    "legal_name": null,
+    "website": "https://fairfieldhomesohio.com",
+    "phone": null,
+    "address": null,
+    "evidence_level": "unverified_lead",
+    "tier": "unconfirmed",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Lead only. Affordable housing management; location not verified; page not fetched. Not published, not counted.",
+    "source_id": "src_lead_unverified",
+    "source_url": null,
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_022",
+    "slug": "mynd",
+    "name": "Mynd",
+    "legal_name": null,
+    "website": "https://mynd.co",
+    "phone": null,
+    "address": null,
+    "evidence_level": "own_site_confirmed",
+    "tier": "B",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Added from fee-data.csv (no seed row). No Columbus office address confirmed.",
+    "source_id": "src_site_mynd",
+    "source_url": "https://mynd.co/locations/ohio/columbus-property-management",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_023",
+    "slug": "homeriver-group",
+    "name": "HomeRiver Group",
+    "legal_name": null,
+    "website": "https://purehomeriver.com",
+    "phone": null,
+    "address": null,
+    "evidence_level": "own_site_confirmed",
+    "tier": "B",
+    "license": null,
+    "services": [],
+    "property_types_served": [
+      {
+        "property_type_id": "pt_single_family",
+        "source_id": "src_site_purehomeriver",
+        "source_url": "https://purehomeriver.com/locations/ohio/columbus/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      },
+      {
+        "property_type_id": "pt_condo_townhome",
+        "source_id": "src_site_purehomeriver",
+        "source_url": "https://purehomeriver.com/locations/ohio/columbus/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      },
+      {
+        "property_type_id": "pt_multifamily",
+        "source_id": "src_site_purehomeriver",
+        "source_url": "https://purehomeriver.com/locations/ohio/columbus/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      }
+    ],
+    "internal_notes": "Added from fee-data.csv (no seed row). homeriver.com redirects to purehomeriver.com. A roundup claims Ohio offices do not publish fees; own page wins. No Columbus office address confirmed.",
+    "source_id": "src_site_purehomeriver",
+    "source_url": "https://purehomeriver.com/locations/ohio/columbus/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_024",
+    "slug": "roost-real-estate-co",
+    "name": "ROOST Real Estate Co.",
+    "legal_name": null,
+    "website": "https://roostrealestateco.com",
+    "phone": null,
+    "address": null,
+    "evidence_level": "own_site_confirmed",
+    "tier": "B",
+    "license": null,
+    "services": [],
+    "property_types_served": [
+      {
+        "property_type_id": "pt_single_family",
+        "source_id": "src_site_roostrealestateco",
+        "source_url": "https://roostrealestateco.com/monthly-property-management-fees-flat-vs-percentage-based/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      },
+      {
+        "property_type_id": "pt_multifamily",
+        "source_id": "src_site_roostrealestateco",
+        "source_url": "https://roostrealestateco.com/monthly-property-management-fees-flat-vs-percentage-based/",
+        "captured_date": "2026-11-11",
+        "last_verified_date": "2026-11-11"
+      }
+    ],
+    "internal_notes": "Added from fee-data.csv (no seed row). Also operates roostpropertymanagementohio.com (flat-rate only, amounts on a separate page). No office address confirmed.",
+    "source_id": "src_site_roostrealestateco",
+    "source_url": "https://roostrealestateco.com/monthly-property-management-fees-flat-vs-percentage-based/",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
+  },
+  {
+    "id": "co_025",
+    "slug": "reafco-ohio-elite-management",
+    "name": "Reafco Ohio Elite Management",
+    "legal_name": null,
+    "website": "https://sites.google.com/view/ohio-elite-management",
+    "phone": null,
+    "address": null,
+    "evidence_level": "own_site_confirmed",
+    "tier": "B",
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "internal_notes": "Added from fee-data.csv (no seed row). Google Sites page; location and Columbus service not confirmed, so no service area recorded.",
+    "source_id": "src_site_reafco_ohio_elite",
+    "source_url": "https://sites.google.com/view/ohio-elite-management/fees/monthly-management-fee",
+    "captured_date": "2026-11-11",
+    "last_verified_date": "2026-11-11"
   }
 ]

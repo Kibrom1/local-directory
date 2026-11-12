@@ -2,22 +2,24 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://directory.local/schemas/sources.schema.json",
   "title": "sources.json",
+  "description": "Source registry. Every fact cites a source_id; the registry records the robots.txt and terms-of-service decision. Sources of kind company_submission and official_reference are read or received by a person, not fetched by the scraper, so robots and ToS decisions may be not_applicable.",
   "type": "array",
   "items": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "name", "url", "access_method", "robots_txt_checked_date", "robots_decision", "tos_checked_date", "tos_decision", "use_allowed"],
+    "required": ["id", "name", "url", "source_kind", "access_method", "robots_txt_checked_date", "robots_decision", "tos_checked_date", "tos_decision", "use_allowed"],
     "properties": {
       "id": { "$ref": "common.schema.json#/definitions/sourceId" },
       "name": { "type": "string", "minLength": 1 },
-      "url": { "type": "string", "format": "uri" },
-      "access_method": { "enum": ["api", "bulk_download", "scrape", "manual_public_lookup"] },
+      "url": { "anyOf": [{ "$ref": "common.schema.json#/definitions/url" }, { "type": "null" }], "description": "Null only for a source whose URL was not located and that has use_allowed false." },
+      "source_kind": { "enum": ["company_site", "official_record", "official_reference", "company_submission", "third_party_directory", "lead_unverified", "other"], "description": "company_site: a company's own public site. official_record: government record or file. official_reference: official reference page (statute, agency guidance). company_submission: fact supplied by the company itself (rendered 'Provided by the company, DATE'). third_party_directory: aggregator or directory (never a value source). lead_unverified: search result or list, not a data source." },
+      "access_method": { "enum": ["api", "bulk_download", "scrape", "manual_public_lookup", "company_submission", "official_reference"] },
       "robots_txt_checked_date": { "anyOf": [{ "$ref": "common.schema.json#/definitions/date" }, { "type": "null" }] },
-      "robots_decision": { "enum": ["allowed", "disallowed", "no_robots_txt", "not_checked"] },
+      "robots_decision": { "enum": ["allowed", "disallowed", "no_robots_txt", "not_checked", "not_applicable"] },
       "tos_checked_date": { "anyOf": [{ "$ref": "common.schema.json#/definitions/date" }, { "type": "null" }] },
-      "tos_decision": { "enum": ["allowed", "prohibits_automated_access", "silent", "not_checked"] },
-      "use_allowed": { "type": "boolean", "description": "False means no record may cite this source." },
-      "decision_notes": { "type": ["string", "null"], "maxLength": 500 },
+      "tos_decision": { "enum": ["allowed", "prohibits_automated_access", "silent", "not_checked", "not_applicable"] },
+      "use_allowed": { "type": "boolean", "description": "False means no published fact may cite this source." },
+      "decision_notes": { "type": ["string", "null"], "maxLength": 1000 },
       "placeholder": { "type": "boolean" }
     }
   }

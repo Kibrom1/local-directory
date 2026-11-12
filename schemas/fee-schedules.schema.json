@@ -2,36 +2,20 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://directory.local/schemas/fee-schedules.schema.json",
   "title": "fee-schedules.json",
-  "description": "One row per company and property type. Every fee value is nullable; null means unknown or not published, never zero.",
+  "description": "One row per company and property type (property_type null = the company does not tie the fee to a property type). Every fee value is nullable; null means unknown or not published, never zero. Fee values may be a single number, a min/max range or plans (see common.schema.json feeValue).",
   "type": "array",
   "items": {
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "company_id", "property_type", "management_pct", "flat_fee", "leasing_fee", "renewal_fee", "minimums", "source_id", "captured_date", "last_verified_date"],
-    "definitions": {
-      "feeAmount": {
-        "anyOf": [
-          { "type": "null" },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["type", "value"],
-            "properties": {
-              "type": { "enum": ["flat_usd", "pct_of_monthly_rent"] },
-              "value": { "type": "number", "minimum": 0 }
-            }
-          }
-        ]
-      }
-    },
+    "required": ["id", "company_id", "property_type", "management_pct", "flat_fee", "leasing_fee", "renewal_fee", "minimums", "source_id", "source_urls", "verification_status", "captured_date", "last_verified_date"],
     "properties": {
       "id": { "type": "string", "pattern": "^fee_[a-z0-9_]+$" },
       "company_id": { "$ref": "common.schema.json#/definitions/companyId" },
-      "property_type": { "$ref": "common.schema.json#/definitions/propertyTypeId" },
-      "management_pct": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "description": "Percent of collected monthly rent." },
-      "flat_fee": { "type": ["number", "null"], "minimum": 0, "description": "USD per unit per month." },
-      "leasing_fee": { "$ref": "#/items/definitions/feeAmount" },
-      "renewal_fee": { "$ref": "#/items/definitions/feeAmount" },
+      "property_type": { "anyOf": [{ "$ref": "common.schema.json#/definitions/propertyTypeId" }, { "type": "null" }] },
+      "management_pct": { "$ref": "common.schema.json#/definitions/feeValue", "description": "Management fee, normally pct_of_rent. Single number, range or plans." },
+      "flat_fee": { "$ref": "common.schema.json#/definitions/feeValue", "description": "Flat management fee, normally flat_usd per month or per unit per month." },
+      "leasing_fee": { "$ref": "common.schema.json#/definitions/feeValue" },
+      "renewal_fee": { "$ref": "common.schema.json#/definitions/feeValue" },
       "minimums": {
         "anyOf": [
           { "type": "null" },
@@ -46,7 +30,24 @@
           }
         ]
       },
+      "other_fees": {
+        "description": "Additional published fees that do not fit the four fee fields (onboarding, standalone prices). Only fees the source states.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "amount"],
+          "properties": {
+            "kind": { "enum": ["onboarding", "standalone_management", "standalone_leasing", "standalone_renewal", "other"] },
+            "label": { "type": ["string", "null"], "maxLength": 80 },
+            "amount": { "$ref": "common.schema.json#/definitions/feeValueObject" }
+          }
+        }
+      },
+      "verification_status": { "enum": ["verified_own_site", "company_submitted", "unverified"], "description": "verified_own_site: value re-checked against the company's own public page. company_submitted: supplied by the company, rendered as 'Provided by the company'." },
+      "notes": { "type": ["string", "null"], "maxLength": 400, "description": "Caveats such as unconfirmed plan labels or a network-wide pricing page." },
       "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
+      "source_urls": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/definitions/url" } },
       "captured_date": { "$ref": "common.schema.json#/definitions/date" },
       "last_verified_date": { "$ref": "common.schema.json#/definitions/date" },
       "placeholder": { "type": "boolean" }

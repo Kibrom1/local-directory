@@ -13,7 +13,8 @@
       "name": { "type": "string", "minLength": 1 },
       "slug": { "$ref": "common.schema.json#/definitions/slug" },
       "state": { "type": "string", "pattern": "^[A-Z]{2}$" },
-      "parent_id": { "anyOf": [{ "$ref": "common.schema.json#/definitions/geographyId" }, { "type": "null" }] }
+      "parent_id": { "anyOf": [{ "$ref": "common.schema.json#/definitions/geographyId" }, { "type": "null" }] },
+      "also_in_county_ids": { "type": "array", "items": { "$ref": "common.schema.json#/definitions/geographyId" }, "description": "Other Phase 1 counties the city spans (parent_id is the principal county)." }
     }
   }
 }

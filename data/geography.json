@@ -1,8 +1,219 @@
 [
-  { "id": "geo_columbus_metro", "type": "metro", "name": "Columbus Metro", "slug": "columbus-metro", "state": "OH", "parent_id": null },
-  { "id": "geo_franklin_county", "type": "county", "name": "Franklin County", "slug": "franklin-county", "state": "OH", "parent_id": "geo_columbus_metro" },
-  { "id": "geo_delaware_county", "type": "county", "name": "Delaware County", "slug": "delaware-county", "state": "OH", "parent_id": "geo_columbus_metro" },
-  { "id": "geo_columbus", "type": "city", "name": "Columbus", "slug": "columbus", "state": "OH", "parent_id": "geo_franklin_county" },
-  { "id": "geo_dublin", "type": "city", "name": "Dublin", "slug": "dublin", "state": "OH", "parent_id": "geo_franklin_county" },
-  { "id": "geo_powell", "type": "city", "name": "Powell", "slug": "powell", "state": "OH", "parent_id": "geo_delaware_county" }
+  {
+    "id": "geo_columbus_metro",
+    "type": "metro",
+    "name": "Columbus Metro",
+    "slug": "columbus-metro",
+    "state": "OH",
+    "parent_id": null
+  },
+  {
+    "id": "geo_franklin_county",
+    "type": "county",
+    "name": "Franklin County",
+    "slug": "franklin-county",
+    "state": "OH",
+    "parent_id": "geo_columbus_metro"
+  },
+  {
+    "id": "geo_delaware_county",
+    "type": "county",
+    "name": "Delaware County",
+    "slug": "delaware-county",
+    "state": "OH",
+    "parent_id": "geo_columbus_metro"
+  },
+  {
+    "id": "geo_fairfield_county",
+    "type": "county",
+    "name": "Fairfield County",
+    "slug": "fairfield-county",
+    "state": "OH",
+    "parent_id": "geo_columbus_metro"
+  },
+  {
+    "id": "geo_licking_county",
+    "type": "county",
+    "name": "Licking County",
+    "slug": "licking-county",
+    "state": "OH",
+    "parent_id": "geo_columbus_metro"
+  },
+  {
+    "id": "geo_columbus",
+    "type": "city",
+    "name": "Columbus",
+    "slug": "columbus",
+    "state": "OH",
+    "parent_id": "geo_franklin_county"
+  },
+  {
+    "id": "geo_dublin",
+    "type": "city",
+    "name": "Dublin",
+    "slug": "dublin",
+    "state": "OH",
+    "parent_id": "geo_franklin_county",
+    "also_in_county_ids": [
+      "geo_delaware_county"
+    ]
+  },
+  {
+    "id": "geo_hilliard",
+    "type": "city",
+    "name": "Hilliard",
+    "slug": "hilliard",
+    "state": "OH",
+    "parent_id": "geo_franklin_county"
+  },
+  {
+    "id": "geo_gahanna",
+    "type": "city",
+    "name": "Gahanna",
+    "slug": "gahanna",
+    "state": "OH",
+    "parent_id": "geo_franklin_county"
+  },
+  {
+    "id": "geo_grove_city",
+    "type": "city",
+    "name": "Grove City",
+    "slug": "grove-city",
+    "state": "OH",
+    "parent_id": "geo_franklin_county"
+  },
+  {
+    "id": "geo_groveport",
+    "type": "city",
+    "name": "Groveport",
+    "slug": "groveport",
+    "state": "OH",
+    "parent_id": "geo_franklin_county"
+  },
+  {
+    "id": "geo_canal_winchester",
+    "type": "city",
+    "name": "Canal Winchester",
+    "slug": "canal-winchester",
+    "state": "OH",
+    "parent_id": "geo_franklin_county",
+    "also_in_county_ids": [
+      "geo_fairfield_county"
+    ]
+  },
+  {
+    "id": "geo_bexley",
+    "type": "city",
+    "name": "Bexley",
+    "slug": "bexley",
+    "state": "OH",
+    "parent_id": "geo_franklin_county"
+  },
+  {
+    "id": "geo_grandview_heights",
+    "type": "city",
+    "name": "Grandview Heights",
+    "slug": "grandview-heights",
+    "state": "OH",
+    "parent_id": "geo_franklin_county"
+  },
+  {
+    "id": "geo_new_albany",
+    "type": "city",
+    "name": "New Albany",
+    "slug": "new-albany",
+    "state": "OH",
+    "parent_id": "geo_franklin_county"
+  },
+  {
+    "id": "geo_westerville",
+    "type": "city",
+    "name": "Westerville",
+    "slug": "westerville",
+    "state": "OH",
+    "parent_id": "geo_franklin_county",
+    "also_in_county_ids": [
+      "geo_delaware_county"
+    ]
+  },
+  {
+    "id": "geo_upper_arlington",
+    "type": "city",
+    "name": "Upper Arlington",
+    "slug": "upper-arlington",
+    "state": "OH",
+    "parent_id": "geo_franklin_county"
+  },
+  {
+    "id": "geo_worthington",
+    "type": "city",
+    "name": "Worthington",
+    "slug": "worthington",
+    "state": "OH",
+    "parent_id": "geo_franklin_county"
+  },
+  {
+    "id": "geo_reynoldsburg",
+    "type": "city",
+    "name": "Reynoldsburg",
+    "slug": "reynoldsburg",
+    "state": "OH",
+    "parent_id": "geo_franklin_county"
+  },
+  {
+    "id": "geo_delaware",
+    "type": "city",
+    "name": "Delaware",
+    "slug": "delaware",
+    "state": "OH",
+    "parent_id": "geo_delaware_county"
+  },
+  {
+    "id": "geo_powell",
+    "type": "city",
+    "name": "Powell",
+    "slug": "powell",
+    "state": "OH",
+    "parent_id": "geo_delaware_county"
+  },
+  {
+    "id": "geo_lancaster",
+    "type": "city",
+    "name": "Lancaster",
+    "slug": "lancaster",
+    "state": "OH",
+    "parent_id": "geo_fairfield_county"
+  },
+  {
+    "id": "geo_pickerington",
+    "type": "city",
+    "name": "Pickerington",
+    "slug": "pickerington",
+    "state": "OH",
+    "parent_id": "geo_fairfield_county"
+  },
+  {
+    "id": "geo_newark",
+    "type": "city",
+    "name": "Newark",
+    "slug": "newark",
+    "state": "OH",
+    "parent_id": "geo_licking_county"
+  },
+  {
+    "id": "geo_heath",
+    "type": "city",
+    "name": "Heath",
+    "slug": "heath",
+    "state": "OH",
+    "parent_id": "geo_licking_county"
+  },
+  {
+    "id": "geo_pataskala",
+    "type": "city",
+    "name": "Pataskala",
+    "slug": "pataskala",
+    "state": "OH",
+    "parent_id": "geo_licking_county"
+  }
 ]
