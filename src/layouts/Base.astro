@@ -1,6 +1,8 @@
 ---
-interface Props { title: string; description?: string; noindex?: boolean; jsonLd?: object; }
-const { title, description = '', noindex = false, jsonLd } = Astro.props;
+interface Props { title: string; description?: string; noindex?: boolean; robots?: string; jsonLd?: object; }
+// robots overrides the default; pass 'noindex, follow' for listed pages, 'noindex, nofollow' for placeholders.
+const { title, description = '', noindex = false, robots, jsonLd } = Astro.props;
+const robotsValue = robots || (noindex ? 'noindex, nofollow' : '');
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const gaId = import.meta.env.PUBLIC_GA_ID;
 ---
@@ -12,7 +14,7 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {robotsValue && robotsValue !== 'index, follow' && <meta name="robots" content={robotsValue} />}
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     {gaId && <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>}
     {gaId && <script is:inline define:vars={{ gaId }}>
@@ -35,7 +37,7 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
     <header>
       <nav><a href="/">Columbus PM Directory</a><a href="/about/">About</a><a href="/privacy/">Privacy</a></nav>
     </header>
-    <main data-pagefind-body>
+    <main {...(robotsValue.startsWith('noindex') ? {} : { 'data-pagefind-body': '' })}>
       <slot />
     </main>
     <footer>

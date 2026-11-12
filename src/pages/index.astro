@@ -10,8 +10,20 @@ const s = getSite();
   <div id="search" data-pagefind-ignore></div>
   <h2>Browse by city</h2>
   <ul>
-    {s.cityPages.map((p) => <li><a href={p.path}>{p.geo.name}, {p.geo.state}</a> ({p.companies.length} companies)</li>)}
+    {s.cityPages.filter((p) => p.tier === 'indexable').map((p) => <li><a href={p.path}>{p.geo.name}, {p.geo.state}</a> ({p.companies.length} companies)</li>)}
   </ul>
+  {s.cityPages.some((p) => p.tier === 'listed') && (
+    <>
+      <h2>Cities with limited published data</h2>
+      <ul>{s.cityPages.filter((p) => p.tier === 'listed').map((p) => <li><a href={p.path}>{p.geo.name}, {p.geo.state}</a></li>)}</ul>
+    </>
+  )}
+  {s.companyPages.some((p) => p.tier === 'listed') && (
+    <>
+      <h2>Companies with limited published data</h2>
+      <ul>{s.companyPages.filter((p) => p.tier === 'listed').map((p) => <li><a href={p.path}>{p.company.name}</a></li>)}</ul>
+    </>
+  )}
   <script is:inline data-pagefind-ignore>
     // Pagefind UI exists only after `npm run build`; skip silently in dev.
     fetch('/pagefind/pagefind-ui.js', { method: 'HEAD' }).then((r) => {

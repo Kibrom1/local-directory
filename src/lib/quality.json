@@ -1,8 +1,24 @@
 {
   "company": {
     "minFactGroups": 3,
-    "requireOneOf": ["fees", "license", "areas"],
-    "note": "Fact groups: license, fees (at least one non-null fee value), areas, services, property_types, contact (website/phone/address)."
+    "indexRequireOneOf": ["fees", "license"],
+    "indexRequireEvidence": ["own_site_confirmed"],
+    "listed": { "minFactGroups": 2, "requireEvidence": ["own_site_confirmed"] },
+    "note": "Fact groups: license (self-stated or verified), fees (verified, fresh), areas, services, property_types, contact. A profile is indexable only with 3+ groups AND verified fees or a verified license (status active, checked against the state record). Areas, services and contact alone never make a page indexable. Own-site-confirmed companies below that bar but with 2+ groups are listed as noindex,follow. Third-party-directory-only and unverified-lead companies are never generated."
   },
-  "city": { "minPublishableCompanies": 2 }
+  "verifiedFeeStatuses": ["verified_own_site", "company_submitted"],
+  "verifiedLicenseStatuses": ["active"],
+  "city": { "indexMinCompanies": 3, "indexMinCompaniesWithFees": 1, "listedMinCompanies": 2 },
+  "propertyType": { "indexMinCompanies": 3 },
+  "feeComparison": { "minCompanies": 5 },
+  "feeGuide": { "minCompaniesPerFeeType": 5 },
+  "freshness": { "displayFlagDays": 180, "dropDays": 365, "reverifyQueueDays": 150, "feeRowWarnDays": 120 },
+  "stages": [
+    { "stage": 1, "minIndexable": 30, "maxIndexable": 45, "label": "Launch" },
+    { "stage": 2, "minIndexable": null, "maxIndexable": 60, "label": "Stabilize" },
+    { "stage": 3, "minIndexable": 60, "maxIndexable": 100, "label": "Expansion" },
+    { "stage": 4, "minIndexable": 100, "maxIndexable": null, "label": "Only with evidence of unique data" }
+  ],
+  "currentStage": 1,
+  "thresholds": { "tierACompanies": 40 }
 }

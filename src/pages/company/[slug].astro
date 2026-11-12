@@ -1,13 +1,20 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Unknown from '../../components/Unknown.astro';
-import { getSite, fmtAmount } from '../../lib/site.mjs';
+import { getSite } from '../../lib/site.mjs';
+import { formatFee, feeText, provenanceLabel } from '../../lib/format.mjs';
 export function getStaticPaths() {
   return getSite().companyPages.map((p) => ({ params: { slug: p.company.slug }, props: { page: p } }));
 }
 const s = getSite();
-const { company: c, fees, areas } = Astro.props.page;
+const { company: c, fees, areas, robots, tier } = Astro.props.page;
 const src = (id) => s.sourceById.get(id);
+const prov = (o) => provenanceLabel(src(o.source_id), o.captured_date, o.last_verified_date, s.today, s.quality.freshness.displayFlagDays);
+const fresh = (o) => s.fresh(o.last_verified_date);
+const FEE_ROWS = [['Management fee', 'management_pct'], ['Flat fee', 'flat_fee'], ['Leasing fee', 'leasing_fee'], ['Renewal fee', 'renewal_fee']];
+// Fees older than the drop threshold are not shown until re-verified.
+const shownFees = fees.filter(fresh);
+const addressText = c.address && (c.address.street || c.address.city) ? [c.address.street, c.address.city, c.address.state, c.address.zip].filter(Boolean).join(', ') : null;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -16,7 +23,7 @@ const jsonLd = {
   name: c.name,
   url: c.website || undefined,
   telephone: c.phone || undefined,
-  address: c.address && (c.address.street || c.address.zip || c.address.city)
+  address: c.address && (c.address.street || c.address.zip)
     ? {
         '@type': 'PostalAddress',
         streetAddress: c.address.street || undefined,
@@ -29,38 +36,46 @@ const jsonLd = {
   areaServed: areas.map((g) => ({ '@type': 'City', name: g.name })),
 };
 ---
-<Base title={`${c.name}: fees, services and service areas`} description={`Sourced fee, license and service-area facts for ${c.name}.`} noindex={!!c.placeholder} jsonLd={jsonLd}>
+<Base title={`${c.name}: fees, services and service areas`} description={`Sourced fee, license and service-area facts for ${c.name}.`} robots={robots} jsonLd={tier === 'indexable' ? jsonLd : undefined}>
   <h1>{c.name}</h1>
-  {c.placeholder && <p class="banner">Placeholder record. Not real data.</p>}
+  {tier === 'placeholder' && <p class="banner">Placeholder record. Not real data.</p>}
   <h2>Contact</h2>
   <ul>
     <li>Website: {c.website ? <a href={c.website} rel="nofollow noopener">{c.website}</a> : <Unknown />}</li>
     <li>Phone: {c.phone ?? <Unknown />}</li>
+    <li>Address: {addressText ?? <Unknown />}</li>
   </ul>
-  <p><small>Source: {src(c.source_id).name}, captured {c.captured_date}, last verified {c.last_verified_date}</small></p>
+  <p><small>{prov(c)}</small></p>
 
   <h2>License</h2>
-  {c.license
-    ? <p>{c.license.status}{c.license.number ? `, #${c.license.number}` : ''}{c.license.issuing_body ? ` (${c.license.issuing_body})` : ''}<br /><small>Source: {src(c.license.source_id).name}, captured {c.license.captured_date}, last verified {c.license.last_verified_date}</small></p>
-    : <p><Unknown /></p>}
+  {c.license && c.license.status !== 'unverified'
+    ? <p>{c.license.status === 'self_stated'
+        ? <>Stated by the company, not checked against the state record: &ldquo;{c.license.claim_text}&rdquo;{c.license.number ? ` (number given: ${c.license.number})` : ''}</>
+        : <>{c.license.status}{c.license.number ? `, #${c.license.number}` : ''}{c.license.issuing_body ? ` (${c.license.issuing_body})` : ''}</>}<br /><small>{prov(c.license)}. <a href={c.license.source_url} rel="nofollow noopener">Source page</a></small></p>
+    : <p><Unknown /> <small>(license not verified)</small></p>}
 
   <h2>Fees</h2>
-  {fees.length === 0 ? <p><Unknown /></p> : fees.map((f) => (
-    <section>
-      <h3>{s.ptById.get(f.property_type).name}</h3>
-      <ul>
-        <li>Management: {f.management_pct !== null ? `${f.management_pct}% of rent` : <Unknown />}</li>
-        <li>Flat fee: {f.flat_fee !== null ? `$${f.flat_fee} per unit per month` : <Unknown />}</li>
-        <li>Leasing fee: {fmtAmount(f.leasing_fee) ?? <Unknown />}</li>
-        <li>Renewal fee: {fmtAmount(f.renewal_fee) ?? <Unknown />}</li>
-        <li>Minimums: {f.minimums && f.minimums.monthly_usd !== null ? `$${f.minimums.monthly_usd} per month` : <Unknown />}{f.minimums && f.minimums.other ? `; ${f.minimums.other}` : ''}</li>
-      </ul>
-      <p><small>Source: {src(f.source_id).name}, captured {f.captured_date}, last verified {f.last_verified_date}</small></p>
-    </section>
-  ))}
+  {shownFees.length === 0 ? <p><Unknown /></p> : shownFees.map((f) => {
+    const other = (f.other_fees || []);
+    return (
+      <section>
+        <h3>{f.property_type ? s.ptById.get(f.property_type).name : 'All property types (no type stated)'}</h3>
+        <ul>
+          {FEE_ROWS.map(([label, k]) => { const x = formatFee(f[k]); return <li>{label}: {x ? <>{x.text}{x.lines.length > 0 && <ul>{x.lines.map((l) => <li>{l}</li>)}</ul>}{x.notes && <> <small>({x.notes})</small></>}</> : <Unknown />}</li>; })}
+          <li>Minimums: {f.minimums && (f.minimums.monthly_usd !== null || f.minimums.other) ? [f.minimums.monthly_usd !== null ? `$${f.minimums.monthly_usd} per month` : null, f.minimums.other].filter(Boolean).join('; ') : <Unknown />}</li>
+          {other.map((o) => <li>{o.label || o.kind}: {feeText(o.amount) ?? <Unknown />}</li>)}
+        </ul>
+        {f.notes && <p><small>Note: {f.notes}</small></p>}
+        <p><small>{prov(f)}. {f.source_urls.map((u, i) => <>{i > 0 && ' '}<a href={u} rel="nofollow noopener">Source page{f.source_urls.length > 1 ? ` ${i + 1}` : ''}</a></>)}</small></p>
+      </section>
+    );
+  })}
 
   <h2>Service areas</h2>
   {areas.length ? <ul>{areas.map((g) => <li>{g.name}, {g.state}</li>)}</ul> : <p><Unknown /></p>}
+
+  <h2>Property types</h2>
+  {c.property_types_served.length ? <ul>{c.property_types_served.map((x) => <li>{s.ptById.get(x.property_type_id).name}</li>)}</ul> : <p><Unknown /></p>}
 
   <h2>Services</h2>
   {c.services.length ? <ul>{c.services.map((x) => <li>{x.service}</li>)}</ul> : <p><Unknown /></p>}

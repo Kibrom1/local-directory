@@ -7,7 +7,12 @@
     "validate": "node scripts/validate.mjs",
     "dev": "astro dev",
     "build": "npm run validate && astro build && pagefind --site dist",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "validate:strict": "node scripts/validate.mjs --strict",
+    "freshness": "node scripts/freshness.mjs",
+    "report": "node scripts/report.mjs",
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "scraper:run": "node scripts/scraper/run.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
