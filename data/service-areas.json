@@ -1,0 +1,6 @@
+[
+  { "id": "sa_placeholder_a_columbus", "company_id": "co_placeholder_a", "geography_id": "geo_columbus", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01", "placeholder": true },
+  { "id": "sa_placeholder_a_dublin", "company_id": "co_placeholder_a", "geography_id": "geo_dublin", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01", "placeholder": true },
+  { "id": "sa_placeholder_b_columbus", "company_id": "co_placeholder_b", "geography_id": "geo_columbus", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01", "placeholder": true },
+  { "id": "sa_placeholder_c_columbus", "company_id": "co_placeholder_c", "geography_id": "geo_columbus", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01", "placeholder": true }
+]

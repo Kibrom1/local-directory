@@ -1,0 +1,55 @@
+[
+  {
+    "id": "co_placeholder_a",
+    "slug": "placeholder-company-a",
+    "name": "Placeholder Company A (fake)",
+    "website": "https://example.com/a",
+    "phone": null,
+    "address": { "street": null, "city": "Columbus", "state": "OH", "zip": null },
+    "license": { "status": "active", "number": "PLACEHOLDER-0001", "issuing_body": "Placeholder Board", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01" },
+    "services": [
+      { "service": "full-service-management", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01" }
+    ],
+    "property_types_served": [
+      { "property_type_id": "pt_single_family", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01" }
+    ],
+    "source_id": "src_placeholder_001",
+    "captured_date": "2026-11-01",
+    "last_verified_date": "2026-11-01",
+    "placeholder": true
+  },
+  {
+    "id": "co_placeholder_b",
+    "slug": "placeholder-company-b",
+    "name": "Placeholder Company B (fake)",
+    "website": "https://example.com/b",
+    "phone": null,
+    "address": null,
+    "license": null,
+    "services": [
+      { "service": "leasing-only", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01" }
+    ],
+    "property_types_served": [
+      { "property_type_id": "pt_small_multifamily", "source_id": "src_placeholder_001", "captured_date": "2026-11-01", "last_verified_date": "2026-11-01" }
+    ],
+    "source_id": "src_placeholder_001",
+    "captured_date": "2026-11-01",
+    "last_verified_date": "2026-11-01",
+    "placeholder": true
+  },
+  {
+    "id": "co_placeholder_c",
+    "slug": "placeholder-company-c",
+    "name": "Placeholder Company C (fake, thin record)",
+    "website": null,
+    "phone": null,
+    "address": null,
+    "license": null,
+    "services": [],
+    "property_types_served": [],
+    "source_id": "src_placeholder_001",
+    "captured_date": "2026-11-01",
+    "last_verified_date": "2026-11-01",
+    "placeholder": true
+  }
+]

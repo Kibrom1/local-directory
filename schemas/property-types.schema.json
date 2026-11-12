@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://directory.local/schemas/property-types.schema.json",
+  "title": "property-types.json",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "slug", "name"],
+    "properties": {
+      "id": { "$ref": "common.schema.json#/definitions/propertyTypeId" },
+      "slug": { "$ref": "common.schema.json#/definitions/slug" },
+      "name": { "type": "string", "minLength": 1 }
+    }
+  }
+}

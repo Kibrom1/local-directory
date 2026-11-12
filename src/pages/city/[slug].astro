@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import Unknown from '../../components/Unknown.astro';
+import { getSite, fmtAmount } from '../../lib/site.mjs';
+export function getStaticPaths() {
+  return getSite().cityPages.map((p) => ({ params: { slug: p.geo.slug }, props: { page: p } }));
+}
+const { page } = Astro.props;
+const { geo, companies } = page;
+const placeholder = companies.some((c) => c.company.placeholder);
+---
+<Base title={`Property management companies in ${geo.name}, ${geo.state}`} description={`${companies.length} property management companies serving ${geo.name}, with sourced fee data where published.`} noindex={placeholder}>
+  <h1>Property management in {geo.name}, {geo.state}</h1>
+  {placeholder && <p class="banner">Placeholder data only.</p>}
+  <table>
+    <thead><tr><th>Company</th><th>Management %</th><th>Flat fee</th><th>Leasing fee</th><th>License</th></tr></thead>
+    <tbody>
+      {companies.map(({ company, fees }) => {
+        const f = fees[0];
+        return (
+          <tr>
+            <td><a href={`/company/${company.slug}/`}>{company.name}</a></td>
+            <td>{f && f.management_pct !== null ? `${f.management_pct}%` : <Unknown />}</td>
+            <td>{f && f.flat_fee !== null ? `$${f.flat_fee}/mo` : <Unknown />}</td>
+            <td>{f && fmtAmount(f.leasing_fee) ? fmtAmount(f.leasing_fee) : <Unknown />}</td>
+            <td>{company.license ? company.license.status : <Unknown />}</td>
+          </tr>
+        );
+      })}
+    </tbody>
+  </table>
+</Base>

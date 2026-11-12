@@ -1,0 +1,45 @@
+---
+interface Props { title: string; description?: string; noindex?: boolean; jsonLd?: object; }
+const { title, description = '', noindex = false, jsonLd } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const gaId = import.meta.env.PUBLIC_GA_ID;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {gaId && <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>}
+    {gaId && <script is:inline define:vars={{ gaId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', gaId);
+    </script>}
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 0 auto; padding: 1rem; line-height: 1.5; color: #1a1a1a; }
+      nav a { margin-right: 1rem; }
+      table { border-collapse: collapse; width: 100%; }
+      th, td { border-bottom: 1px solid #ddd; padding: .4rem; text-align: left; }
+      .unknown { color: #767676; }
+      .banner { background: #fff3cd; padding: .5rem 1rem; border-radius: 4px; }
+      footer { margin-top: 3rem; font-size: .9rem; color: #555; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav><a href="/">Columbus PM Directory</a><a href="/about/">About</a><a href="/privacy/">Privacy</a></nav>
+    </header>
+    <main data-pagefind-body>
+      <slot />
+    </main>
+    <footer>
+      <p>Free directory. No paid placement. Facts come from public sources; unknown values are left blank. Spot an error or want a listing removed? See <a href="/about/#corrections">corrections</a>.</p>
+    </footer>
+  </body>
+</html>

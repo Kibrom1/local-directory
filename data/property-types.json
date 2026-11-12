@@ -1,0 +1,6 @@
+[
+  { "id": "pt_single_family", "slug": "single-family", "name": "Single-family" },
+  { "id": "pt_small_multifamily", "slug": "small-multifamily", "name": "Small multifamily (2-4 units)" },
+  { "id": "pt_hoa_community", "slug": "hoa-community", "name": "HOA / community" },
+  { "id": "pt_short_term_rental", "slug": "short-term-rental", "name": "Short-term rental" }
+]

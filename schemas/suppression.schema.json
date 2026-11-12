@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://directory.local/schemas/suppression.schema.json",
+  "title": "suppression.json",
+  "description": "Removal requests. A matching company (by id, website domain or normalized name) must not appear in any data file; validation fails if it does.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "company_id", "domain", "name", "reason", "requested_date"],
+    "properties": {
+      "id": { "type": "string", "pattern": "^sup_[a-z0-9_]+$" },
+      "company_id": { "anyOf": [{ "$ref": "common.schema.json#/definitions/companyId" }, { "type": "null" }] },
+      "domain": { "type": ["string", "null"], "description": "Bare domain, e.g. example.com" },
+      "name": { "type": ["string", "null"] },
+      "reason": { "enum": ["owner_request", "correction_unresolved", "source_prohibits", "other"] },
+      "requested_date": { "$ref": "common.schema.json#/definitions/date" }
+    }
+  }
+}

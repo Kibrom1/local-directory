@@ -1,0 +1,15 @@
+[
+  {
+    "id": "src_placeholder_001",
+    "name": "PLACEHOLDER source (not a real source)",
+    "url": "https://example.com/placeholder",
+    "access_method": "manual_public_lookup",
+    "robots_txt_checked_date": null,
+    "robots_decision": "not_checked",
+    "tos_checked_date": null,
+    "tos_decision": "not_checked",
+    "use_allowed": true,
+    "decision_notes": "Placeholder to prove the pipeline. Replace with real sources from the Researcher.",
+    "placeholder": true
+  }
+]

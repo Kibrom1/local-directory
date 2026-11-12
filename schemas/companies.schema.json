@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://directory.local/schemas/companies.schema.json",
+  "title": "companies.json",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "description": "Top-level source_id/captured_date/last_verified_date cover the identity and contact fields (name, website, phone, address). License, services and property types carry their own provenance.",
+    "required": ["id", "slug", "name", "source_id", "captured_date", "last_verified_date"],
+    "properties": {
+      "id": { "$ref": "common.schema.json#/definitions/companyId" },
+      "slug": { "$ref": "common.schema.json#/definitions/slug" },
+      "name": { "type": "string", "minLength": 1 },
+      "website": { "type": ["string", "null"], "format": "uri" },
+      "phone": { "type": ["string", "null"] },
+      "address": {
+        "anyOf": [
+          { "type": "null" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["street", "city", "state", "zip"],
+            "properties": {
+              "street": { "type": ["string", "null"] },
+              "city": { "type": ["string", "null"] },
+              "state": { "type": ["string", "null"], "pattern": "^[A-Z]{2}$" },
+              "zip": { "type": ["string", "null"], "pattern": "^\\d{5}(-\\d{4})?$" }
+            }
+          }
+        ]
+      },
+      "license": {
+        "anyOf": [
+          { "type": "null" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "number", "issuing_body", "source_id", "captured_date", "last_verified_date"],
+            "properties": {
+              "status": { "enum": ["active", "inactive", "none_found"] },
+              "number": { "type": ["string", "null"] },
+              "issuing_body": { "type": ["string", "null"] },
+              "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
+              "captured_date": { "$ref": "common.schema.json#/definitions/date" },
+              "last_verified_date": { "$ref": "common.schema.json#/definitions/date" }
+            }
+          }
+        ]
+      },
+      "services": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["service", "source_id", "captured_date", "last_verified_date"],
+          "properties": {
+            "service": { "enum": ["full-service-management", "leasing-only", "tenant-placement", "rent-collection", "maintenance-coordination", "eviction-handling", "hoa-management", "short-term-rental-management"] },
+            "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
+            "captured_date": { "$ref": "common.schema.json#/definitions/date" },
+            "last_verified_date": { "$ref": "common.schema.json#/definitions/date" }
+          }
+        }
+      },
+      "property_types_served": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["property_type_id", "source_id", "captured_date", "last_verified_date"],
+          "properties": {
+            "property_type_id": { "$ref": "common.schema.json#/definitions/propertyTypeId" },
+            "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
+            "captured_date": { "$ref": "common.schema.json#/definitions/date" },
+            "last_verified_date": { "$ref": "common.schema.json#/definitions/date" }
+          }
+        }
+      },
+      "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
+      "captured_date": { "$ref": "common.schema.json#/definitions/date" },
+      "last_verified_date": { "$ref": "common.schema.json#/definitions/date" },
+      "placeholder": { "type": "boolean" }
+    }
+  }
+}

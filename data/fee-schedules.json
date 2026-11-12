@@ -1,0 +1,30 @@
+[
+  {
+    "id": "fee_placeholder_a_sf",
+    "company_id": "co_placeholder_a",
+    "property_type": "pt_single_family",
+    "management_pct": 8,
+    "flat_fee": null,
+    "leasing_fee": { "type": "pct_of_monthly_rent", "value": 50 },
+    "renewal_fee": null,
+    "minimums": { "monthly_usd": 95, "other": null },
+    "source_id": "src_placeholder_001",
+    "captured_date": "2026-11-01",
+    "last_verified_date": "2026-11-01",
+    "placeholder": true
+  },
+  {
+    "id": "fee_placeholder_b_mf",
+    "company_id": "co_placeholder_b",
+    "property_type": "pt_small_multifamily",
+    "management_pct": null,
+    "flat_fee": 100,
+    "leasing_fee": null,
+    "renewal_fee": null,
+    "minimums": null,
+    "source_id": "src_placeholder_001",
+    "captured_date": "2026-11-01",
+    "last_verified_date": "2026-11-01",
+    "placeholder": true
+  }
+]

@@ -1,0 +1,67 @@
+---
+import Base from '../../layouts/Base.astro';
+import Unknown from '../../components/Unknown.astro';
+import { getSite, fmtAmount } from '../../lib/site.mjs';
+export function getStaticPaths() {
+  return getSite().companyPages.map((p) => ({ params: { slug: p.company.slug }, props: { page: p } }));
+}
+const s = getSite();
+const { company: c, fees, areas } = Astro.props.page;
+const src = (id) => s.sourceById.get(id);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': new URL(Astro.url.pathname, Astro.site).href + '#business',
+  name: c.name,
+  url: c.website || undefined,
+  telephone: c.phone || undefined,
+  address: c.address && (c.address.street || c.address.zip || c.address.city)
+    ? {
+        '@type': 'PostalAddress',
+        streetAddress: c.address.street || undefined,
+        addressLocality: c.address.city || undefined,
+        addressRegion: c.address.state || undefined,
+        postalCode: c.address.zip || undefined,
+        addressCountry: 'US'
+      }
+    : undefined,
+  areaServed: areas.map((g) => ({ '@type': 'City', name: g.name })),
+};
+---
+<Base title={`${c.name}: fees, services and service areas`} description={`Sourced fee, license and service-area facts for ${c.name}.`} noindex={!!c.placeholder} jsonLd={jsonLd}>
+  <h1>{c.name}</h1>
+  {c.placeholder && <p class="banner">Placeholder record. Not real data.</p>}
+  <h2>Contact</h2>
+  <ul>
+    <li>Website: {c.website ? <a href={c.website} rel="nofollow noopener">{c.website}</a> : <Unknown />}</li>
+    <li>Phone: {c.phone ?? <Unknown />}</li>
+  </ul>
+  <p><small>Source: {src(c.source_id).name}, captured {c.captured_date}, last verified {c.last_verified_date}</small></p>
+
+  <h2>License</h2>
+  {c.license
+    ? <p>{c.license.status}{c.license.number ? `, #${c.license.number}` : ''}{c.license.issuing_body ? ` (${c.license.issuing_body})` : ''}<br /><small>Source: {src(c.license.source_id).name}, captured {c.license.captured_date}, last verified {c.license.last_verified_date}</small></p>
+    : <p><Unknown /></p>}
+
+  <h2>Fees</h2>
+  {fees.length === 0 ? <p><Unknown /></p> : fees.map((f) => (
+    <section>
+      <h3>{s.ptById.get(f.property_type).name}</h3>
+      <ul>
+        <li>Management: {f.management_pct !== null ? `${f.management_pct}% of rent` : <Unknown />}</li>
+        <li>Flat fee: {f.flat_fee !== null ? `$${f.flat_fee} per unit per month` : <Unknown />}</li>
+        <li>Leasing fee: {fmtAmount(f.leasing_fee) ?? <Unknown />}</li>
+        <li>Renewal fee: {fmtAmount(f.renewal_fee) ?? <Unknown />}</li>
+        <li>Minimums: {f.minimums && f.minimums.monthly_usd !== null ? `$${f.minimums.monthly_usd} per month` : <Unknown />}{f.minimums && f.minimums.other ? `; ${f.minimums.other}` : ''}</li>
+      </ul>
+      <p><small>Source: {src(f.source_id).name}, captured {f.captured_date}, last verified {f.last_verified_date}</small></p>
+    </section>
+  ))}
+
+  <h2>Service areas</h2>
+  {areas.length ? <ul>{areas.map((g) => <li>{g.name}, {g.state}</li>)}</ul> : <p><Unknown /></p>}
+
+  <h2>Services</h2>
+  {c.services.length ? <ul>{c.services.map((x) => <li>{x.service}</li>)}</ul> : <p><Unknown /></p>}
+</Base>

@@ -1,0 +1,8 @@
+{
+  "company": {
+    "minFactGroups": 3,
+    "requireOneOf": ["fees", "license", "areas"],
+    "note": "Fact groups: license, fees (at least one non-null fee value), areas, services, property_types, contact (website/phone/address)."
+  },
+  "city": { "minPublishableCompanies": 2 }
+}

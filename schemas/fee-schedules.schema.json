@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://directory.local/schemas/fee-schedules.schema.json",
+  "title": "fee-schedules.json",
+  "description": "One row per company and property type. Every fee value is nullable; null means unknown or not published, never zero.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "company_id", "property_type", "management_pct", "flat_fee", "leasing_fee", "renewal_fee", "minimums", "source_id", "captured_date", "last_verified_date"],
+    "definitions": {
+      "feeAmount": {
+        "anyOf": [
+          { "type": "null" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "value"],
+            "properties": {
+              "type": { "enum": ["flat_usd", "pct_of_monthly_rent"] },
+              "value": { "type": "number", "minimum": 0 }
+            }
+          }
+        ]
+      }
+    },
+    "properties": {
+      "id": { "type": "string", "pattern": "^fee_[a-z0-9_]+$" },
+      "company_id": { "$ref": "common.schema.json#/definitions/companyId" },
+      "property_type": { "$ref": "common.schema.json#/definitions/propertyTypeId" },
+      "management_pct": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "description": "Percent of collected monthly rent." },
+      "flat_fee": { "type": ["number", "null"], "minimum": 0, "description": "USD per unit per month." },
+      "leasing_fee": { "$ref": "#/items/definitions/feeAmount" },
+      "renewal_fee": { "$ref": "#/items/definitions/feeAmount" },
+      "minimums": {
+        "anyOf": [
+          { "type": "null" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["monthly_usd", "other"],
+            "properties": {
+              "monthly_usd": { "type": ["number", "null"], "minimum": 0 },
+              "other": { "type": ["string", "null"], "maxLength": 200 }
+            }
+          }
+        ]
+      },
+      "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
+      "captured_date": { "$ref": "common.schema.json#/definitions/date" },
+      "last_verified_date": { "$ref": "common.schema.json#/definitions/date" },
+      "placeholder": { "type": "boolean" }
+    }
+  }
+}

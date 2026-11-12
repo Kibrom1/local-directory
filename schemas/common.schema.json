@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://directory.local/schemas/common.schema.json",
+  "title": "Shared definitions",
+  "definitions": {
+    "date": { "type": "string", "format": "date" },
+    "sourceId": { "type": "string", "pattern": "^src_[a-z0-9_]+$" },
+    "companyId": { "type": "string", "pattern": "^co_[a-z0-9_]+$" },
+    "geographyId": { "type": "string", "pattern": "^geo_[a-z0-9_]+$" },
+    "propertyTypeId": { "type": "string", "pattern": "^pt_[a-z0-9_]+$" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "provenanceProps": {
+      "type": "object",
+      "properties": {
+        "source_id": { "$ref": "#/definitions/sourceId" },
+        "captured_date": { "$ref": "#/definitions/date" },
+        "last_verified_date": { "$ref": "#/definitions/date" }
+      },
+      "required": ["source_id", "captured_date", "last_verified_date"]
+    },
+    "money": { "type": ["number", "null"], "minimum": 0 }
+  }
+}

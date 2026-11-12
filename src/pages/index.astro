@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import { getSite } from '../lib/site.mjs';
+const s = getSite();
+---
+<Base title="Columbus, Ohio property management companies: fees and service areas" description="Free directory of Columbus-area property management companies with sourced fee and service-area data.">
+  <h1>Columbus-area property management companies</h1>
+  <p>Compare fees, services and service areas, each fact with its source and date.</p>
+  {s.placeholderPaths.size > 0 && <p class="banner">Placeholder data only. Records below are fake and exist to test the build.</p>}
+  <div id="search" data-pagefind-ignore></div>
+  <h2>Browse by city</h2>
+  <ul>
+    {s.cityPages.map((p) => <li><a href={p.path}>{p.geo.name}, {p.geo.state}</a> ({p.companies.length} companies)</li>)}
+  </ul>
+  <script is:inline data-pagefind-ignore>
+    // Pagefind UI exists only after `npm run build`; skip silently in dev.
+    fetch('/pagefind/pagefind-ui.js', { method: 'HEAD' }).then((r) => {
+      if (!r.ok) return;
+      const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = '/pagefind/pagefind-ui.css'; document.head.appendChild(css);
+      const js = document.createElement('script'); js.src = '/pagefind/pagefind-ui.js';
+      js.onload = () => new PagefindUI({ element: '#search', showSubResults: false });
+      document.head.appendChild(js);
+    }).catch(() => {});
+  </script>
+</Base>

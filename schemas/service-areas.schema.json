@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://directory.local/schemas/service-areas.schema.json",
+  "title": "service-areas.json",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "company_id", "geography_id", "source_id", "captured_date", "last_verified_date"],
+    "properties": {
+      "id": { "type": "string", "pattern": "^sa_[a-z0-9_]+$" },
+      "company_id": { "$ref": "common.schema.json#/definitions/companyId" },
+      "geography_id": { "$ref": "common.schema.json#/definitions/geographyId" },
+      "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
+      "captured_date": { "$ref": "common.schema.json#/definitions/date" },
+      "last_verified_date": { "$ref": "common.schema.json#/definitions/date" },
+      "placeholder": { "type": "boolean" }
+    }
+  }
+}
