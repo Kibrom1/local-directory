@@ -1,82 +1,138 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Banner from '../../components/Banner.astro';
+import Badge from '../../components/Badge.astro';
+import FeeValue from '../../components/FeeValue.astro';
+import SourceNote from '../../components/SourceNote.astro';
 import Unknown from '../../components/Unknown.astro';
 import { getSite } from '../../lib/site.mjs';
-import { formatFee, feeText, provenanceLabel } from '../../lib/format.mjs';
+import { describeFee, minimumsText, freshnessBadge, licenseBadge, LICENSE_EXPLANATION } from '../../lib/fees.mjs';
+import { formatFee, feeText } from '../../lib/format.mjs';
 export function getStaticPaths() {
   return getSite().companyPages.map((p) => ({ params: { slug: p.company.slug }, props: { page: p } }));
 }
 const s = getSite();
-const { company: c, fees, areas, robots, tier } = Astro.props.page;
-const src = (id) => s.sourceById.get(id);
-const prov = (o) => provenanceLabel(src(o.source_id), o.captured_date, o.last_verified_date, s.today, s.quality.freshness.displayFlagDays);
-const fresh = (o) => s.fresh(o.last_verified_date);
+const flag = s.quality.freshness.displayFlagDays;
+const { company: c, areas, robots, tier, verifiedFeeRows } = Astro.props.page;
+const fees = verifiedFeeRows; // verified, fresh, from an allowed source, with at least one value
+const dropped = Astro.props.page.fees.filter((f) => !s.fresh(f.last_verified_date) && s.quality.verifiedFeeStatuses.includes(f.verification_status));
+const staleFee = fees.filter((f) => freshnessBadge(f.last_verified_date, s.today, flag).kind === 'stale');
+const newest = [...fees].sort((a, b) => b.last_verified_date.localeCompare(a.last_verified_date))[0];
+const fb = freshnessBadge(newest ? newest.last_verified_date : c.last_verified_date, s.today, flag);
+const lb = licenseBadge(c.license, s.today);
 const FEE_ROWS = [['Management fee', 'management_pct'], ['Flat fee', 'flat_fee'], ['Leasing fee', 'leasing_fee'], ['Renewal fee', 'renewal_fee']];
-// Fees older than the drop threshold are not shown until re-verified.
-const shownFees = fees.filter(fresh);
 const addressText = c.address && (c.address.street || c.address.city) ? [c.address.street, c.address.city, c.address.state, c.address.zip].filter(Boolean).join(', ') : null;
-
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  '@id': new URL(Astro.url.pathname, Astro.site).href + '#business',
-  name: c.name,
-  url: c.website || undefined,
-  telephone: c.phone || undefined,
-  address: c.address && (c.address.street || c.address.zip)
-    ? {
-        '@type': 'PostalAddress',
-        streetAddress: c.address.street || undefined,
-        addressLocality: c.address.city || undefined,
-        addressRegion: c.address.state || undefined,
-        postalCode: c.address.zip || undefined,
-        addressCountry: 'US'
-      }
-    : undefined,
-  areaServed: areas.map((g) => ({ '@type': 'City', name: g.name })),
-};
+const host = c.website ? new URL(c.website).host.replace(/^www\./, '') : null;
+const types = c.property_types_served.map((x) => s.ptById.get(x.property_type_id)).filter(Boolean);
+const cityPageFor = (g) => s.cityPages.find((p) => p.geo.id === g.id && p.tier !== 'placeholder');
+const ptPages = types.map((t) => s.planned.find((p) => p.type === 'property-type' && p.property_type_id === t.id && p.eligible)).filter(Boolean);
+const pretty = (x) => x.replace(/-/g, ' ').replace(/^./, (m) => m.toUpperCase()).replace(/\bhoa\b/gi, 'HOA');
+const lede = [
+  areas.length ? `${c.name} lists ${areas.map((g) => g.name).join(', ')} as ${areas.length === 1 ? 'its service area' : 'its service areas'}.` : `${c.name} has no service area recorded in our data yet.`,
+  types.length ? `Property types stated: ${types.map((t) => t.name.toLowerCase()).join(', ')}.` : null,
+  fees.length ? 'Fees below are as published by the company, not a quote.' : 'We have no fee data recorded for this company yet.'
+].filter(Boolean).join(' ');
+const correct = `/corrections/?company=${encodeURIComponent(c.name)}`;
+const jsonLd = tier === 'indexable' ? {
+  '@context': 'https://schema.org', '@type': 'LocalBusiness', '@id': new URL(Astro.url.pathname, Astro.site).href + '#business',
+  name: c.name, url: c.website || undefined, telephone: c.phone || undefined,
+  address: c.address && (c.address.street || c.address.zip) ? { '@type': 'PostalAddress', streetAddress: c.address.street || undefined, addressLocality: c.address.city || undefined, addressRegion: c.address.state || undefined, postalCode: c.address.zip || undefined, addressCountry: 'US' } : undefined,
+  areaServed: areas.map((g) => ({ '@type': 'City', name: g.name }))
+} : undefined;
+const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'], ['services', 'Services and property types'], ['contact', 'Contact'], ['correct', 'Correct or remove']];
 ---
-<Base title={`${c.name}: fees, services and service areas`} description={`Sourced fee, license and service-area facts for ${c.name}.`} robots={robots} jsonLd={tier === 'indexable' ? jsonLd : undefined}>
+<Base title={`${c.name}: fees and service areas`} description={`${c.name}: published fees with sources and dates, license note and service areas in the Columbus, Ohio area.`} robots={robots} jsonLd={jsonLd} pageType="company" crumbs={[{ name: c.name }]}>
   <h1>{c.name}</h1>
-  {tier === 'placeholder' && <p class="banner">Placeholder record. Not real data.</p>}
-  <h2>Contact</h2>
+  {tier === 'placeholder' && <Banner kind="warn" lead="Test data.">This page uses test records and is not indexed.</Banner>}
+  <div class="meta" style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:1rem">
+    <Badge kind={lb.kind} text={lb.text} />
+    <Badge kind={fb.kind} text={newest ? fb.text : `Listing ${fb.text.toLowerCase()}`} />
+    <a href={correct}>Correct or remove this listing</a>
+  </div>
+  {staleFee.length > 0 && <Banner kind="warn" lead={`Fees last verified ${freshnessBadge(staleFee[0].last_verified_date, s.today, flag).text.replace('Verified ', '')}.`}>They may have changed. Check the company site before relying on them.</Banner>}
+  <p class="lede">{lede}</p>
+  <nav class="toc" aria-label="On this page"><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
+
+  <h2 id="fees">Fees</h2>
+  {fees.length === 0 ? (
+    <p><Unknown kind="not_checked" /> We have no fee data recorded for this company. Fees may exist on its own website. {dropped.length > 0 ? 'Earlier values are listed below.' : ''}</p>
+  ) : (
+    <>
+      <p class="small muted">Published by the company, not a quote. Ranges and plans are shown as published, never averaged.{s.nav.fees && <> <a href="/fees/">Compare fees across companies</a>.</>}</p>
+      {fees.map((f) => {
+        const pt = f.property_type ? s.ptById.get(f.property_type).name : null;
+        return (
+          <section>
+            <h3>{pt ? `Fees for ${pt}` : 'Fees (no property type stated)'}</h3>
+            <div class="fee-wrap">
+              <table class="fee-table">
+                <caption class="sr">Published fees for {c.name}{pt ? `, ${pt}` : ''}</caption>
+                <thead><tr><th scope="col">Item</th><th scope="col">Amount and basis</th><th scope="col">Source and date</th></tr></thead>
+                <tbody>
+                  {FEE_ROWS.map(([label, k]) => (
+                    <tr>
+                      <th scope="row">{label}</th>
+                      <td><span class="lbl">Amount and basis</span><FeeValue value={f[k]} showNotes /></td>
+                      <td><span class="lbl">Source and date</span><span class="v">{describeFee(f[k]) ? <SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} /> : <span class="src">Checked {f.last_verified_date}: not on the pages we read. <a href={f.source_urls[0]} rel="nofollow noopener">Open source</a></span>}</span></td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <th scope="row">Minimums</th>
+                    <td><span class="lbl">Amount and basis</span><span class="v">{minimumsText(f.minimums) ?? <Unknown />}</span></td>
+                    <td><span class="lbl">Source and date</span><span class="v"><SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} /></span></td>
+                  </tr>
+                  {(f.other_fees || []).map((o) => (
+                    <tr>
+                      <th scope="row">{o.label || o.kind}</th>
+                      <td><span class="lbl">Amount and basis</span><FeeValue value={o.amount} /></td>
+                      <td><span class="lbl">Source and date</span><span class="v"><SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} /></span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {f.notes && <p class="small muted">Note: {f.notes}</p>}
+          </section>
+        );
+      })}
+    </>
+  )}
+  {dropped.map((f) => (
+    <p class="small">Last known: {FEE_ROWS.map(([label, k]) => feeText(f[k]) ? `${label} ${feeText(f[k])}` : null).filter(Boolean).join('; ')} (verified {f.last_verified_date}). Not shown in comparisons until re-checked.</p>
+  ))}
+
+  <h2 id="license">License</h2>
+  <p><Badge kind={lb.kind} text={lb.text} /></p>
+  {c.license && c.license.status === 'self_stated' && <p>The company's website says: &ldquo;{c.license.claim_text}&rdquo;{c.license.number ? ` (number given: ${c.license.number})` : ''}. We have not checked this against the state record.</p>}
+  {c.license && ['active', 'inactive', 'none_found'].includes(c.license.status) && <p>Checked against {c.license.issuing_body || 'the state record'}{c.license.number ? `, number ${c.license.number}` : ''}.</p>}
+  <p>{LICENSE_EXPLANATION} This is general information, not legal advice.</p>
+  {c.license && c.license.status !== 'unverified' ? <p><SourceNote sourceId={c.license.source_id} captured={c.license.captured_date} verified={c.license.last_verified_date} urls={[c.license.source_url]} /></p> : <p class="small muted">Nothing about a license was recorded from the company's website, and we have not checked the state record.</p>}
+
+  <h2 id="areas">Service areas</h2>
+  {areas.length ? (
+    <>
+      <ul>{areas.map((g) => { const cp = cityPageFor(g); return <li>{cp ? <a href={cp.path}>{g.name}, {g.state}</a> : <>{g.name}{g.type === 'city' ? `, ${g.state}` : ''}</>}</li>; })}</ul>
+      <p class="small muted">As stated on the company's own website.</p>
+    </>
+  ) : <p><Unknown kind="not_checked" /></p>}
+
+  <h2 id="services">Services and property types</h2>
+  <h3>Property types</h3>
+  {types.length ? <ul>{types.map((t) => { const pp = ptPages.find((p) => p.property_type_id === t.id); return <li>{pp ? <a href={pp.path}>{t.name}</a> : t.name}</li>; })}</ul> : <p><Unknown kind="not_checked" /></p>}
+  <h3>Services</h3>
+  {c.services.length ? <ul>{c.services.map((x) => <li>{pretty(x.service)}</li>)}</ul> : <p><Unknown kind="not_checked" /></p>}
+
+  <h2 id="contact">Contact</h2>
+  <p class="small muted">Public business details only, as the company publishes them. Nothing is routed through this site.</p>
   <ul>
-    <li>Website: {c.website ? <a href={c.website} rel="nofollow noopener">{c.website}</a> : <Unknown />}</li>
-    <li>Phone: {c.phone ?? <Unknown />}</li>
+    <li>Website: {c.website ? <a href={c.website} rel="nofollow noopener">{host}</a> : <Unknown />}</li>
+    <li>Phone: {c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, '')}`}>{c.phone}</a> : <Unknown />}</li>
     <li>Address: {addressText ?? <Unknown />}</li>
   </ul>
-  <p><small>{prov(c)}</small></p>
+  <p><SourceNote sourceId={c.source_id} captured={c.captured_date} verified={c.last_verified_date} urls={[c.source_url]} /></p>
 
-  <h2>License</h2>
-  {c.license && c.license.status !== 'unverified'
-    ? <p>{c.license.status === 'self_stated'
-        ? <>Stated by the company, not checked against the state record: &ldquo;{c.license.claim_text}&rdquo;{c.license.number ? ` (number given: ${c.license.number})` : ''}</>
-        : <>{c.license.status}{c.license.number ? `, #${c.license.number}` : ''}{c.license.issuing_body ? ` (${c.license.issuing_body})` : ''}</>}<br /><small>{prov(c.license)}. <a href={c.license.source_url} rel="nofollow noopener">Source page</a></small></p>
-    : <p><Unknown /> <small>(license not verified)</small></p>}
-
-  <h2>Fees</h2>
-  {shownFees.length === 0 ? <p><Unknown /></p> : shownFees.map((f) => {
-    const other = (f.other_fees || []);
-    return (
-      <section>
-        <h3>{f.property_type ? s.ptById.get(f.property_type).name : 'All property types (no type stated)'}</h3>
-        <ul>
-          {FEE_ROWS.map(([label, k]) => { const x = formatFee(f[k]); return <li>{label}: {x ? <>{x.text}{x.lines.length > 0 && <ul>{x.lines.map((l) => <li>{l}</li>)}</ul>}{x.notes && <> <small>({x.notes})</small></>}</> : <Unknown />}</li>; })}
-          <li>Minimums: {f.minimums && (f.minimums.monthly_usd !== null || f.minimums.other) ? [f.minimums.monthly_usd !== null ? `$${f.minimums.monthly_usd} per month` : null, f.minimums.other].filter(Boolean).join('; ') : <Unknown />}</li>
-          {other.map((o) => <li>{o.label || o.kind}: {feeText(o.amount) ?? <Unknown />}</li>)}
-        </ul>
-        {f.notes && <p><small>Note: {f.notes}</small></p>}
-        <p><small>{prov(f)}. {f.source_urls.map((u, i) => <>{i > 0 && ' '}<a href={u} rel="nofollow noopener">Source page{f.source_urls.length > 1 ? ` ${i + 1}` : ''}</a></>)}</small></p>
-      </section>
-    );
-  })}
-
-  <h2>Service areas</h2>
-  {areas.length ? <ul>{areas.map((g) => <li>{g.name}, {g.state}</li>)}</ul> : <p><Unknown /></p>}
-
-  <h2>Property types</h2>
-  {c.property_types_served.length ? <ul>{c.property_types_served.map((x) => <li>{s.ptById.get(x.property_type_id).name}</li>)}</ul> : <p><Unknown /></p>}
-
-  <h2>Services</h2>
-  {c.services.length ? <ul>{c.services.map((x) => <li>{x.service}</li>)}</ul> : <p><Unknown /></p>}
+  <Banner kind="info" lead="Is this your company?" id="correct">
+    Correct a fact or remove this listing, free and without an account. Correcting or claiming a listing never changes its position.
+    <a href={correct}>Correct this listing</a> or <a href={`/corrections/?type=remove&company=${encodeURIComponent(c.name)}`}>request removal</a>.
+  </Banner>
 </Base>

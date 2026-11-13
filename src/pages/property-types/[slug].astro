@@ -1,0 +1,61 @@
+---
+import Base from '../../layouts/Base.astro';
+import Banner from '../../components/Banner.astro';
+import FeeTable from '../../components/FeeTable.astro';
+import ResultCard from '../../components/ResultCard.astro';
+import { getSite } from '../../lib/site.mjs';
+import { buildFeeRows } from '../../lib/feetable.mjs';
+import { rankPages } from '../../lib/gate.mjs';
+import { FEE_GUIDES } from '../../lib/feeguides.mjs';
+// Exists only when 3+ indexable companies have a sourced fact for the type (quality gate).
+export function getStaticPaths() {
+  const s = getSite();
+  return s.planned.filter((p) => p.type === 'property-type' && p.eligible).map((p) => ({ params: { slug: s.ptById.get(p.property_type_id).slug }, props: { gate: p } }));
+}
+const s = getSite();
+const flag = s.quality.freshness.displayFlagDays;
+const { gate } = Astro.props;
+const pt = s.ptById.get(gate.property_type_id);
+const str = pt.id === 'pt_short_term_rental';
+const serves = (c) => c.property_types_served.some((x) => x.property_type_id === pt.id && s.sourceById.get(x.source_id)?.use_allowed && s.fresh(x.last_verified_date));
+const companies = rankPages(s.companyPages.filter((p) => p.tier === 'indexable' && serves(p.company)));
+const ids = new Set(companies.map((p) => p.id));
+// Fee rows tied to this type, plus rows with no stated type from companies that serve it (labelled as such in the table).
+const feeRows = s.feeRows.filter((f) => ids.has(f.company_id) && (f.property_type === pt.id || f.property_type === null));
+const rows = buildFeeRows(s, feeRows, { revenueBasis: () => str });
+const cities = s.cityPages.filter((c) => c.tier !== 'placeholder' && [...c.companies, ...c.listedCompanies].some((p) => ids.has(p.id)));
+const guides = s.planned.filter((p) => p.type === 'fee-guide' && p.eligible);
+const name = pt.name.replace(/\s*\(.*\)/, '');
+const lc = name.replace(/^[A-Z](?=[a-z])/, (m) => m.toLowerCase());
+const nameNote = (pt.name.match(/\((.*)\)/) || [])[1] || null;
+---
+<Base title={`Property managers for ${lc} rentals`} description={`${companies.length} Columbus-area property management companies state they serve ${lc} rentals. Published fees and sources for each.`} pageType="property-type" crumbs={[{ name: 'Property types' }, { name }]}>
+  <h1>Property managers for {lc} rentals in the Columbus area</h1>
+  <p class="lede">{companies.length} companies we reviewed state on their own websites that they serve this property type{nameNote ? ` (${pt.name})` : ''}.</p>
+  <Banner kind="info" lead="Companies we reviewed, not a market average.">Order: how complete and recent our data is, then A to Z. Fees and payment never affect order. <a href="/methodology/">How we collect and rank</a></Banner>
+
+  <h2>Fees published by these companies</h2>
+  {rows.length ? (
+    <>
+      {str && <Banner kind="warn" lead="Different basis.">Short-term rental fees are usually based on booking revenue, not rent, so they are not converted to a rent estimate.</Banner>}
+      <p class="small muted">Rows marked &ldquo;No property type stated&rdquo; are fees the company publishes without tying them to a property type. Check with the company that they apply to {lc} rentals.</p>
+      <FeeTable rows={rows} caption={`Published fees from companies that serve ${lc} rentals`} flagDays={flag} />
+    </>
+  ) : <p>None of these companies publishes fees we have verified yet. <a href="/corrections/">Know a published fee we missed? Tell us.</a></p>}
+
+  <h2>Companies serving {lc} rentals</h2>
+  <ul class="results">{companies.map((p) => <ResultCard page={p} />)}</ul>
+
+  {cities.length > 0 && (
+    <>
+      <h2>Where they serve</h2>
+      <ul class="pill-list">{cities.map((c) => <li><a href={c.path}>{c.geo.name}</a></li>)}</ul>
+    </>
+  )}
+  <h2>Related</h2>
+  <ul>
+    {s.nav.fees && <li><a href="/fees/">Compare fees across all companies we reviewed</a></li>}
+    {guides.map((g) => <li><a href={g.path}>{FEE_GUIDES[g.fee_type].title}</a></li>)}
+    <li><a href="/corrections/">Correct or remove a listing</a></li>
+  </ul>
+</Base>

@@ -1,0 +1,20 @@
+---
+// One published fee value: amount, basis, range/plan tag, plans in a details element, and minimum. Unknown shows its state.
+import Unknown from './Unknown.astro';
+import { describeFee } from '../lib/fees.mjs';
+interface Props { value: any; unknown?: 'not_published' | 'not_checked' | 'not_offered' | 'varies'; showNotes?: boolean }
+const { value, unknown = 'not_published', showNotes = false } = Astro.props;
+const d = describeFee(value);
+---
+{d ? (
+  <span class="v">
+    <span class="fee-val">{d.main}</span>{d.tag && <span class="range-tag">{d.tag}</span>}{d.basis && <> <small>{d.basis}</small></>}
+    {d.minimum && <><br /><small>{d.minimum}</small></>}
+    {d.plans.length > 0 && (
+      <details><summary>{d.tag === 'range' ? 'Plans' : 'Show plans'}</summary>
+        <ul class="small">{d.plans.map((p) => <li>{p.label}: {p.text}{p.extra ? ` (${p.extra})` : ''}</li>)}</ul>
+      </details>
+    )}
+    {showNotes && d.notes && <><br /><small class="muted">{d.notes}</small></>}
+  </span>
+) : <span class="v"><Unknown kind={unknown} /></span>}

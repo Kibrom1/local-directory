@@ -1,11 +1,29 @@
 ---
 import Base from '../layouts/Base.astro';
+import { readLaunchEnv } from '../lib/env.mjs';
+const { operator, disclosure, contactEmail } = readLaunchEnv(import.meta.env);
 ---
-<Base title="About this directory" description="How this free Columbus property management directory collects and verifies data.">
+<Base title="About this directory" description="Who runs this free Columbus property management directory, what it costs, how the data is collected and how to correct or remove a listing." pageType="about" crumbs={[{ name: 'About' }]}>
   <h1>About</h1>
-  <p>This is a free, independent directory of property management companies in the Columbus, Ohio area. It has no paid listings, no featured placement and no lead routing.</p>
+  <p class="lede">A free, independent directory of property management companies in the Columbus, Ohio area, built for rental owners choosing a manager.</p>
+
+  {operator && (<><h2>Who runs this site</h2><p>{operator}</p></>)}
+  {disclosure && (<><h2>Related businesses</h2><p>{disclosure}</p></>)}
+
+  <h2 id="how">What it costs and what we do not do</h2>
+  <ul>
+    <li>Free to use. Free to be listed, corrected or removed.</li>
+    <li>No paid listings, no featured placement, no lead routing, no ads, no accounts.</li>
+    <li>Fees, payment and claiming a listing never change a company's position.</li>
+    <li>We are not a rental-listings site and do not refer tenants.</li>
+  </ul>
+
   <h2>Where the data comes from</h2>
-  <p>Facts (fees, services, service areas, license status) come from publicly available sources. Each fact shows its source and the dates it was captured and last verified. Unknown values are left blank rather than guessed.</p>
+  <p>Facts (fees, services, service areas, license notes) come from publicly available sources, mainly each company's own website. Every fact shows its source, the date we captured it and the date we last verified it. Unknown values are left blank and shown as &ldquo;Not published&rdquo; or &ldquo;Not checked yet&rdquo;, never guessed. We collect facts, not company descriptions or images, and only business contact details a company has published. <a href="/methodology/">Read the methodology</a>.</p>
+
   <h2 id="corrections">Corrections and removal</h2>
-  <p>To report an error or request removal of a listing, contact: <em>TODO: contact address to be set before launch</em>. Removal requests are added to a suppression list and honored on the next build.</p>
+  <p>To report an error, add a missing fact or have a listing removed, use <a href="/corrections/">the correction page</a>. Removal needs no reason. Removed companies are added to a suppression list and are not added back.</p>
+
+  <h2>Contact</h2>
+  <p>{contactEmail ? <>Email <a href={`mailto:${contactEmail}`}>{contactEmail}</a>, or use <a href="/corrections/">the correction page</a>.</> : <>Use <a href="/corrections/">the correction page</a>.</>}</p>
 </Base>

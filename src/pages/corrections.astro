@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import Banner from '../components/Banner.astro';
+import { readLaunchEnv } from '../lib/env.mjs';
+// The form posts to a hosted form tool (PUBLIC_FORM_ACTION). With no destination set, no form is rendered:
+// a dead form must never ship. The build prints a warning and strict mode fails (astro.config.mjs).
+const env = readLaunchEnv(import.meta.env);
+const { formAction, contactEmail } = env;
+const mailto = contactEmail ? `mailto:${contactEmail}?subject=${encodeURIComponent('Correct or remove a listing')}&body=${encodeURIComponent('Company name or page address:\nWhat to do (correct, add or remove):\nWhich fact is wrong and what is correct:\nLink that shows it (not needed for removal):\nYour name and role:\n')}` : null;
+---
+<Base title="Correct or remove a listing" description="Free way for a property management company to correct a fact, add a missing one or remove its listing. No account, no payment, and it never changes ranking." pageType="corrections" crumbs={[{ name: 'Correct or remove a listing' }]}>
+  <h1>Correct or remove a listing</h1>
+  <p class="lede">Free. No account. Takes about 3 minutes.</p>
+
+  <h2>What happens next</h2>
+  <ol>
+    <li>We reply to the email you give. We aim to answer within 3 business days.</li>
+    <li>We check that you can speak for the company, for example by replying to an address on the company's own website domain or a published company contact.</li>
+    <li>We publish a correction when there is a public source for it. Removals are published at the next update, within 5 business days.</li>
+  </ol>
+  <p>Correcting or claiming a listing never changes its position. You do not need to pay or sign up.</p>
+
+  {!formAction && !contactEmail && (
+    <Banner kind="bad" lead="This page cannot receive requests yet.">No form destination or contact address is configured for this build, so nothing you type here would reach anyone. Do not rely on this page.</Banner>
+  )}
+  {!formAction && contactEmail && (
+    <Banner kind="info" lead="Send your request by email.">Write to <a href={mailto}>{contactEmail}</a> and include: the company name or page address, whether to correct, add or remove, the fact and the correct value, and a link that shows it. A link is not needed for removal.</Banner>
+  )}
+
+  {formAction && (
+    <>
+      <div id="error-summary" class="banner bad" tabindex="-1" hidden role="alert" aria-labelledby="error-title">
+        <strong id="error-title">Please fix these fields</strong>
+        <ul id="error-list" class="err-list"></ul>
+      </div>
+      <form id="correct-form" method="post" action={formAction} style="max-width:36rem" aria-label="Correct or remove a listing">
+        <fieldset>
+          <legend>What do you want to do?</legend>
+          <label class="check"><input type="radio" name="rtype" value="correct" checked />Correct a fact</label>
+          <label class="check"><input type="radio" name="rtype" value="add" />Add a missing fact or company</label>
+          <label class="check"><input type="radio" name="rtype" value="remove" />Remove the listing</label>
+        </fieldset>
+        <div class="field">
+          <label for="company">Company name or page address</label>
+          <input id="company" name="company" type="text" autocomplete="organization" required aria-describedby="company-err" />
+          <p class="err" id="company-err" hidden>Enter the company name or the page address.</p>
+        </div>
+        <div id="fact-fields">
+          <div class="field">
+            <label for="fact">Which fact is wrong, and what is correct?</label>
+            <p class="hint" id="fact-h">Example: &ldquo;Renewal fee is $200, not $150.&rdquo;</p>
+            <textarea id="fact" name="fact" aria-describedby="fact-h"></textarea>
+          </div>
+          <div class="field">
+            <label for="evidence">Link that shows the correct fact</label>
+            <p class="hint" id="ev-h">A page on your company website or another public source. Needed so we can publish a correction. Not needed to remove a listing.</p>
+            <input id="evidence" name="evidence" type="url" inputmode="url" aria-describedby="ev-h evidence-err" />
+            <p class="err" id="evidence-err" hidden>Enter a link starting with https://</p>
+          </div>
+        </div>
+        <div class="field"><label for="requester_name">Your name</label><input id="requester_name" name="requester_name" type="text" autocomplete="name" /></div>
+        <div class="field"><label for="role">Your role at the company</label><input id="role" name="role" type="text" autocomplete="organization-title" /></div>
+        <div class="field">
+          <label for="requester_email">Your email</label>
+          <p class="hint" id="em-h">Used only to verify and reply. Not published. <a href="/privacy/#requests">Privacy</a></p>
+          <input id="requester_email" name="requester_email" type="email" autocomplete="email" required aria-describedby="em-h requester_email-err" />
+          <p class="err" id="requester_email-err" hidden>Enter your email, like name@company.com.</p>
+        </div>
+        <button class="btn" type="submit">Send request</button>
+      </form>
+      {contactEmail && <p class="small" style="margin-top:2rem">Prefer email? <a href={mailto}>{contactEmail}</a></p>}
+      <script>import '../scripts/corrections.js';</script>
+    </>
+  )}
+</Base>

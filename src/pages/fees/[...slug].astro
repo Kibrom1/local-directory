@@ -1,0 +1,65 @@
+---
+import Base from '../../layouts/Base.astro';
+import Banner from '../../components/Banner.astro';
+import FeeTable from '../../components/FeeTable.astro';
+import { getSite } from '../../lib/site.mjs';
+import { buildFeeRows } from '../../lib/feetable.mjs';
+import { EXAMPLE_RENT } from '../../lib/estimate.mjs';
+import { FEE_GUIDES } from '../../lib/feeguides.mjs';
+// /fees/ exists only when 5+ companies publish fees (quality gate). Otherwise no page is generated.
+export function getStaticPaths() {
+  const s = getSite();
+  return s.planned.find((p) => p.type === 'fee-comparison').eligible ? [{ params: { slug: undefined } }] : [];
+}
+const s = getSite();
+const rows = buildFeeRows(s, s.feeRows);
+const n = s.companiesWithFees.size;
+const N = s.companyPages.filter((p) => p.tier === 'indexable' || p.tier === 'listed').length;
+const excluded = s.feeRule === 'conservative' ? s.excludedByAreaRule.length : 0;
+const flag = s.quality.freshness.displayFlagDays;
+const droppedOld = s.data['fee-schedules'].filter((f) => s.quality.verifiedFeeStatuses.includes(f.verification_status) && !s.fresh(f.last_verified_date)).length;
+const guides = s.planned.filter((p) => p.type === 'fee-guide' && p.eligible);
+const ptPages = s.planned.filter((p) => p.type === 'property-type' && p.eligible);
+---
+<Base title="Property management fees: companies we reviewed" description={`Fees published by ${n} Columbus-area property management companies, side by side with the basis, source and date for every figure. Companies we reviewed, not a market average.`} pageType="fees" crumbs={[{ name: 'Fee comparison' }]}>
+  <h1>Property management fees: companies we reviewed</h1>
+  <Banner kind="info" lead="Companies we reviewed, not a market average.">
+    This table lists only companies that publish fees on their own websites ({n} of the {N} companies we list). It is not a survey.
+    {excluded > 0 && <> {excluded} other {excluded === 1 ? 'company publishes' : 'companies publish'} fees but {excluded === 1 ? 'does' : 'do'} not state a Columbus-area service area on {excluded === 1 ? 'its' : 'their'} own site, so {excluded === 1 ? 'it is' : 'they are'} not shown here.</>}
+    Fee amount never changes a company's position. <a href="/methodology/">How we collect and rank</a>
+  </Banner>
+
+  <div class="legend" role="group" aria-label="How to read this table">
+    <span><span class="unk">Not published</span> We read the company's page and it shows no figure. The company may still charge it. Ask them.</span>
+    <span><span class="range-tag">range</span> The company publishes a range, shown as published. We do not average it.</span>
+    <span><span class="range-tag">plans</span> The company publishes several plans. Open the plans list to see each one.</span>
+    <span><strong>Basis</strong> is shown with every number: percent of rent, percent of one month's rent, or flat dollars.</span>
+  </div>
+
+  <div class="est js-only">
+    <label for="rent" style="margin-bottom:.25rem">Example monthly rent per unit</label>
+    <p class="hint" id="rent-h">Optional. ${EXAMPLE_RENT.toLocaleString('en-US')} is a round example, not a Columbus average or median. The estimate column applies each company's published management or flat fee to it. Illustration only, not a quote.</p>
+    <input id="rent" type="number" inputmode="numeric" min="0" step="50" value={EXAMPLE_RENT} aria-describedby="rent-h" style="max-width:10rem" />
+  </div>
+  <div class="js-only">
+    <p id="compare-msg" role="status" aria-live="polite" class="small">0 selected (choose 2 or 3).</p>
+    <p><button class="btn" id="show-selected" type="button" disabled aria-disabled="true">Compare selected</button> <button class="btn secondary" id="show-all" type="button" hidden>Show all</button></p>
+  </div>
+
+  <FeeTable rows={rows} caption="Published fees by company, companies we reviewed" compare flagDays={flag} />
+  <p class="small muted">The estimate column shows &ldquo;Not enough published data&rdquo; when a company publishes no management percent or monthly flat fee. Without JavaScript it is shown for a ${EXAMPLE_RENT.toLocaleString('en-US')} example rent. Leasing and renewal fees are one-time charges and are not in the estimate.</p>
+
+  <h2>Where do these numbers come from?</h2>
+  <p>Each value comes from the company's own website on the date shown in its row, with a link to the page we read. Values older than {flag} days are flagged. Values older than 12 months are removed from this table until we re-check them{droppedOld > 0 ? ` (${droppedOld} ${droppedOld === 1 ? 'row is' : 'rows are'} removed right now)` : ''}. <a href="/methodology/">Methodology</a></p>
+  <p>Fee wrong or out of date? <a href="/corrections/">Correct or remove a listing</a>, free.</p>
+  {(guides.length > 0 || ptPages.length > 0) && (
+    <>
+      <h2>Related</h2>
+      <ul>
+        {guides.map((g) => <li><a href={g.path}>{FEE_GUIDES[g.fee_type].title}</a></li>)}
+        {ptPages.map((p) => <li><a href={p.path}>Property managers by property type: {s.ptById.get(p.property_type_id).name}</a></li>)}
+      </ul>
+    </>
+  )}
+  <script>import '../../scripts/fees.js';</script>
+</Base>

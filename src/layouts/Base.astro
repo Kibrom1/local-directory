@@ -1,47 +1,105 @@
 ---
-interface Props { title: string; description?: string; noindex?: boolean; robots?: string; jsonLd?: object; }
-// robots overrides the default; pass 'noindex, follow' for listed pages, 'noindex, nofollow' for placeholders.
-const { title, description = '', noindex = false, robots, jsonLd } = Astro.props;
+import '../styles/site.css';
+import { getSite } from '../lib/site.mjs';
+interface Crumb { name: string; href?: string }
+interface Props { title: string; description?: string; noindex?: boolean; robots?: string; jsonLd?: object | object[]; crumbs?: Crumb[]; pageType?: string; wide?: boolean; }
+// robots overrides the default; pass 'noindex, follow' for listed pages, 'noindex, nofollow' for placeholders and drafts.
+const { title, description = '', noindex = false, robots, jsonLd, crumbs = [], pageType = 'page' } = Astro.props;
 const robotsValue = robots || (noindex ? 'noindex, nofollow' : '');
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const isNoindex = robotsValue.startsWith('noindex');
+const fullTitle = title.includes('Columbus PM Guide') ? title : `${title} | Columbus PM Guide`;
+const path = Astro.url.pathname;
+const canonical = new URL(path, Astro.site).href;
 const gaId = import.meta.env.PUBLIC_GA_ID;
+const s = getSite();
+
+// Main navigation (UX spec section 3). A link exists only when its target page exists.
+const nav = [
+  s.nav.fees && { name: 'Compare fees', href: '/fees/', on: path.startsWith('/fees/') },
+  s.nav.feeGuides && { name: 'Fee guides', href: '/fee-guide/', on: path.startsWith('/fee-guide/') },
+  s.nav.guides && { name: 'Landlord guides', href: '/guides/', on: path.startsWith('/guides/') },
+  { name: 'Cities', href: '/#cities', on: path.startsWith('/city/') },
+  { name: 'About', href: '/about/', on: path === '/about/' }
+].filter(Boolean);
+
+const ld = [];
+if (jsonLd) ld.push(...(Array.isArray(jsonLd) ? jsonLd : [jsonLd]));
+if (crumbs.length && !isNoindex) {
+  ld.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ name: 'Home', href: '/' }, ...crumbs.filter((c, i) => c.href || i === crumbs.length - 1)].map((c, i, all) => ({
+      '@type': 'ListItem', position: i + 1, name: c.name,
+      item: i === all.length - 1 ? canonical : new URL(c.href, Astro.site).href
+    }))
+  });
+}
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href="data:," />
     {robotsValue && robotsValue !== 'index, follow' && <meta name="robots" content={robotsValue} />}
-    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
-    {gaId && <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>}
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
     {gaId && <script is:inline define:vars={{ gaId }}>
+      // GA4 loads after the page has loaded, with Google signals and ad personalization off (privacy page).
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', gaId);
+      gtag('config', gaId, { allow_google_signals: false, allow_ad_personalization_signals: false });
+      window.addEventListener('load', function () {
+        var g = document.createElement('script'); g.async = true;
+        g.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gaId);
+        document.head.appendChild(g);
+      });
     </script>}
-    <style>
-      body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 0 auto; padding: 1rem; line-height: 1.5; color: #1a1a1a; }
-      nav a { margin-right: 1rem; }
-      table { border-collapse: collapse; width: 100%; }
-      th, td { border-bottom: 1px solid #ddd; padding: .4rem; text-align: left; }
-      .unknown { color: #767676; }
-      .banner { background: #fff3cd; padding: .5rem 1rem; border-radius: 4px; }
-      footer { margin-top: 3rem; font-size: .9rem; color: #555; }
-    </style>
   </head>
   <body>
-    <header>
-      <nav><a href="/">Columbus PM Directory</a><a href="/about/">About</a><a href="/privacy/">Privacy</a></nav>
+    <a class="skip" href="#main">Skip to main content</a>
+    <header class="site-header" data-pagefind-ignore>
+      <div class="wrap">
+        <div class="hdr">
+          <a class="brand" href="/">Columbus PM Guide</a>
+          <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-list">Menu</button>
+        </div>
+        <nav class="site-nav" aria-label="Main">
+          <ul class="nav-list" id="nav-list">
+            {nav.map((n) => <li><a href={n.href} aria-current={n.on ? 'page' : undefined}>{n.name}</a></li>)}
+          </ul>
+        </nav>
+      </div>
     </header>
-    <main {...(robotsValue.startsWith('noindex') ? {} : { 'data-pagefind-body': '' })}>
+    {crumbs.length > 0 && (
+      <div class="wrap" data-pagefind-ignore>
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            {crumbs.map((c, i) => <li>{c.href && i < crumbs.length - 1 ? <a href={c.href}>{c.name}</a> : <span aria-current={i === crumbs.length - 1 ? 'page' : undefined}>{c.name}</span>}</li>)}
+          </ol>
+        </nav>
+      </div>
+    )}
+    <main id="main" class="wrap" {...(isNoindex ? {} : { 'data-pagefind-body': '', 'data-pagefind-filter': `page_type:${pageType}` })}>
       <slot />
     </main>
-    <footer>
-      <p>Free directory. No paid placement. Facts come from public sources; unknown values are left blank. Spot an error or want a listing removed? See <a href="/about/#corrections">corrections</a>.</p>
+    <footer class="site-footer" data-pagefind-ignore>
+      <div class="wrap">
+        <p><strong>Columbus PM Guide</strong>. Free and independent. No paid listings, no ads, no accounts. Facts come from public sources, each with a source and a date. Unknown values are left blank, never guessed.</p>
+        <ul>
+          <li><a href="/corrections/">Correct or remove a listing</a></li>
+          <li><a href="/methodology/">How we collect and rank (Methodology)</a></li>
+          <li><a href="/about/">About this site</a></li>
+          <li><a href="/privacy/">Privacy</a></li>
+        </ul>
+        <p class="small">Service areas: Franklin, Delaware, Fairfield and Licking counties, Ohio.{s.lastDataUpdate && <> Last site data update: <time datetime={s.lastDataUpdate}>{s.lastDataUpdate}</time>.</>}</p>
+      </div>
     </footer>
+    <script>import '../scripts/nav.js';</script>
   </body>
 </html>

@@ -1,0 +1,49 @@
+---
+import Base from '../../layouts/Base.astro';
+import Banner from '../../components/Banner.astro';
+import { getSite } from '../../lib/site.mjs';
+// Landlord guides rendered from content/guides/*.md. Drafts render only in dev (never in a production build).
+export function getStaticPaths() {
+  const s = getSite();
+  const out = s.guidePages.map((p) => ({ params: { slug: p.guide.slug }, props: { page: p } }));
+  if (s.planned.find((p) => p.type === 'guide-hub').eligible) out.push({ params: { slug: undefined }, props: { page: null } });
+  return out;
+}
+const s = getSite();
+const { page } = Astro.props;
+const published = s.guidePages.filter((p) => p.tier === 'indexable');
+const city = s.cityPages.find((c) => c.tier === 'indexable');
+const g = page ? page.guide : null;
+const jsonLd = page && page.tier === 'indexable' ? { '@context': 'https://schema.org', '@type': 'Article', headline: g.title, description: g.description, dateModified: g.last_verified, keywords: g.keywords.join(', '), inLanguage: 'en-US', mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href } : undefined;
+---
+{!page ? (
+  <Base title="Landlord guides for Columbus-area rental owners" description="Plain-language guides for rental owners in the Columbus, Ohio area. Every guide lists its sources and the date we last checked them." pageType="guides" crumbs={[{ name: 'Landlord guides' }]}>
+    <h1>Landlord guides</h1>
+    <p class="lede">Short guides for rental owners in the Columbus area. Each one lists its sources and when we last checked them. General information, not legal advice.</p>
+    <ul>{published.map((p) => <li><a href={p.path}>{p.guide.title}</a>: {p.guide.description}</li>)}</ul>
+    {s.nav.fees && <p><a href="/fees/">Compare property management fees</a></p>}
+  </Base>
+) : (
+  <Base title={g.title} description={g.description} robots={page.robots} jsonLd={jsonLd} pageType="guide" crumbs={[{ name: 'Landlord guides', href: s.nav.guides ? '/guides/' : undefined }, { name: g.title }]}>
+    <h1>{g.title}</h1>
+    {page.tier === 'draft' && <Banner kind="warn" lead="Draft.">This guide is a draft. It is shown in development only and is not published in production builds.</Banner>}
+    <p class="lede">{g.description}</p>
+    <p class="small muted">Last verified: <time datetime={g.last_verified}>{g.last_verified}</time>. General information, not legal advice.</p>
+    {g.toc.length > 1 && <nav class="toc" aria-label="On this page"><ol>{g.toc.map((t) => <li><a href={`#${t.id}`}>{t.text}</a></li>)}<li><a href="#sources">Sources</a></li></ol></nav>}
+    <div class="prose" set:html={g.html} />
+
+    {(s.nav.fees || city) && (
+      <div class="card" style="margin-top:2rem">
+        <h2 style="margin-top:0;font-size:1.125rem">Next step</h2>
+        <ul>
+          {s.nav.fees && <li><a href="/fees/">Compare fees published by the companies we reviewed</a></li>}
+          {city && <li><a href={city.path}>See companies that serve {city.geo.name}</a></li>}
+        </ul>
+      </div>
+    )}
+
+    <h2 id="sources">Sources</h2>
+    <ul class="sources">{g.sources.map((x) => <li><a href={x.url} rel="nofollow noopener">{x.title}</a> <span class="src" style="display:inline">(captured {x.captured})</span></li>)}</ul>
+    <p class="small muted">Spot an error? <a href="/corrections/">Tell us</a>.</p>
+  </Base>
+)}

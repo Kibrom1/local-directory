@@ -1,0 +1,11 @@
+---
+// "Source: <name>, captured <date>, last verified <date>. Open source" (UX spec 7.3). Visible text, never a tooltip.
+import { getSite } from '../lib/site.mjs';
+interface Props { sourceId: string; captured: string; verified: string; urls?: (string | null | undefined)[]; prefix?: string }
+const { sourceId, captured, verified, urls = [], prefix } = Astro.props;
+const s = getSite();
+const src = s.sourceById.get(sourceId);
+const company = src && src.source_kind === 'company_submission';
+const links = [...new Set(urls.filter(Boolean))];
+---
+<span class="src">{prefix && <>{prefix} </>}{company ? `Provided by the company, ${captured}.` : `Source: ${src ? src.name : 'unknown'}, captured ${captured}, last verified ${verified}.`}{links.map((u, i) => <> <a href={u} rel="nofollow noopener">Open source{links.length > 1 ? ` ${i + 1}` : ''}</a></>)}</span>

@@ -1,0 +1,5 @@
+---
+interface Props { kind?: 'info' | 'warn' | 'bad'; lead?: string; id?: string }
+const { kind = 'info', lead, id } = Astro.props;
+---
+<div class={`banner ${kind}`} id={id}>{lead && <strong>{lead}</strong>}<slot /></div>

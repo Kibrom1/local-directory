@@ -1,37 +1,59 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Unknown from '../../components/Unknown.astro';
+import Banner from '../../components/Banner.astro';
+import ResultCard from '../../components/ResultCard.astro';
 import { getSite } from '../../lib/site.mjs';
-import { feeText } from '../../lib/format.mjs';
+import { FEE_GUIDES } from '../../lib/feeguides.mjs';
 export function getStaticPaths() {
   return getSite().cityPages.map((p) => ({ params: { slug: p.geo.slug }, props: { page: p } }));
 }
+const s = getSite();
 const { page } = Astro.props;
 const { geo, companies, listedCompanies, robots, tier } = page;
 const all = [...companies, ...listedCompanies];
-const firstFee = (rows, k) => { for (const f of rows) { const t = feeText(f[k]); if (t) return t; } return null; };
+const withFees = all.filter((p) => p.verifiedFees).length;
+const county = s.geoById.get(geo.parent_id);
+const types = [...s.ptById.values()].filter((t) => all.some((p) => p.company.property_types_served.some((x) => x.property_type_id === t.id)));
+const otherCities = s.cityPages.filter((p) => p.geo.id !== geo.id && p.tier !== 'placeholder');
+const feeGuides = s.planned.filter((p) => p.type === 'fee-guide' && p.eligible);
+const jsonLd = tier === 'indexable' ? {
+  '@context': 'https://schema.org', '@type': 'ItemList', name: `Property management companies serving ${geo.name}, ${geo.state}`,
+  numberOfItems: all.length,
+  itemListElement: all.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(p.path, Astro.site).href, name: p.company.name }))
+} : undefined;
 ---
-<Base title={`Property management companies in ${geo.name}, ${geo.state}`} description={`${all.length} property management companies serving ${geo.name}, with sourced fee data where published.`} robots={robots}>
+<Base title={`Property management companies in ${geo.name}, ${geo.state}`} description={`${all.length} property management ${all.length === 1 ? 'company serves' : 'companies serve'} ${geo.name}, ${geo.state}. ${withFees} publish fees. Each fact shows its source and date.`} robots={robots} jsonLd={jsonLd} pageType="city" crumbs={[{ name: 'Cities', href: '/#cities' }, { name: geo.name }]}>
   <h1>Property management in {geo.name}, {geo.state}</h1>
-  {tier === 'placeholder' && <p class="banner">Placeholder data only.</p>}
-  <table>
-    <thead><tr><th>Company</th><th>Management fee</th><th>Flat fee</th><th>Leasing fee</th><th>License</th></tr></thead>
-    <tbody>
-      {companies.map(({ company, verifiedFeeRows }) => (
-        <tr>
-          <td><a href={`/company/${company.slug}/`}>{company.name}</a></td>
-          <td>{firstFee(verifiedFeeRows, 'management_pct') ?? <Unknown />}</td>
-          <td>{firstFee(verifiedFeeRows, 'flat_fee') ?? <Unknown />}</td>
-          <td>{firstFee(verifiedFeeRows, 'leasing_fee') ?? <Unknown />}</td>
-          <td>{company.license && company.license.status !== 'unverified' ? (company.license.status === 'self_stated' ? 'Stated by the company, not checked' : company.license.status) : <Unknown />}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-  {listedCompanies.length > 0 && (
-    <>
-      <h2>Also listed (limited published data)</h2>
-      <ul>{listedCompanies.map(({ company }) => <li><a href={`/company/${company.slug}/`}>{company.name}</a></li>)}</ul>
-    </>
-  )}
+  <p class="lede">{all.length} {all.length === 1 ? 'company serves' : 'companies serve'} {geo.name}. {withFees} {withFees === 1 ? 'publishes' : 'publish'} fees.</p>
+  {tier === 'placeholder' && <Banner kind="warn" lead="Test data.">This page uses test records and is not indexed.</Banner>}
+  {tier === 'listed' && <Banner kind="warn" lead={`We list only ${all.length} companies here so far.`}>This page is not indexed by search engines until more companies with verified data serve {geo.name}.</Banner>}
+  <Banner kind="info" lead="Companies we reviewed, not a market average.">
+    Order: serves {geo.name}, then how complete and recent our data is, then A to Z. Fees and payment never affect order. <a href="/methodology/">How we collect and rank</a>
+  </Banner>
+
+  <form id="filters" class="filters js-only" aria-label="Filter companies">
+    <div class="field" style="margin:0"><label for="type">Property type</label>
+      <select id="type" name="type"><option value="">Any property type</option>{types.map((t) => <option value={t.slug}>{t.name}</option>)}</select></div>
+    <div class="field" style="margin:0"><label class="check" style="margin-top:1.5rem"><input type="checkbox" name="fees" />Only companies that publish fees</label></div>
+  </form>
+  {s.nav.fees && <p><a href="/fees/">Compare these companies in the fee table</a></p>}
+  <p id="count" role="status" aria-live="polite" class="small js-only">{all.length} {all.length === 1 ? 'company' : 'companies'} shown</p>
+
+  <h2>Companies serving {geo.name}</h2>
+  <ul class="results">
+    {all.map((p) => <ResultCard page={p} />)}
+  </ul>
+  <div id="empty-state" hidden>
+    <h2>No companies match these filters</h2>
+    <p>We list {all.length} {all.length === 1 ? 'company' : 'companies'} for {geo.name}. Clear a filter, or <a href="/#cities">choose another city</a>. If a company is missing, <a href="/corrections/?type=add">suggest an addition</a>.</p>
+  </div>
+
+  <h2>About this place</h2>
+  <ul>
+    {county && <li>County in our data: {county.name}. Some cities span more than one county.</li>}
+    {otherCities.length > 0 && <li>Other cities with a page: {otherCities.map((p, i) => <>{i > 0 && ', '}<a href={p.path}>{p.geo.name}</a></>)}.</li>}
+    {feeGuides.length > 0 && <li>Fee guides: {feeGuides.map((g, i) => <>{i > 0 && ', '}<a href={g.path}>{FEE_GUIDES[g.fee_type].short}</a></>)}.</li>}
+    <li>Missing a company or see a wrong fact? <a href="/corrections/">Correct, add or remove a listing</a>.</li>
+  </ul>
+  <script>import '../../scripts/filters.js';</script>
 </Base>

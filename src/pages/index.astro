@@ -2,36 +2,53 @@
 import Base from '../layouts/Base.astro';
 import { getSite } from '../lib/site.mjs';
 const s = getSite();
+const cities = s.cityPages.filter((p) => p.tier === 'indexable');
+// Property types that at least one listed company serves (from sourced facts).
+const served = new Set(s.companyPages.filter((p) => p.tier !== 'placeholder').flatMap((p) => p.company.property_types_served.map((x) => x.property_type_id)));
+const types = [...s.ptById.values()].filter((t) => served.has(t.id));
+const guides = s.guidePages.filter((g) => g.tier === 'indexable').slice(0, 3);
+const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Columbus PM Guide', url: new URL('/', Astro.site).href, potentialAction: { '@type': 'SearchAction', target: new URL('/search/?q={query}', Astro.site).href.replace('%7Bquery%7D', '{query}'), 'query-input': 'required name=query' } };
 ---
-<Base title="Columbus, Ohio property management companies: fees and service areas" description="Free directory of Columbus-area property management companies with sourced fee and service-area data.">
-  <h1>Columbus-area property management companies</h1>
-  <p>Compare fees, services and service areas, each fact with its source and date.</p>
-  {s.placeholderPaths.size > 0 && <p class="banner">Placeholder data only. Records below are fake and exist to test the build.</p>}
-  <div id="search" data-pagefind-ignore></div>
-  <h2>Browse by city</h2>
-  <ul>
-    {s.cityPages.filter((p) => p.tier === 'indexable').map((p) => <li><a href={p.path}>{p.geo.name}, {p.geo.state}</a> ({p.companies.length} companies)</li>)}
-  </ul>
-  {s.cityPages.some((p) => p.tier === 'listed') && (
+<Base title="Find and compare Columbus-area property managers" description="A free, independent directory of Columbus-area property management companies. Fees, services and service areas, each fact with its source and date." jsonLd={jsonLd} pageType="home">
+  <h1>Find and compare Columbus-area property managers</h1>
+  <p class="lede">Free and independent. Each fee, service area and license note shows where it came from and when we checked it.</p>
+
+  {cities.length > 0 && (
+    <form id="find-form" class="filters js-only" aria-label="Find property management companies">
+      <div class="field"><label for="city">City</label>
+        <select id="city" name="city">{cities.map((c) => <option value={c.geo.slug}>{c.geo.name}, {c.geo.state}</option>)}</select></div>
+      <div class="field"><label for="type">Property type</label>
+        <select id="type" name="type"><option value="">Any property type</option>{types.map((t) => <option value={t.slug}>{t.name}</option>)}</select></div>
+      <div class="field"><button class="btn" type="submit">Show companies</button></div>
+    </form>
+  )}
+  <form action="/search/" method="get" role="search" aria-label="Search this site" class="field">
+    <label for="q">Search the site</label>
+    <div style="display:flex;gap:.5rem;max-width:36rem"><input id="q" name="q" type="search" autocomplete="off" /><button class="btn secondary" type="submit">Search</button></div>
+  </form>
+
+  <div class="grid cols-3" style="margin-top:2rem">
+    <div class="card"><h2 style="margin-top:0;font-size:1.125rem">Fees side by side</h2><p>{s.nav.fees ? <>Published fees from the companies we reviewed, with the basis shown for every number. <a href="/fees/">Compare fees</a></> : 'A fee table appears here once enough companies publish comparable fees.'}</p></div>
+    <div class="card"><h2 style="margin-top:0;font-size:1.125rem">Sources and dates</h2><p>No fact without a source line, a capture date and a last-verified date. <a href="/methodology/">How we collect facts</a></p></div>
+    <div class="card"><h2 style="margin-top:0;font-size:1.125rem">No pay to play</h2><p>No paid listings, no featured placement, no lead routing. Fees never change order. <a href="/about/">About this site</a></p></div>
+  </div>
+
+  <h2 id="cities">Browse by city</h2>
+  {cities.length ? (
+    <ul>{cities.map((p) => <li><a href={p.path}>{p.geo.name}, {p.geo.state}</a>: {p.companies.length + p.listedCompanies.length} {p.companies.length + p.listedCompanies.length === 1 ? 'company' : 'companies'} serve it, {p.withFees} publish fees</li>)}</ul>
+  ) : <p>City pages appear once at least three companies with verified data serve a city.</p>}
+
+  {(guides.length > 0 || s.nav.feeGuides) && (
     <>
-      <h2>Cities with limited published data</h2>
-      <ul>{s.cityPages.filter((p) => p.tier === 'listed').map((p) => <li><a href={p.path}>{p.geo.name}, {p.geo.state}</a></li>)}</ul>
+      <h2>For landlords</h2>
+      <ul>
+        {s.nav.feeGuides && <li><a href="/fee-guide/">Fee guides</a>: what the companies we reviewed publish for each fee type</li>}
+        {guides.map((g) => <li><a href={g.path}>{g.guide.title}</a></li>)}
+      </ul>
     </>
   )}
-  {s.companyPages.some((p) => p.tier === 'listed') && (
-    <>
-      <h2>Companies with limited published data</h2>
-      <ul>{s.companyPages.filter((p) => p.tier === 'listed').map((p) => <li><a href={p.path}>{p.company.name}</a></li>)}</ul>
-    </>
-  )}
-  <script is:inline data-pagefind-ignore>
-    // Pagefind UI exists only after `npm run build`; skip silently in dev.
-    fetch('/pagefind/pagefind-ui.js', { method: 'HEAD' }).then((r) => {
-      if (!r.ok) return;
-      const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = '/pagefind/pagefind-ui.css'; document.head.appendChild(css);
-      const js = document.createElement('script'); js.src = '/pagefind/pagefind-ui.js';
-      js.onload = () => new PagefindUI({ element: '#search', showSubResults: false });
-      document.head.appendChild(js);
-    }).catch(() => {});
-  </script>
+
+  <h2>Own or run a listed company?</h2>
+  <p>Fix a wrong fact or have your listing removed, free and without an account. <a href="/corrections/">Correct or remove a listing</a></p>
+  <script>import '../scripts/find.js';</script>
 </Base>

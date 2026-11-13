@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import { getSite, quality as q } from '../lib/site.mjs';
+const s = getSite();
+const conservative = s.feeRule === 'conservative';
+// Rule changes are logged here with a date (PRD section 6, item 6).
+const changes = [
+  { date: '2026-11-12', text: 'First published rules: ordering, freshness limits, page thresholds and the fee comparison scope described on this page.' }
+];
+---
+<Base title="Methodology: how we collect, check and rank" description="Where the facts come from, how companies are ordered, how old a fact can be, and which pages exist only when there is enough verified data." pageType="methodology" crumbs={[{ name: 'Methodology' }]}>
+  <h1>Methodology</h1>
+  <p class="lede">How facts get into this directory, how we order companies and when a page is allowed to exist.</p>
+
+  <h2>What we list</h2>
+  <p>We list a company only after reading its own website. Companies seen only on a third-party directory or in a search result are not published. We collect facts (fees, services, service areas, license notes, public business contact details), not descriptions or images.</p>
+
+  <h2>Sources and dates</h2>
+  <p>Every fact carries a source, the date we captured it and the date we last verified it, shown next to the fact. Our rule is to check a source's terms and robots.txt before collecting from it automatically. An unknown fact stays unknown: it shows as &ldquo;Not published&rdquo; (we read the page and found no figure) or &ldquo;Not checked yet&rdquo; (we have no record of reading it). We never fill a gap with a guess or with a figure from a third-party roundup.</p>
+
+  <h2>How we order companies</h2>
+  <ol>
+    <li>Relevance to the page: serves this city or property type.</li>
+    <li>Data completeness: how many of six fact groups are verified and current (license, fees, service areas, services, property types, contact).</li>
+    <li>Name, A to Z.</li>
+  </ol>
+  <p>Payment, claiming a listing, company size, any business relationship with this site and the amount of a fee are never inputs. A company that does not publish fees is still listed.</p>
+
+  <h2>How old a fact can be</h2>
+  <p>A fact last verified more than {q.freshness.displayFlagDays} days ago is flagged with its age. A fact more than {q.freshness.dropDays} days old is left out of fee comparisons and completeness until we re-check it.</p>
+
+  <h2>Fee comparison scope</h2>
+  <p>The fee comparison and fee guides use only fees a company publishes on its own website, labelled &ldquo;companies we reviewed, not a market average&rdquo;. They are not a survey. Ranges and plans are shown as published and are never averaged. A rent estimate uses an example rent and is an illustration, not a quote.</p>
+  {conservative && <p>A company's fees are included only if its own website also states a Columbus-area service area. Fees from a company with no stated service area are not shown until it states one.</p>}
+
+  <h2>When a page exists</h2>
+  <ul>
+    <li>Company page: indexed by search engines only with at least {q.company.minFactGroups} verified fact groups and verified fees or a verified license. Otherwise it is listed but marked not for indexing.</li>
+    <li>City page: indexed with at least {q.city.indexMinCompanies} indexable companies, at least {q.city.indexMinCompaniesWithFees} with verified fees.</li>
+    <li>Property-type page: at least {q.propertyType.indexMinCompanies} indexable companies with a sourced fact for that type.</li>
+    <li>Fee comparison: at least {q.feeComparison.minCompanies} companies with verified fees. Each fee guide: at least {q.feeGuide.minCompaniesPerFeeType} companies publishing that fee.</li>
+  </ul>
+
+  <h2>License notes</h2>
+  <p>Ohio has no separate property manager license. A company's license note shows what its own site says or, when we have checked it, what the state record shows. A company-stated license is labelled &ldquo;stated by company, not verified&rdquo;.</p>
+
+  <h2>Corrections</h2>
+  <p>Companies can correct or remove a listing for free on <a href="/corrections/">the correction page</a>. A correction is published when there is a public source for it.</p>
+
+  <h2>Change log</h2>
+  <ul>{changes.map((c) => <li><time datetime={c.date}>{c.date}</time>: {c.text}</li>)}</ul>
+</Base>
