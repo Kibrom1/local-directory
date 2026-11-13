@@ -10,7 +10,8 @@
   "verifiedLicenseStatuses": ["active"],
   "city": { "indexMinCompanies": 3, "indexMinCompaniesWithFees": 1, "listedMinCompanies": 2 },
   "propertyType": { "indexMinCompanies": 3 },
-  "feeComparison": { "minCompanies": 5 },
+  "feeComparison": { "minCompanies": 5, "requireStatedServiceArea": true },
+  "feeComparisonNote": "requireStatedServiceArea: true (conservative) means a company's fee rows count toward the fee comparison and the fee-guide gates only when its own site states a Columbus-area service area (a service-areas row). false (liberal) counts every verified fee row. This is the one switch; the build report shows counts under both rules.",
   "feeGuide": { "minCompaniesPerFeeType": 5 },
   "freshness": { "displayFlagDays": 180, "dropDays": 365, "reverifyQueueDays": 150, "feeRowWarnDays": 120 },
   "stages": [

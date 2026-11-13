@@ -4,6 +4,7 @@
 import { collectFacts, summarizeFreshness, daysBetween } from './freshness.mjs';
 
 export const FEE_TYPES = ['management_pct', 'flat_fee', 'leasing_fee', 'renewal_fee'];
+export const FEE_GUIDE_SLUGS = { management_pct: 'management-fee', flat_fee: 'flat-fee', leasing_fee: 'leasing-fee', renewal_fee: 'renewal-fee' };
 export const GROUPS = ['license', 'fees', 'areas', 'services', 'property_types', 'contact'];
 const num = (x) => typeof x === 'number';
 
@@ -23,7 +24,8 @@ export function rankPages(pages) {
   return [...pages].sort((a, b) => (b.completeness - a.completeness) || a.company.name.localeCompare(b.company.name) || a.company.id.localeCompare(b.company.id));
 }
 
-export function evaluate(data, quality, { today } = {}) {
+export function evaluate(data, quality, options = {}) {
+  let { today } = options;
   today = today || new Date().toISOString().slice(0, 10);
   const q = quality;
   const fresh = (d) => daysBetween(d, today) <= q.freshness.dropDays;
@@ -112,32 +114,67 @@ export function evaluate(data, quality, { today } = {}) {
     }
   }
 
-  const staticPages = ['/', '/about/', '/privacy/'].map((p) => ({ path: p, type: 'static', id: null }));
-  const builtIndexable = [...staticPages, ...indexable];
+  // Static pages that always exist. Utility pages (search, 404) are noindex and never counted.
+  const staticPages = ['/', '/about/', '/privacy/', '/corrections/', '/methodology/'].map((p) => ({ path: p, type: 'static', id: null }));
+  const utilityPages = ['/search/', '/404.html'];
 
-  // Fee data counts (companies with at least one verified, fresh value per fee type)
-  const feeCompanies = (pred) => new Set(fees.filter((f) => {
+  // Fee data. A company's fee rows count toward the comparison and the fee guides only when they are verified,
+  // fresh and from an allowed source. Under the conservative rule (quality.feeComparison.requireStatedServiceArea)
+  // the company must also state a service area on its own site. Both rules are always computed for the report.
+  const hasArea = (cid) => areas.some((a) => a.company_id === cid && srcOk(a.source_id) && fresh(a.last_verified_date) && geoById.has(a.geography_id));
+  const feeRowsFor = (rule) => fees.filter((f) => {
     const c = data.companies.find((x) => x.id === f.company_id);
-    return c && !c.placeholder && c.evidence_level === 'own_site_confirmed' && q.verifiedFeeStatuses.includes(f.verification_status) && srcOk(f.source_id) && fresh(f.last_verified_date) && pred(f);
-  }).map((f) => f.company_id));
-  const perFeeType = {};
-  for (const k of FEE_TYPES) perFeeType[k] = feeCompanies((f) => feeValuePopulated(f[k])).size;
-  perFeeType.minimums = feeCompanies((f) => !!(f.minimums && (num(f.minimums.monthly_usd) || f.minimums.other))).size;
-  const companiesWithFees = feeCompanies(feeRowHasValue);
+    return c && !c.placeholder && c.evidence_level === 'own_site_confirmed' && q.verifiedFeeStatuses.includes(f.verification_status) && srcOk(f.source_id) && fresh(f.last_verified_date) && feeRowHasValue(f) && (rule === 'liberal' || hasArea(c.id));
+  });
+  const countsFor = (rule) => {
+    const rows = feeRowsFor(rule);
+    const per = {};
+    for (const k of FEE_TYPES) per[k] = new Set(rows.filter((f) => feeValuePopulated(f[k])).map((f) => f.company_id)).size;
+    per.minimums = new Set(rows.filter((f) => f.minimums && (num(f.minimums.monthly_usd) || f.minimums.other)).map((f) => f.company_id)).size;
+    return { rows, perFeeType: per, companies: new Set(rows.map((f) => f.company_id)) };
+  };
+  const feeCountsByRule = { conservative: countsFor('conservative'), liberal: countsFor('liberal') };
+  const activeRule = q.feeComparison.requireStatedServiceArea === false ? 'liberal' : 'conservative';
+  const active = feeCountsByRule[activeRule];
+  const perFeeType = active.perFeeType;
+  const companiesWithFees = active.companies;
+  const feeRows = active.rows;
+  const excludedByAreaRule = [...feeCountsByRule.liberal.companies].filter((id) => !active.companies.has(id));
 
-  // Pages whose gate is decided here but whose templates are built later.
+  // Gated page types (templates exist). `planned` keeps the full gate decision, eligible or not.
   const planned = [];
   const need = q.feeGuide.minCompaniesPerFeeType;
   planned.push({ type: 'fee-comparison', path: '/fees/', count: companiesWithFees.size, need: q.feeComparison.minCompanies, eligible: companiesWithFees.size >= q.feeComparison.minCompanies });
-  for (const k of FEE_TYPES) planned.push({ type: 'fee-guide', path: `/fees/${k.replace(/_/g, '-')}/`, fee_type: k, count: perFeeType[k], need, eligible: perFeeType[k] >= need });
+  for (const k of FEE_TYPES) planned.push({ type: 'fee-guide', path: `/fee-guide/${FEE_GUIDE_SLUGS[k]}/`, fee_type: k, count: perFeeType[k], need, eligible: perFeeType[k] >= need });
+  planned.push({ type: 'fee-guide-hub', path: '/fee-guide/', count: planned.filter((p) => p.type === 'fee-guide' && p.eligible).length, need: 1, eligible: planned.some((p) => p.type === 'fee-guide' && p.eligible) });
   const indexableIds = new Set(companyPages.filter((p) => p.tier === 'indexable').map((p) => p.id));
   for (const pt of ptById.values()) {
     const n = data.companies.filter((c) => indexableIds.has(c.id) && c.property_types_served.some((p) => p.property_type_id === pt.id && srcOk(p.source_id) && fresh(p.last_verified_date))).length;
-    planned.push({ type: 'property-type', path: `/property-type/${pt.slug}/`, property_type_id: pt.id, count: n, need: q.propertyType.indexMinCompanies, eligible: n >= q.propertyType.indexMinCompanies });
+    planned.push({ type: 'property-type', path: `/property-types/${pt.slug}/`, property_type_id: pt.id, count: n, need: q.propertyType.indexMinCompanies, eligible: n >= q.propertyType.indexMinCompanies });
   }
-  for (const p of planned) p.template_built = false;
 
-  return { data, companyPages, cityPages, indexable: builtIndexable, noindexListed, skipped, placeholderPaths, planned, perFeeType, companiesWithFees, quality: q, today, geoById, ptById, sourceById, fresh };
+  // Guides (content/guides/*.md), parsed and validated by src/lib/guides.mjs. Drafts are not published in production.
+  const prod = options.prod !== false;
+  const guidePages = [];
+  const guideSlugs = new Set();
+  for (const g of data.guides || []) {
+    const base = { type: 'guide', path: `/guides/${g.slug}/`, id: g.slug, guide: g };
+    if (g.status === 'draft' && prod) { skipped.push({ path: base.path, type: 'guide', id: g.slug, reasons: ['status draft: not published in production'] }); continue; }
+    if (guideSlugs.has(g.slug)) { skipped.push({ path: base.path, type: 'guide', id: g.slug, reasons: ['duplicate slug'] }); continue; }
+    guideSlugs.add(g.slug);
+    if (g.status === 'draft') { guidePages.push({ ...base, tier: 'draft', robots: 'noindex, nofollow' }); continue; }
+    guidePages.push({ ...base, tier: 'indexable', robots: 'index, follow' });
+  }
+  const publishedGuides = guidePages.filter((p) => p.tier === 'indexable');
+  planned.push({ type: 'guide-hub', path: '/guides/', count: publishedGuides.length, need: 1, eligible: publishedGuides.length >= 1 });
+  for (const p of planned) p.template_built = true;
+
+  const extra = [];
+  for (const p of planned.filter((x) => x.eligible)) extra.push({ path: p.path, type: p.type, id: p.fee_type || p.property_type_id || null });
+  for (const g of publishedGuides) extra.push({ path: g.path, type: 'guide', id: g.id });
+  const builtIndexable = [...staticPages, ...indexable, ...extra];
+
+  return { data, companyPages, cityPages, guidePages, indexable: builtIndexable, noindexListed, skipped, placeholderPaths, planned, perFeeType, companiesWithFees, feeRows, feeRule: activeRule, feeCountsByRule, excludedByAreaRule, utilityPages, prod, quality: q, today, geoById, ptById, sourceById, fresh };
 }
 
 export function buildReport(site) {
@@ -199,7 +236,11 @@ export function buildReport(site) {
       with_self_stated_license: count((c) => real(c) && c.license && c.license.status === 'self_stated'),
       with_verified_license: count((c) => real(c) && c.license && q.verifiedLicenseStatuses.includes(c.license.status))
     },
+    fee_rule: { active: site.feeRule, switch: 'src/lib/quality.json feeComparison.requireStatedServiceArea', excluded_companies_under_active_rule: site.excludedByAreaRule },
     fee_type_counts: site.perFeeType,
+    fee_type_counts_by_rule: Object.fromEntries(Object.entries(site.feeCountsByRule).map(([k, v]) => [k, { companies_with_fees: v.companies.size, fee_rows: v.rows.length, per_fee_type: v.perFeeType }])),
+    guides: { published: site.guidePages.filter((g) => g.tier === 'indexable').length, drafts_rendered_in_dev: site.guidePages.filter((g) => g.tier === 'draft').length, drafts_not_published_in_production: site.skipped.filter((x) => x.type === 'guide' && /draft/.test(x.reasons[0])).length, mode: site.prod ? 'production' : 'development' },
+    utility_noindex_pages: site.utilityPages,
     freshness,
     sources: {
       total: data.sources.length,

@@ -1,0 +1,5 @@
+{
+  "$comment": "Indexable paths that were live at the last release (written by npm run paths:snapshot after a deploy). npm run check:site fails if one of them is missing from the build and is neither redirected nor listed under removed in config/redirects.json. Empty until the first launch.",
+  "released": null,
+  "paths": []
+}

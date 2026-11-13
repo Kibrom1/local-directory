@@ -1,0 +1,83 @@
+// Fee display helpers for tables: split a published fee value into amount, basis, tag and plans.
+// Ranges and plans are shown as published, never merged into one number or averaged. Pure.
+const num = (x) => typeof x === 'number';
+const usd = (n) => `$${Number.isInteger(n) ? n.toLocaleString('en-US') : n.toFixed(2)}`;
+const pct = (n) => `${n}%`;
+const PERIOD = { one_time: '', monthly: 'per month', per_unit_monthly: 'per unit per month', annual: 'per year' };
+
+const fmt = (type, n) => (type === 'flat_usd' ? usd(n) : pct(n));
+function amountOf(type, o) {
+  if (num(o.value)) return { text: fmt(type, o.value), range: false };
+  if (num(o.min) && num(o.max)) return { text: type === 'flat_usd' ? `${usd(o.min)}-${usd(o.max)}` : `${o.min}-${o.max}%`, range: true };
+  if (num(o.min)) return { text: `from ${fmt(type, o.min)}`, range: true };
+  if (num(o.max)) return { text: `up to ${fmt(type, o.max)}`, range: true };
+  return null;
+}
+// Published basis wording is shown as the company states it. A basis that reads like a rent basis gets "of ...";
+// anything else (for example "rate basis not stated") is shown in parentheses so it is never turned into a false basis.
+const RENT_BASIS = /rent|month/i;
+const NOT_STATED = /not stated|depends|only/i;
+function basisOf(v) {
+  const b = v.basis ? v.basis.replace(/^of\s+/, '') : null;
+  if (v.type === 'flat_usd') return [PERIOD[v.period] || '', b ? `(${b})` : ''].filter(Boolean).join(' ');
+  if (b && (!RENT_BASIS.test(b) || NOT_STATED.test(b)) && !/greater of/i.test(b)) return `(${b})`;
+  if (v.type === 'pct_of_monthly_rent') return `of ${b || "one month's rent"}`;
+  return `of ${b || 'rent'}`;
+}
+
+// Returns null when the value has no number at all. Otherwise
+// { main, basis, tag, plans:[{label, text}], minimum, notes, range }.
+export function describeFee(v) {
+  if (!v) return null;
+  const basis = basisOf(v);
+  const minimum = num(v.minimum_usd) ? `minimum ${usd(v.minimum_usd)}` : null;
+  const plans = (v.plans || []).map((p) => {
+    const a = amountOf(v.type, p);
+    if (!a) return null;
+    const label = [p.name, p.condition].filter(Boolean).join(', ') || 'Plan';
+    const extra = [num(p.minimum_usd) ? `minimum ${usd(p.minimum_usd)}` : null, p.label_confirmed === false ? 'plan label inferred, not confirmed' : null].filter(Boolean);
+    return { label, text: a.text, extra: extra.join('; '), numeric: p };
+  }).filter(Boolean);
+  const head = amountOf(v.type, v);
+  if (head) return { main: head.text, basis, tag: head.range ? 'range' : null, plans, minimum, notes: v.notes || null };
+  if (!plans.length) return null;
+  // Plan-based: show the span of the plans, tagged with the plan count.
+  const vals = plans.flatMap((p) => [p.numeric.value, p.numeric.min, p.numeric.max]).filter(num);
+  const lo = Math.min(...vals), hi = Math.max(...vals);
+  const main = lo === hi ? fmt(v.type, lo) : (v.type === 'flat_usd' ? `${usd(lo)}-${usd(hi)}` : `${lo}-${hi}%`);
+  return { main, basis, tag: `${plans.length} plan${plans.length === 1 ? '' : 's'}`, plans, minimum, notes: v.notes || null };
+}
+
+export function minimumsText(m) {
+  if (!m) return null;
+  const parts = [num(m.monthly_usd) ? `${usd(m.monthly_usd)} per month` : null, m.other].filter(Boolean);
+  return parts.length ? parts.join('; ') : null;
+}
+
+export const UNKNOWN = {
+  not_published: 'Not published',
+  not_checked: 'Not checked yet',
+  not_offered: 'Not offered',
+  varies: 'Varies, ask company'
+};
+
+export const monthsBetween = (date, today) => Math.max(0, Math.floor(Math.round((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${date}T00:00:00Z`)) / 86400000) / 30));
+export const ageDays = (date, today) => Math.round((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${date}T00:00:00Z`)) / 86400000);
+
+// Verified / stale badge model for a dated fact.
+export function freshnessBadge(date, today, flagDays) {
+  const age = ageDays(date, today);
+  if (age > flagDays) return { kind: 'stale', text: `Verified ${monthsBetween(date, today)} months ago`, age };
+  return { kind: 'ok', text: `Verified ${date}`, age };
+}
+
+export const LICENSE_EXPLANATION = 'Ohio has no separate property manager license. Companies that manage rental property for a fee generally work under a real estate broker license from the state. A company stating a license on its own website is not the same as us checking the state record.';
+
+export function licenseBadge(lic, today) {
+  if (!lic || lic.status === 'unverified') return { kind: 'none', text: 'License: not checked' };
+  if (lic.status === 'self_stated') return { kind: 'none', text: 'License: stated by company, not verified' };
+  if (lic.status === 'active') return { kind: 'ok', text: 'License verified' };
+  if (lic.status === 'inactive') return { kind: 'bad', text: `License inactive (${lic.last_verified_date})` };
+  if (lic.status === 'none_found') return { kind: 'bad', text: `No matching license found (checked ${lic.last_verified_date})` };
+  return { kind: 'none', text: 'License: not checked' };
+}

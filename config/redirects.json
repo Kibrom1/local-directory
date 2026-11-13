@@ -1,0 +1,5 @@
+{
+  "$comment": "Changed slugs and intentional removals. redirects[]: { from, to, reason, date } with from and to as paths that end in /. A page that was published and later changes path MUST be listed here (npm run check:site compares config/published-paths.json with the build). removed[]: paths deliberately taken down (suppression or removal request); they return the site 404. After editing, run npm run redirects:sync to regenerate vercel.json.",
+  "redirects": [],
+  "removed": []
+}
