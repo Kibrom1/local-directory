@@ -12,11 +12,17 @@ npm test                 # node:test unit tests (validator, gate, scraper) with 
 npm run report           # quality gate + metrics counts without a full build (exit 1 if over the stage budget)
 npm run freshness        # facts and fee rows past 180 / 365 days (and the 150-day re-verify queue)
 npm run validate:strict  # launch check: also fails on warnings (placeholder records, sources used with robots/ToS unreviewed)
-npm run dev              # local dev server (search works only after a build)
+npm run dev              # local dev server (search works only after a build; draft guides render here)
+npm run build:strict     # launch build: validate:strict, fails if form/email, operator, disclosure or SITE_URL are unset, then check:site --strict
+npm run check:site       # after build: canonical/title/description/JSON-LD, sitemap vs noindex, links, orphans, redirects, no SAMPLE/TODO text
+npm run check:a11y       # axe-core in headless Chrome (puppeteer-core) at 320 and 1280 px; falls back to jsdom without Chrome
+npm run check:contrast   # contrast pairs computed from docs/ux/design-tokens.json; CSS must match the tokens
+npm run check:weight     # HTML/CSS/JS size per page against the UX budgets
+npm run redirects:sync   # regenerate vercel.json from config/redirects.json
 ```
 Requires Node 22. Build output: `dist/`. Reports are git-ignored under `reports/`. Operations: see `docs/developer/runbook.md`.
 
-Environment variables: `PUBLIC_GA_ID` (GA4 ID; tag omitted when unset), `SITE_URL` (production origin for canonicals, sitemap, robots.txt), `SCRAPER_CONTACT_URL` (scraper only), `TODAY` (YYYY-MM-DD, overrides the date for reports and tests).
+Environment variables: `PUBLIC_FORM_ACTION`, `PUBLIC_CONTACT_EMAIL`, `PUBLIC_OPERATOR_NAME`, `PUBLIC_DISCLOSURE` (see `.env.example`), `PUBLIC_GA_ID` (GA4 ID; tag omitted when unset), `SITE_URL` (production origin for canonicals, sitemap, robots.txt), `SCRAPER_CONTACT_URL` (scraper only), `TODAY` (YYYY-MM-DD, overrides the date for reports and tests).
 
 ## Layout
 - `data/` JSON data files: companies, fee-schedules, service-areas, property-types, geography, sources, suppression
@@ -25,7 +31,10 @@ Environment variables: `PUBLIC_GA_ID` (GA4 ID; tag omitted when unset), `SITE_UR
 - `scripts/report.mjs`, `scripts/freshness.mjs` build report and freshness listing
 - `scripts/scraper/` registry-driven scraper framework (see below)
 - `src/lib/gate.mjs` the pure quality gate and build report; `src/lib/quality.json` thresholds; `src/lib/site.mjs` loads data; `src/lib/format.mjs` fee and provenance text
-- `src/pages/` home, `city/[slug]`, `company/[slug]`, about, privacy, robots.txt
+- `src/pages/` home, `city/[slug]`, `company/[slug]`, `fees/`, `fee-guide/`, `property-types/[slug]`, `guides/` (from `content/guides/*.md`), corrections, methodology, about, privacy, search, 404, robots.txt. Gated pages use `[...slug]` routes whose `getStaticPaths` returns nothing when the gate is not met.
+- `src/layouts/Base.astro`, `src/components/`, `src/styles/site.css` (design tokens as CSS variables), `src/scripts/` (one small script per feature, loaded only where used)
+- `src/lib/guides.mjs` guide loader/validator/renderer; `fees.mjs`, `estimate.mjs`, `feetable.mjs`, `feeguides.mjs` fee display, rent illustration, table rows, guide wording; `env.mjs` launch configuration checks
+- `config/redirects.json` changed-slug redirects and removals; `config/published-paths.json` paths live at the last release; `vercel.json` generated from the redirects
 - `tests/` unit tests and fixtures (`tests/fixtures/`)
 
 ## Data conventions
@@ -53,7 +62,7 @@ Environment variables: `PUBLIC_GA_ID` (GA4 ID; tag omitted when unset), `SITE_UR
 ## Quality gate (`src/lib/gate.mjs`, thresholds in `src/lib/quality.json`, rules from `docs/pm/prd.md` section 10)
 - Company profile: indexable only with 3+ fact groups (license, fees, areas, services, property types, contact) AND verified fees or a verified license. Areas, services and contact alone are not enough. Below that but with 2+ groups and own-site evidence: generated as `noindex, follow` (listed tier, not in the sitemap or the search index). Otherwise skipped.
 - City page: indexable with 3+ indexable companies and at least 1 with verified fees; 2 listed companies: `noindex, follow`; fewer: skipped.
-- Fee comparison and each fee guide (management %, flat, leasing, renewal): eligible only with 5+ companies that have a verified, fresh value for that fee type. Property-type pages: 3+ indexable companies with a sourced type fact. These three page types are gated in the report (`planned_pages`) but their templates are not built yet.
+- Fee comparison and each fee guide (management %, flat, leasing, renewal): eligible only with 5+ companies that have a verified, fresh value for that fee type. Property-type pages: 3+ indexable companies with a sourced type fact. All three page types are built; a page is generated only when its gate is met (`planned_pages` in the report).
 - Freshness: facts older than 180 days show "last verified N months ago"; facts older than 365 days drop out of verified fees and completeness.
 - Staged page budget (`stages`, `currentStage`): the build fails if indexable pages exceed the current stage maximum; below the stage minimum is reported, not a failure (the owner decides).
 - Ordering on lists: completeness (populated fact groups of 6), then name. Nothing else can affect order.
@@ -68,3 +77,18 @@ Registry-driven and manual-review only. It produces a reviewable diff report; it
 - `normalize.mjs`: proposes changes with source id, source URL and captured date on every change, anomaly flags (fee change over 25%, value to null, disappeared company, unknown area), suppression rejections (by id, domain, name), and a validation run on the proposed data. Scraped changes are always `unverified`.
 - `health.mjs`: per-source run history (`reports/scraper/history.json`), success rate, parse failures, schema failures, facts changed; a source is stale after two failed runs in a row.
 - Run: `SCRAPER_CONTACT_URL=https://... npm run scraper:run -- --source src_x --adapter name --url https://... ` then review `reports/scraper/<run>/diff-report.md`.
+
+## Pages, gates and the fee-comparison rule
+- Fee comparison `/fees/` (5+ companies), fee guides `/fee-guide/<fee>/` (management-fee, flat-fee, leasing-fee, renewal-fee; 5+ companies publishing that fee each, so flat-fee stays off while it has fewer) plus hub `/fee-guide/`, property types `/property-types/<slug>/` (3+ indexable companies), landlord guides `/guides/<slug>/`, hub `/guides/`. Navigation links exist only for pages that exist.
+- One-line switch `feeComparison.requireStatedServiceArea` in `src/lib/quality.json`. `true` (default, conservative): a company's fee rows count toward the comparison, the guides' gates and the tables only if the company's own site states a service area (a `service-areas` row). `false`: every verified fee row counts. The report prints counts under both rules.
+- Unknown values: "Not published" (a fee row exists and the field is empty), "Not checked yet" (no fee data recorded for the company, for example sites that block fetching), "Not offered" and "Varies, ask company" (supported by the component; the data model has no field for them yet).
+- The rent illustration uses a labelled example rent of $1,500 (a round number, not a Columbus figure). Ranges stay ranges; percent values honor published dollar minimums.
+
+## Guides (`content/guides/*.md`)
+Front matter: `title, slug, description, type, keywords[], last_verified (YYYY-MM-DD), sources[{title,url,captured}], status (published|draft)`. Every guide renders its source list and last-verified date at `/guides/<slug>/` whatever `type` says. A published guide with a problem (no sources, bad date, H1 in body, unknown status, duplicate slug) fails the build. `status: draft` is withheld in production builds and rendered `noindex` in `npm run dev`. Raw HTML in the body is escaped. An empty or missing directory is fine.
+
+## Correction form and launch configuration
+`/corrections/` posts to `PUBLIC_FORM_ACTION` and shows `PUBLIC_CONTACT_EMAIL` as a visible fallback. With neither set the page renders a visible "cannot receive requests" notice instead of a form, the build prints a launch-configuration warning, and `build:strict` / `check:site --strict` fail. Operator name, related-business disclosure and `SITE_URL` are treated the same way.
+
+## Redirects and changed slugs
+Add `{from, to, reason, date}` to `config/redirects.json`, run `npm run redirects:sync` (writes `vercel.json` for host-level 301s; Astro also writes fallback redirect pages) and commit both. After each release run `npm run paths:snapshot` and commit `config/published-paths.json`: `check:site` then fails if a published path disappears without a redirect or a `removed` entry.

@@ -48,10 +48,19 @@ Add `scripts/scraper/adapters/<name>.mjs` exporting `{ id, match(url), parse({ h
 For companies whose site disallows automated fetching (RL Property Management Group pricing domain, I Heart Real Estate PM pricing domain, FYVE) fees stay blank. If the owner approves manual lookups: a person reads the public page, records the facts with `access_method: manual_public_lookup`, the date and exact URL, and sets `verification_status` to `verified_own_site` only after a second check. Do not use third-party roundups as a value source.
 
 ## Stage budget and gates
-`src/lib/quality.json` holds all thresholds. `currentStage` caps indexable pages (stage 1: 30 to 45). The build fails when over the cap. Raise the stage only when the roadmap condition is met (70% of the prior batch indexed after 6 weeks, new pages clear the bar through new data). Being under the minimum is reported, not blocked; do not add thin pages to reach it. The fee comparison, fee guides and property-type pages are gated in `planned_pages`; they are published only once their templates exist and `eligible` is true.
+`src/lib/quality.json` holds all thresholds. `currentStage` caps indexable pages (stage 1: 30 to 45). The build fails when over the cap. Raise the stage only when the roadmap condition is met (70% of the prior batch indexed after 6 weeks, new pages clear the bar through new data). Being under the minimum is reported, not blocked; do not add thin pages to reach it. The fee comparison, fee guides and property-type pages are built; each is generated only when its gate is met (`planned_pages` in the report).
 
 ## Launch checklist (data side)
 - `npm run validate:strict` passes: no placeholder records; every source used by published data has robots and ToS decisions recorded (company site terms are currently unread).
 - `npm run report`: stage budget not over; indexable count reviewed; no company published on directory-only evidence.
 - Licenses: none verified yet. Locate the Ohio Division of Real Estate licensee file URL, read its terms, record the source, then match listed companies.
 - Contact address on About; privacy page reviewed by the owner (retention period and form host are proposals); GA4 settings match the privacy page.
+
+## Build and release checks (site side)
+1. `npm run validate`, `npm test`, `npm run build`, `npm run check:site`. Then `npm run check:a11y` (needs Chrome; set `CHROME_PATH` if not at `/usr/bin/google-chrome`), `npm run check:contrast`, `npm run check:weight`.
+2. Launch: set `PUBLIC_FORM_ACTION`, `PUBLIC_CONTACT_EMAIL`, `PUBLIC_OPERATOR_NAME`, `PUBLIC_DISCLOSURE`, `SITE_URL`, `PUBLIC_GA_ID` in Vercel, then `npm run build:strict` must pass. The hosted form tool must meet WCAG 2.2 AA and accept a plain POST of the fields in `src/pages/corrections.astro`.
+3. After the release: `npm run paths:snapshot`, commit `config/published-paths.json`.
+4. Changed slug: add to `config/redirects.json`, `npm run redirects:sync`, rebuild, `check:site`.
+5. Fee-comparison scope: to include companies that publish fees but state no service area, set `feeComparison.requireStatedServiceArea` to `false` in `src/lib/quality.json` and read `npm run report` (counts under both rules are printed).
+6. Guides: authors edit `content/guides/*.md`; `status: published` plus sources and `last_verified`. `check:site` also lints internal links inside guides (draft links warn, published links fail). Re-verify guides on the same cadence as fees.
+7. Search: Pagefind indexes only indexable pages (`data-pagefind-body`); `/search/` and noindex pages are excluded.
