@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Correct or remove a listing | Columbus PM Guide (prototype)</title>
+<meta name="description" content="Prototype claim/correct form.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="sample-bar" role="note"><div class="wrap"><strong>PROTOTYPE.</strong> Every company name, fee, date and count on this page is <strong>SAMPLE</strong> data for design review. It is not real company data. <a href="about.html#prototype">What this means</a></div></div>
+<header class="site-header"><div class="wrap">
+<div class="hdr"><a class="brand" href="index.html">Columbus PM Guide</a>
+<button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" type="button">Menu</button></div>
+<nav class="site-nav" aria-label="Main"><ul class="nav-list" id="nav-list"><li><a href="index.html">Home</a></li><li><a href="fees.html">Compare fees</a></li><li><a href="fee-guide-leasing.html">Fee guides</a></li><li><a href="guide-what-does-a-property-manager-do.html">Landlord guides</a></li><li><a href="city-dublin.html">Cities</a></li><li><a href="about.html">About</a></li></ul></nav>
+</div></header>
+<div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li aria-current="page">Correct or remove a listing</li></ol></nav></div>
+<main id="main" class="wrap" data-pagefind-body>
+
+<h1>Correct or remove a listing</h1>
+<p class="lede">Free. No account. Takes about 3 minutes.</p>
+<div class="banner warn"><strong>Prototype form.</strong> Nothing is sent or stored. The live site will use a hosted form tool (owner decision pending).</div>
+<h2>What happens next</h2>
+<ol><li>We reply within 3 business days (proposed) to the email you give.</li><li>We verify you can speak for the company, using a reply from an address on the company&#39;s own website domain or a published company contact.</li><li>We publish a correction when there is a public source for it. Removals are published at the next update, within 5 business days (proposed).</li></ol>
+<p>Correcting or claiming a listing never changes its position. You do not need to pay or sign up.</p>
+<div id="error-summary" class="banner bad" role="alert" tabindex="-1" hidden><strong>Please fix the highlighted fields.</strong> Company, your email, and (for corrections) an evidence link are required.</div>
+<div id="thanks" class="banner info" tabindex="-1" hidden><strong>Thanks (prototype).</strong> On the live site this message would say: &quot;We received your request. Request ID: SAMPLE-0001. We will reply within 3 business days.&quot; <a href="index.html">Back to home</a></div>
+<form id="correct-form" novalidate style="max-width:36rem" aria-label="Correct or remove a listing">
+<fieldset><legend>What do you want to do?</legend>
+<label class="check"><input type="radio" name="rtype" value="correct" checked>Correct a fact</label>
+<label class="check"><input type="radio" name="rtype" value="add">Add a missing fact or company</label>
+<label class="check"><input type="radio" name="rtype" value="remove">Remove the listing</label></fieldset>
+<div class="field"><label for="company">Company name or page address</label><input id="company" name="company" type="text" autocomplete="organization" aria-describedby="company-err"><p class="err" id="company-err" hidden>Enter the company name or the page address.</p></div>
+<div id="fact-fields"><div class="field"><label for="fact">Which fact is wrong, and what is correct?</label><p class="hint" id="fact-h">Example: &quot;Renewal fee is $200, not $150.&quot;</p><textarea id="fact" name="fact" aria-describedby="fact-h"></textarea></div>
+<div class="field"><label for="evidence">Link that shows the correct fact</label><p class="hint" id="ev-h">A page on your company website or another public source. Required so we can publish it.</p><input id="evidence" name="evidence" type="url" inputmode="url" aria-describedby="ev-h evidence-err"><p class="err" id="evidence-err" hidden>Enter a link starting with https://</p></div></div>
+<div class="field"><label for="requester_name">Your name</label><input id="requester_name" name="requester_name" type="text" autocomplete="name"></div>
+<div class="field"><label for="role">Your role at the company</label><input id="role" name="role" type="text" autocomplete="organization-title"></div>
+<div class="field"><label for="requester_email">Your email</label><p class="hint" id="em-h">Used only to verify and reply. Not published. Deleted 12 months after we close the request (proposed). <a href="not-built.html?page=privacy">Privacy</a></p><input id="requester_email" name="requester_email" type="email" autocomplete="email" aria-describedby="em-h requester_email-err"><p class="err" id="requester_email-err" hidden>Enter an email like name@company.com.</p></div>
+<button class="btn" type="submit">Send request</button>
+</form>
+<p class="small" style="margin-top:2rem">Prefer email? <span class="unk">address to be set by owner</span></p>
+
+</main>
+<footer class="site-footer"><div class="wrap">
+<p><strong>Columbus PM Guide</strong> (working name). Free and independent. No paid listings, no ads, no accounts. Facts come from public sources, each with a source and a date. Unknown values are left blank, never guessed.</p>
+<ul><li><a href="corrections.html">Correct or remove a listing</a></li><li><a href="not-built.html?page=methodology">How we collect and rank (Methodology)</a></li><li><a href="about.html">About this site</a></li><li><a href="not-built.html?page=privacy">Privacy</a></li></ul>
+<p class="small">Service areas: Franklin, Delaware, Fairfield and Licking counties, Ohio. Last site data update: <span class="tag-sample">SAMPLE</span> 2026-11-11.</p>
+</div></footer>
+<script src="site.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+query,cluster,volume_or_proxy_monthly,measured_or_estimate,source,date
+fresno property managers (cluster incl. variants),analog (non-Columbus),6600,measured,Google Ads API monthly average via https://www.seodata.dev/keyword/fresno-property-managers,page updated 2026-06-24
+property management fresno,analog (non-Columbus),5400,measured,same page https://www.seodata.dev/keyword/fresno-property-managers,page updated 2026-06-24
+property management companies in fresno california,analog (non-Columbus),170,measured,same page https://www.seodata.dev/keyword/fresno-property-managers,page updated 2026-06-24
+property management (US head term),national,110000,measured,RankHero https://www.rankhero.com/keywords/property-management,updated 2026-09-24
+what does a property manager do,national informational,3600,measured,https://www.seodata.dev/keyword/what-is-property-management-company (source/date not stated on page),undated
+what is property management,national informational,2400,measured,same page (source/date not stated),undated
+what does a property management company do,national informational,1000,measured,same page (source/date not stated),undated
+Columbus MSA households (scaling base),context,880121 households,measured,https://censusreporter.org/profiles/31000US18140-columbus-oh-metro-area/ (ACS 2024 1-yr),2026-11-11 retrieved
+Fresno MSA households (scaling base),context,379101 households,measured,https://censusreporter.org/profiles/31000US23420-fresno-ca-metro-area/ (ACS 2024 1-yr),2026-11-11 retrieved
+"property management columbus ohio / property managers columbus oh / columbus property management companies (head cluster, all variants)",Columbus head,3000-15000,estimate,"Proxy: Fresno cluster 6,600 per 379k HH = 17.4/1k HH; x880k HH = ~15,300 (upper); low = ~20% of that. No Columbus figure found. LOW confidence",2026-11-11
+property management fees columbus / how much do property managers charge columbus,Columbus fees,50-320,estimate,No measured data; assumption = 1-5% of head cluster. LOW confidence,2026-11-11
+best property management companies columbus ohio,Columbus head,(included in head cluster),estimate,Google Ads groups close variants; do not add to head cluster,2026-11-11
+property management dublin ohio / property managers dublin oh,suburb,50-260,estimate,"Assumption: large suburb, bucket per Fresno long-variant 170. Unmeasured",2026-11-11
+property management westerville ohio,suburb,50-260,estimate,as above; unmeasured,2026-11-11
+property management hilliard ohio,suburb,50-260,estimate,as above; unmeasured,2026-11-11
+property management gahanna ohio,suburb,50-260,estimate,as above; unmeasured,2026-11-11
+property management grove city ohio,suburb,50-260,estimate,as above; unmeasured,2026-11-11
+property management upper arlington ohio,suburb,20-140,estimate,mid-size suburb; unmeasured,2026-11-11
+property management powell ohio,suburb,20-140,estimate,mid-size suburb; unmeasured,2026-11-11
+property management delaware ohio,suburb,20-140,estimate,mid-size; unmeasured,2026-11-11
+property management pickerington ohio,suburb,20-140,estimate,mid-size; unmeasured,2026-11-11
+property management lancaster ohio,suburb,20-140,estimate,mid-size; unmeasured,2026-11-11
+property management newark ohio,suburb,20-140,estimate,mid-size; unmeasured,2026-11-11
+property management new albany ohio,suburb,20-140,estimate,mid-size; unmeasured,2026-11-11
+property management canal winchester ohio,suburb,20-140,estimate,mid-size; unmeasured,2026-11-11
+property management bexley / grandview heights / groveport / heath / pataskala (5 terms),suburb,50-250 combined,estimate,small suburbs 10-50 each; unmeasured,2026-11-11
+"<district> school district property management (7 districts: Olentangy, Dublin, Upper Arlington, Gahanna-Jefferson, Canal Winchester, Lancaster, Big Walnut)",school district x service,0-200 combined,estimate,SERP shows rental listings not PM pages (see competitors.csv); likely near-zero PM intent. Unmeasured,2026-11-11
+single family rental property management columbus,property type,10-140,estimate,unmeasured; SERP dominated by general PM pages,2026-11-11
+duplex / small multifamily property management columbus,property type,10-70,estimate,unmeasured; SERP = BiggerPockets threads,2026-11-11
+hoa management companies columbus ohio,property type,100-480,estimate,"unmeasured; note searchers are boards, not rental owners",2026-11-11
+short term rental / airbnb management columbus ohio,property type,170-720,estimate,unmeasured; STR demand is larger but lead-gen competitors dominate,2026-11-11
+TOTAL combined Phase 1 cluster (sum of above),total,"~3,800-19,600 (central ~9,800)",estimate,Sum of low/high estimates; zero measured Columbus inputs,2026-11-11
+TOTAL excluding head cluster (suburb+district+type+fees),total long-tail,"~800-4,600 (central ~2,300)",estimate,Sum of non-head estimates; this is the realistically contestable demand,2026-11-11

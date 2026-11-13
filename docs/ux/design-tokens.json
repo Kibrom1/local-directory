@@ -1,0 +1,249 @@
+{
+  "$description": "Design tokens for Columbus PM Guide (working name). Contrast ratios computed with the WCAG 2.x relative-luminance formula (docs/ux/accessibility-checklist.md). CSS custom properties in prototype/style.css mirror these values.",
+  "color": {
+    "ink": {
+      "value": "#1a1a1a",
+      "use": "body text",
+      "contrast": {
+        "on bg #ffffff": 17.4,
+        "on surface #f4f6f8": 16.07
+      }
+    },
+    "muted": {
+      "value": "#4a4f57",
+      "use": "secondary text, hints, source notes",
+      "contrast": {
+        "on bg": 8.24,
+        "on surface": 7.61,
+        "on unknown-bg #eef0f3": 7.22
+      }
+    },
+    "bg": {
+      "value": "#ffffff"
+    },
+    "surface": {
+      "value": "#f4f6f8",
+      "use": "panels, filters, table header"
+    },
+    "line": {
+      "value": "#d9dde3",
+      "use": "decorative dividers only (not required for understanding)"
+    },
+    "ui": {
+      "value": "#6b7280",
+      "use": "borders of inputs, buttons, cards (UI component boundary)",
+      "contrast": {
+        "on bg (needs 3:1)": 4.83
+      }
+    },
+    "primary": {
+      "value": "#0b4a8f",
+      "use": "links, primary button background",
+      "contrast": {
+        "on bg": 8.79,
+        "on surface": 8.11,
+        "white text on primary": 8.79
+      }
+    },
+    "focus": {
+      "value": "#0b3d91",
+      "use": "3px focus outline, 2px offset",
+      "contrast": {
+        "on bg": 10.04,
+        "on surface": 9.27
+      }
+    },
+    "warn": {
+      "bg": "#fff4d6",
+      "ink": "#5a3b00",
+      "line": "#8a5a00",
+      "use": "freshness banner, stale badge",
+      "contrast": {
+        "ink on bg": 9.3,
+        "line on white (needs 3:1)": 5.93
+      }
+    },
+    "success": {
+      "bg": "#e6f4ec",
+      "ink": "#0f5c35",
+      "use": "verified badge only",
+      "contrast": {
+        "ink on bg": 7.11,
+        "ink on white": 8.07
+      }
+    },
+    "danger": {
+      "bg": "#fdecea",
+      "ink": "#9b1c10",
+      "use": "form errors",
+      "contrast": {
+        "ink on bg": 7.15,
+        "ink on white": 8.18
+      }
+    },
+    "info": {
+      "bg": "#e8f1fb",
+      "ink": "#0b3a6b",
+      "use": "scope/labeling notes (reviewed, not average)",
+      "contrast": {
+        "ink on bg": 10.05
+      }
+    },
+    "sample": {
+      "bg": "#3b1d6e",
+      "ink": "#ffffff",
+      "use": "prototype SAMPLE marker only; not shipped",
+      "contrast": {
+        "ink on bg": 13.23
+      }
+    },
+    "neutralBadge": {
+      "bg": "#eceef1",
+      "ink": "#3d4148",
+      "use": "unverified/not checked badge, reserved ad slot",
+      "contrast": {
+        "ink on bg": 8.82,
+        "ad dashed border #6b7280 on ad bg (needs 3:1)": 4.16
+      }
+    },
+    "unknown": {
+      "bg": "#eef0f3",
+      "ink": "#4a4f57",
+      "use": "\"Not published\" chip (always text, never color alone)",
+      "contrast": {
+        "ink on bg": 7.22
+      }
+    },
+    "footer": {
+      "bg": "#1f2933",
+      "ink": "#e8ebef",
+      "link": "#ffffff",
+      "contrast": {
+        "ink on bg": 12.34,
+        "link on bg": 14.76
+      }
+    }
+  },
+  "typography": {
+    "family": {
+      "sans": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+      "note": "System fonts only: no web-font request, no layout shift."
+    },
+    "scale": {
+      "xs": "0.75rem/1.4",
+      "sm": "0.875rem/1.5",
+      "base": "1rem/1.6",
+      "lg": "1.125rem/1.6",
+      "h3": "1.125rem/1.3",
+      "h2": "1.375rem/1.25",
+      "h1-mobile": "1.75rem/1.2",
+      "h1-desktop": "2.25rem/1.2"
+    },
+    "weight": {
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    },
+    "measure": "max 42rem for prose (about 70 characters)",
+    "minBodySize": "1rem; allow 200% zoom and text-size override"
+  },
+  "spacing": {
+    "1": "0.25rem",
+    "2": "0.5rem",
+    "3": "0.75rem",
+    "4": "1rem",
+    "6": "1.5rem",
+    "8": "2rem",
+    "12": "3rem"
+  },
+  "radius": {
+    "sm": "0.25rem",
+    "md": "0.5rem",
+    "pill": "1rem"
+  },
+  "breakpoints": {
+    "mobile": "0 (default, styles written mobile first)",
+    "sm": "40rem (640px): 2-col grids, form label/value rows",
+    "md": "48rem (768px): horizontal nav, fee table switches from cards to table",
+    "lg": "64rem (1024px): profile/guide two-column with 18rem side slot"
+  },
+  "layout": {
+    "maxWidth": "68rem",
+    "pageGutter": "1rem",
+    "touchTargetMin": "2.75rem (44px), exceeds WCAG 2.2 2.5.8 minimum of 24px"
+  },
+  "motion": {
+    "policy": "No animation required; honor prefers-reduced-motion; no parallax, carousels or autoplay"
+  },
+  "components": {
+    "button": {
+      "minHeight": "2.75rem",
+      "padding": "0 1.5rem",
+      "radius": "md",
+      "primary": {
+        "bg": "primary",
+        "ink": "#ffffff"
+      },
+      "secondary": {
+        "bg": "bg",
+        "ink": "primary",
+        "border": "primary"
+      },
+      "disabled": {
+        "bg": "unknown.bg",
+        "ink": "muted",
+        "border": "ui",
+        "note": "disabled state keeps aria-disabled and an explanatory status text nearby"
+      }
+    },
+    "input": {
+      "minHeight": "2.75rem",
+      "border": "1px ui",
+      "radius": "md",
+      "focus": "3px focus outline",
+      "error": "2px danger border plus error text, aria-invalid"
+    },
+    "badge": {
+      "variants": [
+        "ok (verified)",
+        "none (unverified / not checked)",
+        "stale (over 180 days)",
+        "bad"
+      ],
+      "textRule": "every badge has text; icon is decorative",
+      "size": "0.8125rem/600"
+    },
+    "banner": {
+      "variants": [
+        "warn",
+        "info",
+        "bad"
+      ],
+      "border": "6px left accent plus 1px",
+      "padding": "0.75rem 1rem"
+    },
+    "resultCard": {
+      "border": "1px ui",
+      "radius": "md",
+      "padding": "1rem",
+      "facts": "2 cols mobile, 4 cols from md"
+    },
+    "feeTable": {
+      "mobile": "stacked cards with data-label rows",
+      "md": "table, sticky first column when it overflows",
+      "rowPadding": "0.75rem",
+      "headerBg": "surface"
+    },
+    "adSlot": {
+      "minHeight": "15.625rem (250px, reserves space so there is no layout shift if ever built)",
+      "border": "2px dashed ui",
+      "label": "required visible text 'Advertisement'",
+      "status": "reserved, not built; absent from production output"
+    },
+    "sourceNote": {
+      "font": "0.8125rem",
+      "ink": "muted"
+    }
+  }
+}

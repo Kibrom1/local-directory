@@ -1,0 +1,27 @@
+# Open questions for the owner
+
+Date: 2026-11-11. Ordered by what blocks the most work. PM recommendation in each line; none of these are decided.
+
+## Blocking launch or the content plan
+1. **Domain choice.** Top candidates (`domain-shortlist.md`): columbuspmguide.com, centralohiopropertymanagers.com, columbuspmdirectory.com. PM recommends columbuspmguide.com (fits guide + directory scope) with centralohiopropertymanagers.com as alternative. Needs registrar check (availability via RDAP is "consistent with not registered", not proven), aftermarket price, trademark web screen, social handles. Site name, About text and the placeholder "Columbus PM Directory" depend on it.
+2. **Keyword Planner pull.** Need a Google Ads account (free, no ads required; the researcher marked this "confirm") to pull monthly ranges for the ~35 queries in `keywords.csv` plus the landlord topics. Without it the 3,000 threshold is an estimate (3,800-19,600, low confidence) and the landlord-topic priority is unmeasured except the three national informational queries. Who does it and by when?
+3. **Display ads: yes/no.** Estimated $1.50-$75/month (`traffic-value.md`); ads would show competitors' ads next to listings and add Vercel and consent implications. PM recommends no ads at launch and revisit after the month-6 gate; if ever yes, block real-estate and property-management categories and disclose.
+4. **Consent banner.** PM recommends none at launch (US audience, no ads, GA4 aggregate only, no Google signals), revisit at ads, remarketing, or over 5% EU/UK sessions. This is a product recommendation, not legal advice; owner decides.
+5. **Vercel plan.** The free Hobby plan is, to my knowledge, limited to non-commercial use; this site has no revenue today but is a business-adjacent project and would turn commercial with ads. Verify current Vercel terms and choose Hobby or Pro before launch. Cost impact unknown here.
+6. **Correction/claim form tool and contact email.** Hosted form (free third-party tool; it stores requester name, role, email) plus email fallback, or email only. Which tool, and which address on the new domain? Who answers within the SLA (ack 3 business days, apply 14 days)?
+7. **Operating entity and About-page identity.** Who is named as the operator (individual or an existing business)? Public contact details to show?
+8. **Related-business disclosure wording (Gashana).** PM recommends plain disclosure on About, no link or promotion elsewhere, no ranking effect, and disclosure on a profile if a Gashana customer is ever listed. Confirm wording, and list any other related business to disclose.
+
+## Content and risk
+9. **Legal-process guides (eviction, security deposits, screening).** These are the highest-demand landlord topics in principle but the highest risk without attorney review. PM proposes Stage 2, process description only, every statement cited to statute or court pages, no advice. Approve, defer, or drop?
+10. **Launch size.** If fewer than 30 pages clear the unique-data bar at launch, launch anyway (record deviation) or wait for more guides and companies?
+11. **Index bar tightening.** PM proposes company profiles are indexable only with verified fees or license (current gate allows areas + services + contact). This reduces launch pages but protects site trust. Approve?
+12. **Fee-guide framing.** Dataset is 9 companies who publish fees, a self-selected sample. PM requires "companies we reviewed, not a market average" on every table. Acceptable, or hold the fee guide until more companies are added?
+13. **Third-party benchmarks.** Several are vendor-written (Awning, Hemlane, Evernest, Thumbtack). Show them with vendor labels (PM proposal), or limit to non-vendor sources?
+
+## Operations
+14. **Who runs the weekly metrics check and the monthly scraper review?** PM drafted the process (`metrics.md`); a named owner and day are needed.
+15. **ToS review for the 9 fee-source sites and the Division licensee file.** Currently robots-allowed, ToS unreviewed. Owner or Researcher to read terms before publish; any prohibition removes the data.
+16. **Companies whose robots.txt blocked fetching** (RL Property Management Group, I Heart Real Estate PM, FYVE unconfirmed): list them with fees blank, or omit? PM recommends list with facts from approved sources and fees blank, and invite them to supply fees via the correction form.
+17. **Month-count baseline.** Confirm T0 = first indexable pages live plus sitemap submitted, and that the 40-company timing (T0 + 6 months) and the 50% non-indexing stop rule are acceptable additions to `thresholds.md`.
+18. **Schema changes.** Fee ranges/plans and company-supplied-fact sources are not in the current schema (`backlog.csv`, Data model epic). Approve Developer work before launch?
