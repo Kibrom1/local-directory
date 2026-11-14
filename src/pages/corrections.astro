@@ -1,10 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import Banner from '../components/Banner.astro';
-import { readLaunchEnv } from '../lib/env.mjs';
+import { readSiteEnv } from '../lib/env.mjs';
 // The form posts to a hosted form tool (PUBLIC_FORM_ACTION). With no destination set, no form is rendered:
 // a dead form must never ship. The build prints a warning and strict mode fails (astro.config.mjs).
-const env = readLaunchEnv(import.meta.env);
+const env = readSiteEnv(import.meta.env);
 const { formAction, contactEmail } = env;
 const mailto = contactEmail ? `mailto:${contactEmail}?subject=${encodeURIComponent('Correct or remove a listing')}&body=${encodeURIComponent('Company name or page address:\nWhat to do (correct, add or remove):\nWhich fact is wrong and what is correct:\nLink that shows it (not needed for removal):\nYour name and role:\n')}` : null;
 ---

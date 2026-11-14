@@ -38,13 +38,14 @@ test('terms gate: company submissions and official references (not_applicable) c
   assert.equal(page(ev(d, { ...Q, requireReviewedTermsForIndex: true }), 'co_t1').tier, 'indexable');
 });
 
-test('terms gate: the real data set has no terms reviews, so no company page is indexable in production', async () => {
+test('terms gate is off by owner decision: production indexes the same company pages as development', async () => {
   const { evaluateSite } = await import('../src/lib/site.mjs');
   const real = evaluateSite({ today: '2026-11-14', prod: true });
-  assert.equal(real.indexable.filter((p) => p.type === 'company').length, 0);
-  assert.ok(real.quality.requireReviewedTermsForIndex === true);
+  assert.ok(real.quality.requireReviewedTermsForIndex === false);
   const open = evaluateSite({ today: '2026-11-14', prod: false });
-  assert.ok(open.indexable.filter((p) => p.type === 'company').length > 0, 'development still shows what the gate would remove');
+  const n = (s) => s.indexable.filter((p) => p.type === 'company').length;
+  assert.ok(n(real) > 0);
+  assert.equal(n(real), n(open));
 });
 
 // ---- listed tier (finding 12)

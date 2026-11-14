@@ -28,3 +28,12 @@ export function formatProblems(problems) {
   const lines = problems.map((p) => `  [${p.level === 'error' ? 'BLOCKS LAUNCH' : 'warning'}] ${p.key}: ${p.message}`);
   return `\n${bar}\nLAUNCH CONFIGURATION INCOMPLETE\n${bar}\n${lines.join('\n')}\n${bar}\n`;
 }
+
+// The public contact address for corrections and privacy questions. It is public on the site anyway, so it lives here and
+// PUBLIC_CONTACT_EMAIL only overrides it. Everything in the site and its checks reads launch settings through readSiteEnv.
+export const DEFAULT_CONTACT_EMAIL = 'brightstepsdigitalllc@gmail.com';
+// Who runs the site (owner confirmed 2026-11-14). PUBLIC_OPERATOR_NAME overrides it.
+export const DEFAULT_OPERATOR_NAME = 'Bright Steps Digital LLC';
+// Related-business disclosure (owner chose wording A on 2026-11-14: no related business that serves property managers). PUBLIC_DISCLOSURE overrides it.
+export const DEFAULT_DISCLOSURE = 'Bright Steps Digital LLC operates this site. It has no business relationship with any company listed here and receives no payment from any of them.';
+export const readSiteEnv = (env = {}) => readLaunchEnv({ PUBLIC_CONTACT_EMAIL: DEFAULT_CONTACT_EMAIL, PUBLIC_OPERATOR_NAME: DEFAULT_OPERATOR_NAME, PUBLIC_DISCLOSURE: DEFAULT_DISCLOSURE, ...env });

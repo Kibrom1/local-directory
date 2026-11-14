@@ -35,14 +35,14 @@ for (const [l, f, b, need] of pairs) {
 const claims = [['ink', '#ffffff', 'on bg #ffffff'], ['muted', '#ffffff', 'on bg'], ['primary', '#ffffff', 'on bg'], ['focus', '#ffffff', 'on bg']];
 for (const [k, bg, key] of claims) { const c = tokens[k].contrast[key]; const r = ratio(tokens[k].value, bg); if (Math.abs(c - r) > 0.02) { fail++; console.log(`token claim mismatch: ${k} ${key} says ${c}, computed ${r.toFixed(2)}`); } }
 // CSS custom properties must equal the tokens.
-const css2tok = { ink: T('ink'), muted: T('muted'), bg: T('bg'), surface: T('surface'), line: T('line'), ui: T('ui'), primary: T('primary'), focus: T('focus'), 'warn-bg': T('warn', 'bg'), 'warn-ink': T('warn', 'ink'), 'warn-line': T('warn', 'line'), 'ok-bg': T('success', 'bg'), 'ok-ink': T('success', 'ink'), 'bad-bg': T('danger', 'bg'), 'bad-ink': T('danger', 'ink'), 'info-bg': T('info', 'bg'), 'info-ink': T('info', 'ink'), 'ad-bg': T('neutralBadge', 'bg'), 'ad-ink': T('neutralBadge', 'ink'), 'unk-bg': T('unknown', 'bg'), 'foot-bg': T('footer', 'bg'), 'foot-ink': T('footer', 'ink') };
+const css2tok = { ink: T('ink'), muted: T('muted'), bg: T('bg'), surface: T('surface'), line: T('line'), ui: T('ui'), primary: T('primary'), focus: T('focus'), 'warn-bg': T('warn', 'bg'), 'warn-ink': T('warn', 'ink'), 'warn-line': T('warn', 'line'), 'ok-bg': T('success', 'bg'), 'ok-ink': T('success', 'ink'), 'bad-bg': T('danger', 'bg'), 'bad-ink': T('danger', 'ink'), 'info-bg': T('info', 'bg'), 'info-ink': T('info', 'ink'), 'unk-bg': T('unknown', 'bg'), 'foot-bg': T('footer', 'bg'), 'foot-ink': T('footer', 'ink') };
 for (const [v, hex] of Object.entries(css2tok)) { const m = css.match(new RegExp(`--${v}:(#[0-9a-fA-F]{6})`)); if (!m || m[1].toLowerCase() !== hex.toLowerCase()) { fail++; console.log(`CSS --${v} is ${m ? m[1] : 'missing'}, token says ${hex}`); } }
 // Dark theme: values come from the @media (prefers-color-scheme:dark) block in the CSS itself.
 const darkBlock = (css.match(/@media \(prefers-color-scheme:dark\)\{\s*:root\{([^}]*)\}/) || [])[1];
 if (!darkBlock) { fail++; console.log('CSS has no dark theme block'); }
 else {
   const D = Object.fromEntries([...darkBlock.matchAll(/--([a-z-]+):(#[0-9a-fA-F]{6})/g)].map((m) => [m[1], m[2]]));
-  const need = ['ink', 'muted', 'bg', 'surface', 'ui', 'primary', 'focus', 'warn-bg', 'warn-ink', 'warn-line', 'ok-bg', 'ok-ink', 'bad-bg', 'bad-ink', 'info-bg', 'info-ink', 'ad-bg', 'ad-ink', 'unk-bg', 'foot-bg', 'foot-ink', 'foot-link', 'on-primary', 'primary-press'];
+  const need = ['ink', 'muted', 'bg', 'surface', 'ui', 'primary', 'focus', 'warn-bg', 'warn-ink', 'warn-line', 'ok-bg', 'ok-ink', 'bad-bg', 'bad-ink', 'info-bg', 'info-ink', 'unk-bg', 'foot-bg', 'foot-ink', 'foot-link', 'on-primary', 'primary-press'];
   for (const k of need) if (!D[k]) { fail++; console.log(`dark theme is missing --${k}`); }
   if (need.every((k) => D[k])) {
     const dp = [
@@ -52,7 +52,7 @@ else {
       ['Input/card border', D.ui, D.bg, 3], ['Input border on panel', D.ui, D.surface, 3], ['Focus ring', D.focus, D.bg, 3], ['Focus ring on panel', D.focus, D.surface, 3],
       ['Warning text', D['warn-ink'], D['warn-bg'], 4.5], ['Warning border', D['warn-line'], D.bg, 3], ['Error text on error bg', D['bad-ink'], D['bad-bg'], 4.5], ['Error text', D['bad-ink'], D.bg, 4.5],
       ['Verified badge', D['ok-ink'], D['ok-bg'], 4.5], ['Verified badge border', D['ok-ink'], D.bg, 3], ['Info banner', D['info-ink'], D['info-bg'], 4.5],
-      ['Neutral badge', D['ad-ink'], D['ad-bg'], 4.5], ['Neutral badge border', D.ui, D['ad-bg'], 3], ['Unknown chip', D.muted, D['unk-bg'], 4.5],
+      ['Neutral badge', D.muted, D['unk-bg'], 4.5], ['Neutral badge border', D.ui, D['unk-bg'], 3], ['Unknown chip', D.muted, D['unk-bg'], 4.5],
       ['Footer text', D['foot-ink'], D['foot-bg'], 4.5], ['Footer link and focus ring', D['foot-link'], D['foot-bg'], 4.5]
     ];
     console.log('\nDark theme');

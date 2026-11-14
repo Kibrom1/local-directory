@@ -3,13 +3,15 @@ import Base from '../layouts/Base.astro';
 import { getSite } from '../lib/site.mjs';
 import { SITE_NAME } from '../lib/brand.mjs';
 const s = getSite();
-const cities = s.cityPages.filter((p) => p.tier === 'indexable');
+const cities = s.cityPages.filter((p) => p.tier !== 'placeholder');
 ---
 <Base title="Search this site" description={`Search companies, cities and guides on ${SITE_NAME}.`} noindex pageType="search" crumbs={[]}>
   <h1>Search this site</h1>
   <div id="search" data-pagefind-ignore></div>
   <p id="search-fallback" class="small">Search is not available right now. Browse the <a href="/site-map/">A to Z list of all pages</a>, or go to:
     {cities.map((c, i) => <>{i > 0 && ', '}<a href={c.path}>{c.geo.name}</a></>)}{s.nav.fees && <>{cities.length > 0 && ', '}<a href="/fees/">fee comparison</a></>}.</p>
+  <p class="small">Search finds companies and cities. You can also see every company in the <a href="/#companies">A to Z list on the home page</a>.</p>
+  <style is:inline>#search{--pagefind-ui-primary:var(--primary);--pagefind-ui-text:var(--ink);--pagefind-ui-background:var(--bg);--pagefind-ui-border:var(--ui);--pagefind-ui-tag:var(--surface)}</style>
   <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
   <script is:inline src="/pagefind/pagefind-ui.js"></script>
   <script is:inline>

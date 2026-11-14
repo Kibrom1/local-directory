@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import { readLaunchEnv } from '../lib/env.mjs';
-const { operator, disclosure, contactEmail } = readLaunchEnv(import.meta.env);
+import { readSiteEnv } from '../lib/env.mjs';
+const { operator, disclosure, contactEmail } = readSiteEnv(import.meta.env);
 ---
 <Base title="About this directory" description="Who runs this free Columbus property management directory, what it costs, how the data is collected and how to correct or remove a listing." pageType="about" crumbs={[{ name: 'About' }]}>
   <h1>About</h1>

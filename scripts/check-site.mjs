@@ -11,7 +11,7 @@ import { loadEnv } from 'vite';
 import { loadPages, walk, urlPath, parseArgs } from './lib/dist.mjs';
 import { vercelText } from './redirects.mjs';
 import { loadGuides } from '../src/lib/guides.mjs';
-import { readLaunchEnv, PLACEHOLDER_SITE } from '../src/lib/env.mjs';
+import { readSiteEnv, PLACEHOLDER_SITE } from '../src/lib/env.mjs';
 import { todayIso } from '../src/lib/freshness.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -83,9 +83,9 @@ for (const p of real) {
     if (!/noindex/.test(p.robots)) err(`${p.path}: robots meta unexpected`);
     ldTypes(p);
   }
-  // Pagefind must not index noindex pages: main has data-pagefind-body only on indexable pages.
+  // On-site search (Pagefind) covers indexable pages and listed pages (noindex, follow). Placeholders, drafts and utility pages (noindex, nofollow) stay out.
   const body = !!d.querySelector('[data-pagefind-body]');
-  if (p.noindex && body) err(`${p.path}: noindex page is in the search index (data-pagefind-body present)`);
+  if (p.noindex && body && !/^noindex,\s*follow$/i.test(p.robots)) err(`${p.path}: ${p.robots} page is in the search index (data-pagefind-body present)`);
   if (!p.noindex && !body) err(`${p.path}: indexable page is missing data-pagefind-body`);
   // Duplicate ids
   const ids = [...d.querySelectorAll('[id]')].map((e) => e.id);
@@ -252,7 +252,7 @@ for (const p of real) if (!p.doc.querySelector('footer a[href="/corrections/"]')
 
 // ---- strict (launch) checks ---------------------------------------------------------------------------------------
 if (strict) {
-  const launch = readLaunchEnv({ ...env });
+  const launch = readSiteEnv({ ...env });
   for (const pr of launch.problems.filter((x) => x.level === 'error')) err(`(strict) ${pr.key}: ${pr.message}`);
   if (origin && PLACEHOLDER_SITE.test(origin)) err(`(strict) canonical origin ${origin} is the placeholder domain`);
   if (report && report.placeholder_pages_noindexed.length) err(`(strict) pages built from test data: ${report.placeholder_pages_noindexed.join(', ')}`);

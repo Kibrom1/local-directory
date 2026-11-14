@@ -4,16 +4,19 @@ import { loadEnv } from 'vite';
 import fs from 'node:fs';
 import path from 'node:path';
 import { getSite, buildReport } from './src/lib/site.mjs';
-import { readLaunchEnv, formatProblems } from './src/lib/env.mjs';
+import { readSiteEnv, formatProblems } from './src/lib/env.mjs';
 
 const env = { ...loadEnv(process.env.NODE_ENV || 'production', process.cwd(), ''), ...process.env };
-const site = env.SITE_URL || 'https://columbus-pm-directory.example';
+// Public address: SITE_URL if set, else the production address Vercel exposes at build time, else the current Vercel address.
+// Set SITE_URL when a custom domain is attached. The placeholder (.example) is no longer used by the build.
+const vercelUrl = env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${env.VERCEL_PROJECT_PRODUCTION_URL}` : null;
+const site = env.SITE_URL || vercelUrl || 'https://local-directory-livid.vercel.app';
 const isBuild = process.argv.includes('build');
 const strict = env.STRICT_BUILD === '1' || process.argv.includes('--strict');
 
 // Launch configuration: loud warning when the correction form has nowhere to send requests, and other owner decisions
 // still unset. Strict mode (npm run build:strict) refuses to build until the blocking ones are set.
-const launch = readLaunchEnv({ ...env, SITE_URL: env.SITE_URL });
+const launch = readSiteEnv({ ...env, SITE_URL: site });
 if (launch.problems.length && process.argv.some((a) => ['build', 'dev'].includes(a))) {
   console.warn(formatProblems(launch.problems));
   const blocking = launch.problems.filter((p) => p.level === 'error');
