@@ -165,6 +165,14 @@ export function validateData(data, { schemaDir, today = new Date().toISOString()
     const s = checkProv(w, c, { allowRefused: !confirmed });
     checkVerification(w, c);
     if (c.placeholder) warn(`${w}: placeholder record`);
+    // Per-field check state: 'Not published' needs a recorded check; the field must really be empty.
+    for (const [field, chk] of Object.entries(c.fields_checked || {})) {
+      const fw = `${w}: fields_checked.${field}`;
+      checkSource(fw, chk.source_id);
+      if (chk.checked_date > today) fail(`${fw}: checked_date ${chk.checked_date} is in the future`);
+      const has = { website: !!c.website, phone: !!c.phone, address: !!c.address, services: (c.services || []).length > 0, property_types: (c.property_types_served || []).length > 0, service_areas: data['service-areas'].some((a) => a.company_id === c.id) }[field];
+      if (has) fail(`${fw}: the field has a value, so it cannot be recorded as not stated`);
+    }
     if (confirmed) {
       if (s && s.source_kind !== 'company_site') fail(`${w}: own_site_confirmed needs a company_site source (got ${s.source_kind})`);
       if (!c.website) fail(`${w}: own_site_confirmed needs a website`);

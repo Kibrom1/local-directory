@@ -5,6 +5,7 @@
   "definitions": {
     "date": { "type": "string", "format": "date" },
     "url": { "type": "string", "format": "uri", "pattern": "^https?://" },
+    "fieldCheck": { "type": "object", "additionalProperties": false, "required": ["source_id", "checked_date"], "properties": { "source_id": { "$ref": "#/definitions/sourceId" }, "checked_date": { "$ref": "#/definitions/date" } }, "description": "We read this source on this date and recorded that the company does not state the field." },
     "sourceId": { "type": "string", "pattern": "^src_[a-z0-9_]+$" },
     "companyId": { "type": "string", "pattern": "^co_[a-z0-9_]+$" },
     "geographyId": { "type": "string", "pattern": "^geo_[a-z0-9_]+$" },

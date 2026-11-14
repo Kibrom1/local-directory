@@ -68,6 +68,9 @@ export function fmtDate(iso) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ''));
   return m && MONTHS[Number(m[2]) - 1] ? `${MONTHS[Number(m[2]) - 1]} ${Number(m[3])}, ${m[1]}` : String(iso ?? '');
 }
+// Which "unknown" text a company field gets: "Not published" only where we recorded that the company does not state it
+// (companies.fields_checked), otherwise "Not recorded" (we have no record of looking).
+export const unknownKind = (company, field) => (company && company.fields_checked && company.fields_checked[field] ? 'not_published' : 'not_recorded');
 export const ageDays = (date, today) => daysBetween(date, today);
 export const monthsBetween = (date, today) => Math.max(0, Math.floor(ageDays(date, today) / 30));
 

@@ -6,7 +6,7 @@ import FeeValue from '../../components/FeeValue.astro';
 import SourceNote from '../../components/SourceNote.astro';
 import Unknown from '../../components/Unknown.astro';
 import { getSite } from '../../lib/site.mjs';
-import { describeFee, minimumsText, freshnessBadge, feeBadge, fmtDate, scopeCaveat, licenseBadge, LICENSE_EXPLANATION } from '../../lib/fees.mjs';
+import { describeFee, minimumsText, freshnessBadge, feeBadge, fmtDate, unknownKind, scopeCaveat, licenseBadge, LICENSE_EXPLANATION } from '../../lib/fees.mjs';
 import { formatFee, feeText } from '../../lib/format.mjs';
 export function getStaticPaths() {
   return getSite().companyPages.map((p) => ({ params: { slug: p.company.slug }, props: { page: p } }));
@@ -99,7 +99,7 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
     </>
   )}
   {dropped.map((f) => (
-    <p class="small">Last known: {FEE_ROWS.map(([label, k]) => feeText(f[k]) ? `${label} ${feeText(f[k])}` : null).filter(Boolean).join('; ')} (verified {fmtDate(f.last_verified_date)}). Not shown in comparisons until re-checked.</p>
+    <p class="small">Last known: {FEE_ROWS.map(([label, k]) => feeText(f[k]) ? `${label} ${feeText(f[k])}` : null).filter(Boolean).join('; ')} (last read {fmtDate(f.last_verified_date)}). Not shown in comparisons until re-checked.</p>
   ))}
 
   <h2 id="license">License</h2>
@@ -115,20 +115,20 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
       <ul>{areas.map((g) => { const cp = cityPageFor(g); return <li>{cp ? <a href={cp.path}>{g.name}, {g.state}</a> : <>{g.name}{g.type === 'city' ? `, ${g.state}` : ''}</>}</li>; })}</ul>
       <p class="small muted">As stated on the company's own website.</p>
     </>
-  ) : <p><Unknown kind="not_recorded" /></p>}
+  ) : <p><Unknown kind={unknownKind(c, 'service_areas')} /></p>}
 
   <h2 id="services">Services and property types</h2>
   <h3>Property types</h3>
-  {types.length ? <ul>{types.map((t) => { const pp = ptPages.find((p) => p.property_type_id === t.id); return <li>{pp ? <a href={pp.path}>{t.name}</a> : t.name}</li>; })}</ul> : <p><Unknown kind="not_recorded" /></p>}
+  {types.length ? <ul>{types.map((t) => { const pp = ptPages.find((p) => p.property_type_id === t.id); return <li>{pp ? <a href={pp.path}>{t.name}</a> : t.name}</li>; })}</ul> : <p><Unknown kind={unknownKind(c, 'property_types')} /></p>}
   <h3>Services</h3>
-  {c.services.length ? <ul>{c.services.map((x) => <li>{pretty(x.service)}</li>)}</ul> : <p><Unknown kind="not_recorded" /></p>}
+  {c.services.length ? <ul>{c.services.map((x) => <li>{pretty(x.service)}</li>)}</ul> : <p><Unknown kind={unknownKind(c, 'services')} /></p>}
 
   <h2 id="contact">Contact</h2>
   <p class="small muted">Public business details only, as the company publishes them. Nothing is routed through this site.</p>
   <ul>
-    <li>Website: {c.website ? <a href={c.website} rel="nofollow noopener">Visit company website<span class="sr"> for {c.name}</span></a> <span class="muted">({host})</span> : <Unknown />}</li>
-    <li>Phone: {c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, '')}`}>{c.phone}</a> : <Unknown />}</li>
-    <li>Address: {addressText ?? <Unknown />}</li>
+    <li>Website: {c.website ? <a href={c.website} rel="nofollow noopener">Visit company website<span class="sr"> for {c.name}</span></a> <span class="muted">({host})</span> : <Unknown kind={unknownKind(c, 'website')} />}</li>
+    <li>Phone: {c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, '')}`}>{c.phone}</a> : <Unknown kind={unknownKind(c, 'phone')} />}</li>
+    <li>Address: {addressText ?? <Unknown kind={unknownKind(c, 'address')} />}</li>
   </ul>
   <p><SourceNote sourceId={c.source_id} captured={c.captured_date} verified={c.last_verified_date} urls={[c.source_url]} who={c.name} /></p>
 
