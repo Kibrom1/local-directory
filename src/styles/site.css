@@ -44,7 +44,7 @@ small,.small{font-size:.875rem}
 /* breadcrumbs */
 .crumbs{font-size:.875rem;margin:var(--s3) 0 0}
 .crumbs ol{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:var(--s1)}
-.crumbs li+li::before{content:"/";color:var(--muted)}
+.crumbs li+li::before{content:"/";margin-right:.25rem;color:var(--muted)}
 /* banners */
 .banner{border:1px solid;border-left-width:.375rem;border-radius:var(--r-sm);padding:var(--s3) var(--s4);margin:0 0 var(--s4)}
 .banner.warn{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn-line)}
