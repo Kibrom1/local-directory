@@ -26,7 +26,7 @@ const jsonLd = tier === 'indexable' ? {
   <h1>Property management in {geo.name}, {geo.state}</h1>
   <p class="lede">{all.length} {all.length === 1 ? 'company serves' : 'companies serve'} {geo.name}. {withFees} {withFees === 1 ? 'publishes' : 'publish'} fees.</p>
   {tier === 'placeholder' && <Banner kind="warn" lead="Test data.">This page uses test records and is not indexed.</Banner>}
-  {tier === 'listed' && <Banner kind="warn" lead={`We list only ${all.length} companies here so far.`}>This page is not indexed by search engines until more companies with verified data serve {geo.name}.</Banner>}
+  {tier === 'listed' && <Banner kind="warn" lead={`We list only ${all.length} companies here so far.`}>This page is not indexed by search engines until more companies with sourced data serve {geo.name}.</Banner>}
   <Banner kind="info" lead="Companies we reviewed, not a market average.">
     Order: serves {geo.name}, then how complete and recent our data is, then A to Z. Fees and payment never affect order. <a href="/methodology/">How we collect and rank</a>
   </Banner>

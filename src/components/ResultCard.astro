@@ -3,7 +3,7 @@
 import Badge from './Badge.astro';
 import FeeValue from './FeeValue.astro';
 import SourceNote from './SourceNote.astro';
-import { describeFee, freshnessBadge, licenseBadge } from '../lib/fees.mjs';
+import { describeFee, freshnessBadge, feeBadge, licenseBadge } from '../lib/fees.mjs';
 import { getSite } from '../lib/site.mjs';
 interface Props { page: any; }
 const { page } = Astro.props;
@@ -13,13 +13,13 @@ const FACTS = [['management_pct', 'Management'], ['flat_fee', 'Flat fee'], ['lea
 const rows = page.verifiedFeeRows;
 const pick = (k) => { for (const f of rows) if (describeFee(f[k])) return f; return null; };
 const newest = [...rows].sort((a, b) => b.last_verified_date.localeCompare(a.last_verified_date))[0];
-const fb = newest ? freshnessBadge(newest.last_verified_date, s.today, s.quality.freshness.displayFlagDays) : freshnessBadge(c.last_verified_date, s.today, s.quality.freshness.displayFlagDays);
+const fb = newest ? feeBadge(newest, s.today, s.quality.freshness.displayFlagDays) : freshnessBadge(c.last_verified_date, s.today, s.quality.freshness.displayFlagDays);
 const lb = licenseBadge(c.license, s.today);
 const types = c.property_types_served.map((x) => s.ptById.get(x.property_type_id)).filter(Boolean);
 ---
 <li class="card result" data-types={types.map((t) => t.slug).join(' ')} data-fees={rows.length ? 'yes' : 'no'}>
   <h3><a href={page.path}>{c.name}</a></h3>
-  <div class="meta"><Badge kind={lb.kind} text={lb.text} /><Badge kind={fb.kind} text={newest ? fb.text : `Listing ${fb.text.toLowerCase()}`} /></div>
+  <div class="meta"><Badge kind={lb.kind} text={lb.text} /><Badge kind={fb.kind} text={fb.text} /></div>
   {rows.length === 0 ? (
     <p class="compact">No fee data recorded yet. Fees may exist on <a href={c.website || page.path} {...(c.website ? { rel: 'nofollow noopener' } : {})}>{c.website ? <>the company's own site<span class="sr"> ({c.name})</span></> : 'its profile'}</a>.</p>
   ) : (
@@ -30,6 +30,6 @@ const types = c.property_types_served.map((x) => s.ptById.get(x.property_type_id
   </div>
   )}
   {newest && <SourceNote sourceId={newest.source_id} captured={newest.captured_date} verified={newest.last_verified_date} urls={[]} who={c.name} />}
-  {fb.kind === 'stale' && newest && <p class="small">Fees last verified {fb.text.replace(/^Verified /, '').replace(/^Read on the company's site /, '')}. They may have changed. Check the company site before relying on them.</p>}
+  {fb.kind === 'stale' && newest && <p class="small">{fb.text}. They may have changed. Check the company site before relying on them.</p>}
   {types.length > 0 && <p class="small muted">Property types: {types.map((t) => t.name).join(', ')}</p>}
 </li>

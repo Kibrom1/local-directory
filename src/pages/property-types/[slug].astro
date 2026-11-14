@@ -41,7 +41,7 @@ const nameNote = (pt.name.match(/\((.*)\)/) || [])[1] || null;
       <p class="small muted">Rows marked &ldquo;No property type stated&rdquo; are fees the company publishes without tying them to a property type. Check with the company that they apply to {lc} rentals.</p>
       <FeeTable rows={rows} caption={`Published fees from companies that serve ${lc} rentals`} flagDays={flag} />
     </>
-  ) : <p>None of these companies publishes fees we have verified yet. <a href="/corrections/">Know a published fee we missed? Tell us.</a></p>}
+  ) : <p>None of these companies publishes fees we have read yet. <a href="/corrections/">Know a published fee we missed? Tell us.</a></p>}
 
   <h2>Companies serving {lc} rentals</h2>
   <ul class="results">{companies.map((p) => <ResultCard page={p} />)}</ul>

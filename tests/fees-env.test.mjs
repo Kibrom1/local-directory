@@ -25,7 +25,7 @@ test('plans are never merged into one number and ranges never averaged', () => {
 });
 
 test('unknown states are four distinct texts and never 0 or a dash', () => {
-  assert.deepEqual(Object.values(UNKNOWN), ['Not published', 'Not checked yet', 'Not offered', 'Varies, ask company']);
+  assert.deepEqual(Object.values(UNKNOWN), ['Not published', 'Not recorded', 'Not offered', 'Varies, ask company']);
   assert.equal(minimumsText(null), null);
   assert.equal(minimumsText({ monthly_usd: null, other: null }), null);
 });
@@ -61,7 +61,7 @@ test('rangeSummary groups by how the fee is stated and gives low and high only',
 });
 
 test('freshness and license badges carry words', () => {
-  assert.deepEqual(freshnessBadge('2026-11-01', '2026-11-12', 180), { kind: 'ok', text: 'Verified Nov 1, 2026', age: 11 });
+  assert.deepEqual(freshnessBadge('2026-11-01', '2026-11-12', 180), { kind: 'ok', text: 'Listing read Nov 1, 2026', age: 11 });
   assert.equal(freshnessBadge('2026-03-02', '2026-11-12', 180).kind, 'stale');
   assert.match(freshnessBadge('2026-03-02', '2026-11-12', 180).text, /months ago/);
   assert.equal(licenseBadge(null).text, 'License: not checked');

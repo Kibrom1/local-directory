@@ -2,7 +2,7 @@
 // One published fee value: amount, basis, range/plan tag, plans in a details element, and minimum. Unknown shows its state.
 import Unknown from './Unknown.astro';
 import { describeFee } from '../lib/fees.mjs';
-interface Props { value: any; unknown?: 'not_published' | 'not_checked' | 'not_offered' | 'varies'; showNotes?: boolean }
+interface Props { value: any; unknown?: 'not_published' | 'not_recorded' | 'not_offered' | 'varies'; showNotes?: boolean }
 const { value, unknown = 'not_published', showNotes = false } = Astro.props;
 const d = describeFee(value);
 ---

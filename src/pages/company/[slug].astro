@@ -49,13 +49,13 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
     <Badge kind={fb.kind} text={newest ? fb.text : `Listing ${fb.text.toLowerCase()}`} />
     <a href={correct}>Correct or remove this listing</a>
   </div>
-  {staleFee.length > 0 && <Banner kind="warn" lead={`Fees last ${staleFee[0].verification_method === 'human_compared' ? 'checked by a person' : 'read on the company site'} ${freshnessBadge(staleFee[0].last_verified_date, s.today, flag).text.replace('Verified ', '')}.`}>They may have changed. Check the company site before relying on them.</Banner>}
+  {staleFee.length > 0 && <Banner kind="warn" lead={`${feeBadge(staleFee[0], s.today, flag).text}.`}>They may have changed. Check the company site before relying on them.</Banner>}
   <p class="lede">{lede}</p>
   <nav class="toc" aria-label="On this page"><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
 
   <h2 id="fees">Fees</h2>
   {fees.length === 0 ? (
-    <p><Unknown kind="not_checked" /> We have no fee data recorded for this company. Fees may exist on its own website. {dropped.length > 0 ? 'Earlier values are listed below.' : ''}</p>
+    <p><Unknown kind="not_recorded" /> We have no fee data recorded for this company. Fees may exist on its own website. {dropped.length > 0 ? 'Earlier values are listed below.' : ''}</p>
   ) : (
     <>
       <p class="small muted">Published by the company, not a quote. Ranges and plans are shown as published, never averaged.{s.nav.fees && <> <a href="/fees/">Compare fees across companies</a>.</>}</p>
@@ -115,13 +115,13 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
       <ul>{areas.map((g) => { const cp = cityPageFor(g); return <li>{cp ? <a href={cp.path}>{g.name}, {g.state}</a> : <>{g.name}{g.type === 'city' ? `, ${g.state}` : ''}</>}</li>; })}</ul>
       <p class="small muted">As stated on the company's own website.</p>
     </>
-  ) : <p><Unknown kind="not_checked" /></p>}
+  ) : <p><Unknown kind="not_recorded" /></p>}
 
   <h2 id="services">Services and property types</h2>
   <h3>Property types</h3>
-  {types.length ? <ul>{types.map((t) => { const pp = ptPages.find((p) => p.property_type_id === t.id); return <li>{pp ? <a href={pp.path}>{t.name}</a> : t.name}</li>; })}</ul> : <p><Unknown kind="not_checked" /></p>}
+  {types.length ? <ul>{types.map((t) => { const pp = ptPages.find((p) => p.property_type_id === t.id); return <li>{pp ? <a href={pp.path}>{t.name}</a> : t.name}</li>; })}</ul> : <p><Unknown kind="not_recorded" /></p>}
   <h3>Services</h3>
-  {c.services.length ? <ul>{c.services.map((x) => <li>{pretty(x.service)}</li>)}</ul> : <p><Unknown kind="not_checked" /></p>}
+  {c.services.length ? <ul>{c.services.map((x) => <li>{pretty(x.service)}</li>)}</ul> : <p><Unknown kind="not_recorded" /></p>}
 
   <h2 id="contact">Contact</h2>
   <p class="small muted">Public business details only, as the company publishes them. Nothing is routed through this site.</p>

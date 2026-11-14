@@ -19,22 +19,22 @@ const changes = [
   <p>We list a company only after reading its own website. Companies seen only on a third-party directory or in a search result are not published. We collect facts (fees, services, service areas, license notes, public business contact details), not descriptions or images.</p>
 
   <h2>Sources and dates</h2>
-  <p>Every fact carries a source, the date we captured it and the date we last verified it, shown next to the fact. Our rule is to check a source's terms and robots.txt before collecting from it automatically. An unknown fact stays unknown: it shows as &ldquo;Not published&rdquo; (we read the page and found no figure) or &ldquo;Not checked yet&rdquo; (we have no record of reading it). We never fill a gap with a guess or with a figure from a third-party roundup.</p>
+  <p>Every fact carries a source, the date we captured it and the date we last read it, shown next to the fact. Our rule is to check a source's terms and robots.txt before collecting from it automatically. An unknown fact stays unknown: it shows as &ldquo;Not published&rdquo; (we recorded that the company does not state it) or &ldquo;Not recorded&rdquo; (we have no record of looking). We never fill a gap with a guess or with a figure from a third-party roundup.</p>
 
-  <h2>What "verified" means here</h2>
-  <p>Each fee row says how it was checked. &ldquo;Read on the company's site&rdquo; means a reader or automated tool compared the value with the company's own page on the date shown. It is not a person's check and not a quote, and fees change, so confirm with the company. &ldquo;Checked by a person&rdquo; means a person compared the value with the live page. We do not describe a license as verified unless we checked an official record; none of our sources for that are available yet, so license notes read &ldquo;stated by company, not verified&rdquo;.</p>
+  <h2>How a fee was checked</h2>
+  <p>Each fee row says how it was checked. &ldquo;Read from the company's website by our tool&rdquo; means an automated tool read the value from the company's own page on the date shown and no person has compared it yet. It is not a quote, and fees change, so confirm with the company. &ldquo;Checked by a person&rdquo; means a person compared the value with the live page. We do not call a fee &ldquo;verified&rdquo; in either case. We do not describe a license as verified unless we checked an official record; none of our sources for that are available yet, so license notes read &ldquo;stated by company, not verified&rdquo;.</p>
   <p>We use a source for pages that can be indexed only after its terms of service have been reviewed and recorded. Company pages with too little reviewed data are not published.</p>
 
   <h2>How we order companies</h2>
   <ol>
     <li>Relevance to the page: serves this city or property type.</li>
-    <li>Data completeness: how many of six fact groups are verified and current (license, fees, service areas, services, property types, contact).</li>
+    <li>Data completeness: how many of six fact groups are sourced and current (license, fees, service areas, services, property types, contact).</li>
     <li>Name, A to Z.</li>
   </ol>
   <p>Payment, claiming a listing, company size, any business relationship with this site and the amount of a fee are never inputs. A company that does not publish fees is still listed.</p>
 
   <h2>How old a fact can be</h2>
-  <p>A fact last verified more than {q.freshness.displayFlagDays} days ago is flagged with its age. A fact more than {q.freshness.dropDays} days old is left out of fee comparisons and completeness until we re-check it.</p>
+  <p>A fact last read more than {q.freshness.displayFlagDays} days ago is flagged with its age. A fact more than {q.freshness.dropDays} days old is left out of fee comparisons and completeness until we re-check it.</p>
 
   <h2>Fee comparison scope</h2>
   <p>The fee comparison and fee guides use only fees a company publishes on its own website, labelled &ldquo;companies we reviewed, not a market average&rdquo;. They are not a survey. Ranges and plans are shown as published and are never averaged. A rent estimate uses an example rent and is an illustration, not a quote.</p>
@@ -44,10 +44,10 @@ const changes = [
 
   <h2>When a page exists</h2>
   <ul>
-    <li>Company page: indexed by search engines only with at least {q.company.minFactGroups} verified fact groups and verified fees or a verified license. Otherwise it is listed but marked not for indexing.</li>
-    <li>City page: indexed with at least {q.city.indexMinCompanies} indexable companies, at least {q.city.indexMinCompaniesWithFees} with verified fees.</li>
+    <li>Company page: indexed by search engines only with at least {q.company.minFactGroups} sourced fact groups and fees from a company's own site or a license checked against the state record. Otherwise it is listed but marked not for indexing.</li>
+    <li>City page: indexed with at least {q.city.indexMinCompanies} indexable companies, at least {q.city.indexMinCompaniesWithFees} with published fees we have read.</li>
     <li>Property-type page: at least {q.propertyType.indexMinCompanies} indexable companies with a sourced fact for that type.</li>
-    <li>Fee comparison: at least {q.feeComparison.minCompanies} companies with verified fees. Each fee guide: at least {q.feeGuide.minCompaniesPerFeeType} companies publishing that fee.</li>
+    <li>Fee comparison: at least {q.feeComparison.minCompanies} companies with published fees we have read. Each fee guide: at least {q.feeGuide.minCompaniesPerFeeType} companies publishing that fee.</li>
   </ul>
 
   <h2>License notes</h2>

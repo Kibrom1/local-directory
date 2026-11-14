@@ -22,9 +22,9 @@ test('formatFee keeps minimums on a plan and never invents a number', () => {
 
 test('provenance label: company submissions say "Provided by the company"; old facts show months', () => {
   const src = { name: 'Site', source_kind: 'company_site' };
-  assert.match(provenanceLabel(src, '2026-11-01', '2026-11-01', TODAY), /^Source: Site, captured 2026-11-01, last verified 2026-11-01$/);
+  assert.match(provenanceLabel(src, '2026-11-01', '2026-11-01', TODAY), /^Source: Site, captured 2026-11-01, last read 2026-11-01$/);
   assert.match(provenanceLabel({ name: 'x', source_kind: 'company_submission' }, '2026-11-01', '2026-11-01', TODAY), /^Provided by the company, 2026-11-01$/);
-  assert.match(provenanceLabel(src, '2026-01-01', '2026-01-01', TODAY), /last verified 10 months ago/);
+  assert.match(provenanceLabel(src, '2026-01-01', '2026-01-01', TODAY), /last read 10 months ago/);
   assert.equal(monthsAgo('2026-11-01', TODAY), 0);
 });
 
