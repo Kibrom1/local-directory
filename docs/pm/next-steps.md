@@ -15,10 +15,10 @@ The site is live at https://centralohiopmguide.com. The build, tests and launch 
 - [ ] **Service areas for 10X and Reafco.** Do not guess; record only what the company states.
 - [ ] **Re-read stale facts.** Facts older than 150 days go on the re-verify queue (`npm run` report lists them).
 
-## Decisions to confirm
-- [ ] **Serif headings.** Adopted on the designer's advice; the PM has not approved them. One-line revert: `--serif` in `src/styles/site.css`.
-- [ ] **Removal-log policy.** A removal is logged without the company's name. Developer default, PM to confirm.
-- [ ] **Analytics.** Decide whether to set `PUBLIC_GA_ID`. Four events are already wired and listed on the Privacy page.
+## Decisions (made by the developer on 2026-11-14, owner can reverse)
+- [x] **Serif headings: keep.** The designer recommended them, every text pair passes contrast, and they cost nothing in weight (system fonts). To revert, change `--serif` in `src/styles/site.css`.
+- [x] **Removal log: keep the default.** A removal is logged as "a listing was removed" without the company's name, so the log never reveals who asked or who was removed. The log still shows that and when a removal happened.
+- [x] **Analytics: leave off for now.** Do not set `PUBLIC_GA_ID` yet. Search Console gives aggregate search data with no cookies. The four counted events are wired and stay dormant until an ID is set; the Privacy page already describes them. Revisit when there is traffic worth measuring.
 
 ## Later
 - [ ] **Keep the domain renewing.** Turn on auto-renew for `centralohiopmguide.com`.
