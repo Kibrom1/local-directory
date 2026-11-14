@@ -40,6 +40,7 @@ if (crumbs.length && !isNoindex) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
     <title>{fullTitle}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
@@ -96,6 +97,7 @@ if (crumbs.length && !isNoindex) {
           <li><a href="/methodology/">How we collect and rank (Methodology)</a></li>
           <li><a href="/about/">About this site</a></li>
           <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/site-map/">All pages, A to Z</a></li>
         </ul>
         <p class="small">Service areas: Franklin, Delaware, Fairfield and Licking counties, Ohio.{s.lastDataUpdate && <> Last site data update: <time datetime={s.lastDataUpdate}>{s.lastDataUpdate}</time>.</>}</p>
       </div>

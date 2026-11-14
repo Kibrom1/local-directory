@@ -41,3 +41,10 @@ The Astro build fails inside `/Users/Kb/Desktop` because a stray `/Users/Kb/Desk
 
 ## Designers
 No dependency: this work is gate logic, data and scripts. Any visual redesign should be built on the new states: the two badge texts, the scope caveat, no listed pages in production, and the "Use this data" links.
+
+## Designer reviews (docs/ux/reviews): developer response
+Their reviews used the pre-branch build (17 indexable pages, listed tier visible). With the production switches on, the site builds 5 static pages, so the redesign must work with no companies, cities or fee table.
+- Built (steps 1-3): dark theme and tokenised colours with a contrast check for both themes (54 pairs); no-JS-safe home (city picker only with 2+ cities, plain A-Z site map link, "What this site covers today" panel); `/site-map/` utility page. Mobile overflow checked on the real build at 320px: none on home, city, company, fees, methodology and site map (the clipping in the designer's screenshots is a prototype artifact).
+- Not built, needs owner or PM: verification wording (UX F2), "Not recorded" versus "Not published" (F3), first-year cost range (F6), public corrections log and relaxed evidence rule (F8), guide merge (F4), site name, serif display type, license badge shortening, "N days ago" (the two designers disagree; absolute dates stay).
+- Waiting on data: fee cell and table rework, profile snapshot, result card. They need pages that exist only after the terms reviews.
+- Designers to remove: the reserved ad slot (design-system section 11, `design-tokens.json` adSlot, `prototype/city-dublin.html`, `prototype/fees.html`).
