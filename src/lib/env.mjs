@@ -32,4 +32,6 @@ export function formatProblems(problems) {
 // The public contact address for corrections and privacy questions. It is public on the site anyway, so it lives here and
 // PUBLIC_CONTACT_EMAIL only overrides it. Everything in the site and its checks reads launch settings through readSiteEnv.
 export const DEFAULT_CONTACT_EMAIL = 'brightstepsdigitalllc@gmail.com';
-export const readSiteEnv = (env = {}) => readLaunchEnv({ PUBLIC_CONTACT_EMAIL: DEFAULT_CONTACT_EMAIL, ...env });
+// Who runs the site (owner confirmed 2026-11-14). PUBLIC_OPERATOR_NAME overrides it.
+export const DEFAULT_OPERATOR_NAME = 'Bright Steps Digital LLC';
+export const readSiteEnv = (env = {}) => readLaunchEnv({ PUBLIC_CONTACT_EMAIL: DEFAULT_CONTACT_EMAIL, PUBLIC_OPERATOR_NAME: DEFAULT_OPERATOR_NAME, ...env });
