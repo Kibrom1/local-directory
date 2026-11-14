@@ -19,7 +19,11 @@
     "check:contrast": "node scripts/contrast.mjs",
     "check:weight": "node scripts/weights.mjs",
     "redirects:sync": "node scripts/redirects.mjs",
-    "paths:snapshot": "node scripts/redirects.mjs --snapshot"
+    "paths:snapshot": "node scripts/redirects.mjs --snapshot",
+    "launch:check": "node scripts/launch-check.mjs",
+    "queue": "node scripts/queue.mjs",
+    "guides:check": "node scripts/guides-check.mjs",
+    "scraper:review": "node scripts/scraper/review.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
