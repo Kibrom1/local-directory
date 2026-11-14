@@ -6,7 +6,7 @@ import FeeValue from '../../components/FeeValue.astro';
 import SourceNote from '../../components/SourceNote.astro';
 import Unknown from '../../components/Unknown.astro';
 import { getSite } from '../../lib/site.mjs';
-import { describeFee, minimumsText, freshnessBadge, licenseBadge, LICENSE_EXPLANATION } from '../../lib/fees.mjs';
+import { describeFee, minimumsText, freshnessBadge, feeBadge, scopeCaveat, licenseBadge, LICENSE_EXPLANATION } from '../../lib/fees.mjs';
 import { formatFee, feeText } from '../../lib/format.mjs';
 export function getStaticPaths() {
   return getSite().companyPages.map((p) => ({ params: { slug: p.company.slug }, props: { page: p } }));
@@ -18,7 +18,7 @@ const fees = verifiedFeeRows; // verified, fresh, from an allowed source, with a
 const dropped = Astro.props.page.fees.filter((f) => !s.fresh(f.last_verified_date) && s.quality.verifiedFeeStatuses.includes(f.verification_status));
 const staleFee = fees.filter((f) => freshnessBadge(f.last_verified_date, s.today, flag).kind === 'stale');
 const newest = [...fees].sort((a, b) => b.last_verified_date.localeCompare(a.last_verified_date))[0];
-const fb = freshnessBadge(newest ? newest.last_verified_date : c.last_verified_date, s.today, flag);
+const fb = newest ? feeBadge(newest, s.today, flag) : freshnessBadge(c.last_verified_date, s.today, flag);
 const lb = licenseBadge(c.license, s.today);
 const FEE_ROWS = [['Management fee', 'management_pct'], ['Flat fee', 'flat_fee'], ['Leasing fee', 'leasing_fee'], ['Renewal fee', 'renewal_fee']];
 const addressText = c.address && (c.address.street || c.address.city) ? [c.address.street, c.address.city, c.address.state, c.address.zip].filter(Boolean).join(', ') : null;
@@ -49,7 +49,7 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
     <Badge kind={fb.kind} text={newest ? fb.text : `Listing ${fb.text.toLowerCase()}`} />
     <a href={correct}>Correct or remove this listing</a>
   </div>
-  {staleFee.length > 0 && <Banner kind="warn" lead={`Fees last verified ${freshnessBadge(staleFee[0].last_verified_date, s.today, flag).text.replace('Verified ', '')}.`}>They may have changed. Check the company site before relying on them.</Banner>}
+  {staleFee.length > 0 && <Banner kind="warn" lead={`Fees last ${staleFee[0].verification_method === 'human_compared' ? 'checked by a person' : 'read on the company site'} ${freshnessBadge(staleFee[0].last_verified_date, s.today, flag).text.replace('Verified ', '')}.`}>They may have changed. Check the company site before relying on them.</Banner>}
   <p class="lede">{lede}</p>
   <nav class="toc" aria-label="On this page"><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
 
@@ -64,6 +64,7 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
         return (
           <section>
             <h3>{pt ? `Fees for ${pt}` : 'Fees (no property type stated)'}</h3>
+            {scopeCaveat(f) && <Banner kind="warn" lead="Read this first.">{scopeCaveat(f)}</Banner>}
             <div class="fee-wrap">
               <table class="fee-table">
                 <caption class="sr">Published fees for {c.name}{pt ? `, ${pt}` : ''}</caption>

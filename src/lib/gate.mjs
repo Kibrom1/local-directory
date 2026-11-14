@@ -35,6 +35,19 @@ export function evaluate(data, quality, options = {}) {
   const fees = data['fee-schedules'] || data.fees;
   const areas = data['service-areas'] || data.areas;
   const srcOk = (id) => !!(sourceById.get(id) && sourceById.get(id).use_allowed);
+  // Terms gate (quality.requireReviewedTermsForIndex, production only): a fact whose source has no recorded terms-of-service
+  // review does not count toward INDEXABLE pages. Facts still display on a listed page if listed pages are published.
+  const prod = options.prod !== false;
+  const termsGateOn = q.requireReviewedTermsForIndex === true && prod;
+  const TERMS_REVIEWED = ['allowed', 'silent', 'not_applicable'];
+  const termsReviewed = (id) => { const x = sourceById.get(id); return !!x && TERMS_REVIEWED.includes(x.tos_decision); };
+  const srcIdx = (id) => srcOk(id) && (!termsGateOn || termsReviewed(id));
+  // Fee scope (fee row `scope`): rows that are network-wide or have unconfirmed plan mapping display with a caveat but only count
+  // toward the fee gates when quality.feeScopesCountingTowardGates lists their scope (the owner override).
+  const scopesCounting = q.feeScopesCountingTowardGates || ['columbus_specific', 'network_wide', 'unconfirmed_mapping'];
+  const scopeCounts = (f) => scopesCounting.includes(f.scope || 'columbus_specific');
+  // Listed (noindex,follow) pages are generated only when quality.publishListedTier is true, or in development.
+  const publishListed = q.publishListedTier === true || !prod;
 
   const skipped = [];
   const noindexListed = [];
@@ -42,25 +55,33 @@ export function evaluate(data, quality, options = {}) {
   const placeholderPaths = new Set();
   const companyPages = [];
 
-  for (const c of data.companies) {
-    const cFees = fees.filter((f) => f.company_id === c.id);
-    const verifiedRows = cFees.filter((f) => q.verifiedFeeStatuses.includes(f.verification_status) && srcOk(f.source_id) && fresh(f.last_verified_date) && feeRowHasValue(f));
-    const cAreaRows = areas.filter((a) => a.company_id === c.id && srcOk(a.source_id) && fresh(a.last_verified_date));
-    const cAreas = cAreaRows.map((a) => geoById.get(a.geography_id)).filter(Boolean);
-    const idFresh = srcOk(c.source_id) && fresh(c.last_verified_date);
-    const licOk = !!(c.license && ['self_stated', 'active', 'inactive'].includes(c.license.status) && srcOk(c.license.source_id) && fresh(c.license.last_verified_date));
+  const calc = (c, cFees, ok) => {
+    const verifiedRows = cFees.filter((f) => q.verifiedFeeStatuses.includes(f.verification_status) && ok(f.source_id) && fresh(f.last_verified_date) && feeRowHasValue(f));
+    const cAreas = areas.filter((a) => a.company_id === c.id && ok(a.source_id) && fresh(a.last_verified_date)).map((a) => geoById.get(a.geography_id)).filter(Boolean);
+    const idFresh = ok(c.source_id) && fresh(c.last_verified_date);
+    const licOk = !!(c.license && ['self_stated', 'active', 'inactive'].includes(c.license.status) && ok(c.license.source_id) && fresh(c.license.last_verified_date));
     const groups = {
       license: licOk,
       fees: verifiedRows.length > 0,
       areas: cAreas.length > 0,
-      services: c.services.some((s) => srcOk(s.source_id) && fresh(s.last_verified_date)),
-      property_types: c.property_types_served.some((s) => srcOk(s.source_id) && fresh(s.last_verified_date)),
+      services: c.services.some((x) => ok(x.source_id) && fresh(x.last_verified_date)),
+      property_types: c.property_types_served.some((x) => ok(x.source_id) && fresh(x.last_verified_date)),
       contact: idFresh && !!(c.website || c.phone || (c.address && (c.address.street || c.address.zip)))
     };
     const have = GROUPS.filter((k) => groups[k]);
-    const verifiedLicense = !!(c.license && q.verifiedLicenseStatuses.includes(c.license.status) && srcOk(c.license.source_id) && fresh(c.license.last_verified_date));
-    const verifiedFees = groups.fees;
-    const base = { type: 'company', path: `/company/${c.slug}/`, id: c.id, company: c, fees: cFees, verifiedFeeRows: verifiedRows, areas: cAreas, groups, completeness: have.length, verifiedFees, verifiedLicense };
+    const verifiedLicense = !!(c.license && q.verifiedLicenseStatuses.includes(c.license.status) && ok(c.license.source_id) && fresh(c.license.last_verified_date));
+    return { verifiedRows, cAreas, groups, have, verifiedLicense, verifiedFees: groups.fees };
+  };
+  const view = (r) => ({ verifiedFeeRows: r.verifiedRows, areas: r.cAreas, groups: r.groups, completeness: r.have.length, verifiedFees: r.verifiedFees, verifiedLicense: r.verifiedLicense });
+
+  for (const c of data.companies) {
+    const cFees = fees.filter((f) => f.company_id === c.id);
+    const disp = calc(c, cFees, srcOk);
+    const idx = termsGateOn ? calc(c, cFees, srcIdx) : disp;
+    const have = idx.have;
+    const verifiedFees = idx.verifiedFees;
+    const verifiedLicense = idx.verifiedLicense;
+    const base = { type: 'company', path: `/company/${c.slug}/`, id: c.id, company: c, fees: cFees, ...view(disp), idxCompleteness: idx.have.length };
 
     if (c.placeholder) {
       placeholderPaths.add(base.path);
@@ -72,13 +93,13 @@ export function evaluate(data, quality, options = {}) {
       skipped.push({ path: base.path, type: 'company', id: c.id, reasons: [`evidence level ${c.evidence_level}: only own-site-confirmed companies are published`] });
       continue;
     }
-    if (have.length < q.company.minFactGroups) reasons.push(`only ${have.length} fact group(s) (${have.join(', ') || 'none'}); need ${q.company.minFactGroups}`);
+    if (have.length < q.company.minFactGroups) reasons.push(`only ${have.length} fact group(s) (${have.join(', ') || 'none'}); need ${q.company.minFactGroups}${termsGateOn && disp.have.length > have.length ? ' (facts from sources with unreviewed terms of service are not counted toward indexing)' : ''}`);
     const hasRequired = (q.company.indexRequireOneOf.includes('fees') && verifiedFees) || (q.company.indexRequireOneOf.includes('license') && verifiedLicense);
     if (!hasRequired) reasons.push(`no verified ${q.company.indexRequireOneOf.join(' or ')} (areas, services and contact alone do not make a profile indexable)`);
     if (!reasons.length) {
       indexable.push({ path: base.path, type: 'company', id: c.id });
-      companyPages.push({ ...base, tier: 'indexable', robots: 'index, follow' });
-    } else if (have.length >= q.company.listed.minFactGroups && q.company.listed.requireEvidence.includes(c.evidence_level)) {
+      companyPages.push({ ...base, ...view(idx), tier: 'indexable', robots: 'index, follow' });
+    } else if (disp.have.length >= q.company.listed.minFactGroups && q.company.listed.requireEvidence.includes(c.evidence_level)) {
       noindexListed.push({ path: base.path, type: 'company', id: c.id, reasons });
       companyPages.push({ ...base, tier: 'listed', robots: 'noindex, follow' });
     } else {
@@ -114,6 +135,15 @@ export function evaluate(data, quality, options = {}) {
     }
   }
 
+  // Listed tier switch: when off (production default) listed company and city pages are not generated. The report keeps them
+  // (noindexListed) so the owner can see what they would be.
+  const unpublishedListed = [];
+  if (!publishListed) {
+    for (let i = companyPages.length - 1; i >= 0; i--) if (companyPages[i].tier === 'listed') unpublishedListed.push(...companyPages.splice(i, 1));
+    for (let i = cityPages.length - 1; i >= 0; i--) { if (cityPages[i].tier === 'listed') unpublishedListed.push(...cityPages.splice(i, 1)); else cityPages[i].listedCompanies = []; }
+  }
+  const publishedIds = new Set(companyPages.filter((p) => p.tier !== 'placeholder').map((p) => p.id));
+
   // Static pages that always exist. Utility pages (search, 404) are noindex and never counted.
   const staticPages = ['/', '/about/', '/privacy/', '/corrections/', '/methodology/'].map((p) => ({ path: p, type: 'static', id: null }));
   const utilityPages = ['/search/', '/404.html'];
@@ -121,10 +151,25 @@ export function evaluate(data, quality, options = {}) {
   // Fee data. A company's fee rows count toward the comparison and the fee guides only when they are verified,
   // fresh and from an allowed source. Under the conservative rule (quality.feeComparison.requireStatedServiceArea)
   // the company must also state a service area on its own site. Both rules are always computed for the report.
-  const hasArea = (cid) => areas.some((a) => a.company_id === cid && srcOk(a.source_id) && fresh(a.last_verified_date) && geoById.has(a.geography_id));
-  const feeRowsFor = (rule) => fees.filter((f) => {
+  const hasArea = (cid) => areas.some((a) => a.company_id === cid && srcIdx(a.source_id) && fresh(a.last_verified_date) && geoById.has(a.geography_id));
+  // Why a fee row is or is not usable for the gates. Used by feeRowsFor and the report.
+  const feeRowChecks = (f) => {
     const c = data.companies.find((x) => x.id === f.company_id);
-    return c && !c.placeholder && c.evidence_level === 'own_site_confirmed' && q.verifiedFeeStatuses.includes(f.verification_status) && srcOk(f.source_id) && fresh(f.last_verified_date) && feeRowHasValue(f) && (rule === 'liberal' || hasArea(c.id));
+    return {
+      company: !!c && !c.placeholder && c.evidence_level === 'own_site_confirmed',
+      published: !!c && publishedIds.has(c.id),
+      status: q.verifiedFeeStatuses.includes(f.verification_status),
+      source: srcOk(f.source_id),
+      terms: srcIdx(f.source_id),
+      fresh: fresh(f.last_verified_date),
+      value: feeRowHasValue(f),
+      area: !!c && hasArea(c.id),
+      scope: scopeCounts(f)
+    };
+  };
+  const feeRowsFor = (rule, { ignoreScope = false } = {}) => fees.filter((f) => {
+    const k = feeRowChecks(f);
+    return k.company && k.published && k.status && k.source && k.terms && k.fresh && k.value && (rule === 'liberal' || k.area) && (ignoreScope || k.scope);
   });
   const countsFor = (rule) => {
     const rows = feeRowsFor(rule);
@@ -139,6 +184,9 @@ export function evaluate(data, quality, options = {}) {
   const perFeeType = active.perFeeType;
   const companiesWithFees = active.companies;
   const feeRows = active.rows;
+  // Rows shown in tables: everything the active rule allows, including rows whose scope keeps them out of the gate counts.
+  const feeRowsShown = feeRowsFor(activeRule, { ignoreScope: true });
+  const scopeExcludedRows = feeRowsShown.filter((f) => !scopeCounts(f));
   const excludedByAreaRule = [...feeCountsByRule.liberal.companies].filter((id) => !active.companies.has(id));
 
   // Gated page types (templates exist). `planned` keeps the full gate decision, eligible or not.
@@ -154,7 +202,6 @@ export function evaluate(data, quality, options = {}) {
   }
 
   // Guides (content/guides/*.md), parsed and validated by src/lib/guides.mjs. Drafts are not published in production.
-  const prod = options.prod !== false;
   const guidePages = [];
   const guideSlugs = new Set();
   for (const g of data.guides || []) {
@@ -174,7 +221,7 @@ export function evaluate(data, quality, options = {}) {
   for (const g of publishedGuides) extra.push({ path: g.path, type: 'guide', id: g.id });
   const builtIndexable = [...staticPages, ...indexable, ...extra];
 
-  return { data, companyPages, cityPages, guidePages, indexable: builtIndexable, noindexListed, skipped, placeholderPaths, planned, perFeeType, companiesWithFees, feeRows, feeRule: activeRule, feeCountsByRule, excludedByAreaRule, utilityPages, prod, quality: q, today, geoById, ptById, sourceById, fresh };
+  return { termsGateOn, publishListed, unpublishedListed, publishedIds, feeRowsShown, scopeExcludedRows, feeRowChecks, scopeCounts, data, companyPages, cityPages, guidePages, indexable: builtIndexable, noindexListed, skipped, placeholderPaths, planned, perFeeType, companiesWithFees, feeRows, feeRule: activeRule, feeCountsByRule, excludedByAreaRule, utilityPages, prod, quality: q, today, geoById, ptById, sourceById, fresh };
 }
 
 export function buildReport(site) {

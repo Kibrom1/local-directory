@@ -21,5 +21,11 @@
     { "stage": 4, "minIndexable": 100, "maxIndexable": null, "label": "Only with evidence of unique data" }
   ],
   "currentStage": 1,
-  "thresholds": { "tierACompanies": 40 }
+  "thresholds": { "tierACompanies": 40 },
+  "requireReviewedTermsForIndex": true,
+  "requireReviewedTermsForIndexNote": "Production only. When true, a fact counts toward an INDEXABLE page (company, city, fee comparison, fee guide, property type) only if its source has a recorded terms-of-service review (tos_decision allowed, silent or not_applicable). Sources still at not_checked are ignored for indexing. Set false only for development or after the terms have been read. Never edit a source's tos_decision without a person reading the terms.",
+  "publishListedTier": false,
+  "publishListedTierNote": "Production only. When false, listed (noindex,follow) company and city pages are not generated, so company identity from thin or unreviewed data is not published. The build report still shows what they would be. Set true to publish them (they stay noindex). Development always shows them.",
+  "feeScopesCountingTowardGates": ["columbus_specific"],
+  "feeScopesNote": "Fee row scope: columbus_specific, network_wide (the company's pricing page covers many markets) or unconfirmed_mapping (plan labels not confirmed next to values). Rows with other scopes display with a caveat but do not count toward the fee comparison or fee-guide gates. Owner override: add the scope to this list."
 }

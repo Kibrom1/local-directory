@@ -82,3 +82,26 @@ export function licenseBadge(lic, today) {
   if (lic.status === 'none_found') return { kind: 'bad', text: `No matching license found (checked ${lic.last_verified_date})` };
   return { kind: 'none', text: 'License: not checked' };
 }
+
+// How a fee row was checked, in the words visitors see. An automated read is never described as a person's check.
+export const VERIFICATION_LABELS = {
+  agent_read: (date) => `Read on the company's site, ${date}. Confirm with the company`,
+  human_compared: (date) => `Checked by a person, ${date}`
+};
+export function feeBadge(f, today, flagDays) {
+  const human = f.verification_method === 'human_compared' && f.human_verified_date;
+  const date = human ? f.human_verified_date : f.last_verified_date;
+  const age = ageDays(f.last_verified_date, today);
+  if (age > flagDays) {
+    const n = monthsBetween(f.last_verified_date, today);
+    return { kind: 'stale', text: human ? `Checked by a person ${n} months ago` : `Read on the company's site ${n} months ago. Confirm with the company`, age, method: human ? 'human_compared' : 'agent_read' };
+  }
+  return { kind: 'ok', text: (human ? VERIFICATION_LABELS.human_compared : VERIFICATION_LABELS.agent_read)(date), age, method: human ? 'human_compared' : 'agent_read' };
+}
+
+// Caveat shown next to fee rows whose scope keeps them out of the gate counts.
+export function scopeCaveat(f) {
+  if (f.scope === 'network_wide') return "This company's pricing page covers many markets, not only Columbus. Shown as published. It is not counted toward our fee comparison and fee guide thresholds.";
+  if (f.scope === 'unconfirmed_mapping') return "Plan labels on the company's page are not confirmed next to these values. Shown as published. It is not counted toward our fee comparison and fee guide thresholds.";
+  return null;
+}

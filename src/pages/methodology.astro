@@ -3,9 +3,11 @@ import Base from '../layouts/Base.astro';
 import { getSite, quality as q } from '../lib/site.mjs';
 const s = getSite();
 const conservative = s.feeRule === 'conservative';
+const downloads = s.planned.find((p) => p.type === 'fee-comparison').eligible;
 // Rule changes are logged here with a date (PRD section 6, item 6).
 const changes = [
-  { date: '2026-11-12', text: 'First published rules: ordering, freshness limits, page thresholds and the fee comparison scope described on this page.' }
+  { date: '2026-11-12', text: 'First published rules: ordering, freshness limits, page thresholds and the fee comparison scope described on this page.' },
+  { date: '2026-11-14', text: 'Fee rows now say how they were checked. Rows from a network-wide pricing page or with unconfirmed plan labels are shown with a note and are not counted toward the thresholds. Facts count toward indexed pages only when the source\'s terms have been reviewed.' }
 ];
 ---
 <Base title="Methodology: how we collect, check and rank" description="Where the facts come from, how companies are ordered, how old a fact can be, and which pages exist only when there is enough verified data." pageType="methodology" crumbs={[{ name: 'Methodology' }]}>
@@ -17,6 +19,10 @@ const changes = [
 
   <h2>Sources and dates</h2>
   <p>Every fact carries a source, the date we captured it and the date we last verified it, shown next to the fact. Our rule is to check a source's terms and robots.txt before collecting from it automatically. An unknown fact stays unknown: it shows as &ldquo;Not published&rdquo; (we read the page and found no figure) or &ldquo;Not checked yet&rdquo; (we have no record of reading it). We never fill a gap with a guess or with a figure from a third-party roundup.</p>
+
+  <h2>What "verified" means here</h2>
+  <p>Each fee row says how it was checked. &ldquo;Read on the company's site&rdquo; means a reader or automated tool compared the value with the company's own page on the date shown. It is not a person's check and not a quote, and fees change, so confirm with the company. &ldquo;Checked by a person&rdquo; means a person compared the value with the live page. We do not describe a license as verified unless we checked an official record; none of our sources for that are available yet, so license notes read &ldquo;stated by company, not verified&rdquo;.</p>
+  <p>We use a source for pages that can be indexed only after its terms of service have been reviewed and recorded. Company pages with too little reviewed data are not published.</p>
 
   <h2>How we order companies</h2>
   <ol>
@@ -32,6 +38,8 @@ const changes = [
   <h2>Fee comparison scope</h2>
   <p>The fee comparison and fee guides use only fees a company publishes on its own website, labelled &ldquo;companies we reviewed, not a market average&rdquo;. They are not a survey. Ranges and plans are shown as published and are never averaged. A rent estimate uses an example rent and is an illustration, not a quote.</p>
   {conservative && <p>A company's fees are included only if its own website also states a Columbus-area service area. Fees from a company with no stated service area are not shown until it states one.</p>}
+
+  {downloads && <><h2>Use the data</h2><p>The published fee rows are available as <a href="/fees-data/columbus-pm-fees.csv">CSV</a> and <a href="/fees-data/columbus-pm-fees.json">JSON</a>, with the source page and dates for every figure. It lists companies we reviewed, not a market average. Please cite &ldquo;Columbus PM Guide fee data, as of {s.today}&rdquo;.</p></>}
 
   <h2>When a page exists</h2>
   <ul>

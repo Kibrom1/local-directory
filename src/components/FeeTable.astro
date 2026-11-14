@@ -31,6 +31,7 @@ const COLS = [['management_pct', 'Management %'], ['flat_fee', 'Flat fee'], ['le
             {compare && <input class="js-only inline" type="checkbox" aria-label={`Select ${r.company.name}${r.ptName ? ` (${r.ptName})` : ''} to compare`} />}
             {r.path ? <a href={r.path}>{r.company.name}</a> : r.company.name}
             <br /><small class="muted">{r.ptName ? `Fees for: ${r.ptName}` : 'No property type stated for these fees'}</small>
+            {r.caveat && <><br /><small class="caveat"><strong>Note:</strong> {r.caveat}</small></>}
           </th>
           {COLS.map(([k, label]) => <td><span class="lbl">{label}</span><FeeValue value={r.fee[k]} /></td>)}
           <td><span class="lbl">Minimums</span><span class="v">{r.minimums ? r.minimums : <Unknown />}</span></td>

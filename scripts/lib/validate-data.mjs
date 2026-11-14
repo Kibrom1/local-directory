@@ -129,6 +129,19 @@ export function validateData(data, { schemaDir, today = new Date().toISOString()
     if (o.captured_date > today) fail(`${where}: captured_date ${o.captured_date} is in the future`);
     if (o.last_verified_date > today) fail(`${where}: last_verified_date ${o.last_verified_date} is in the future`);
   };
+  // Verification method: a person's check needs a handle and a date; an agent read must not claim one.
+  const checkVerification = (where, o) => {
+    if (o.verification_method === 'human_compared') {
+      if (!o.verified_by) fail(`${where}: human_compared needs verified_by (a role or handle)`);
+      if (!o.human_verified_date) fail(`${where}: human_compared needs human_verified_date`);
+    }
+    if (o.verification_method === 'agent_read' && (o.human_verified_date || o.verified_by)) fail(`${where}: agent_read must not carry verified_by or human_verified_date`);
+    if (!o.verification_method && (o.human_verified_date || o.verified_by)) fail(`${where}: verified_by/human_verified_date need verification_method human_compared`);
+    if (o.human_verified_date) {
+      if (o.human_verified_date > today) fail(`${where}: human_verified_date ${o.human_verified_date} is in the future`);
+      if (o.captured_date && o.human_verified_date < o.captured_date) fail(`${where}: human_verified_date is before captured_date`);
+    }
+  };
   const checkProv = (where, o, opts) => {
     const s = checkSource(where, o.source_id, opts);
     checkDates(where, o);
@@ -150,6 +163,7 @@ export function validateData(data, { schemaDir, today = new Date().toISOString()
     const w = `companies ${c.id}`;
     const confirmed = c.evidence_level === 'own_site_confirmed';
     const s = checkProv(w, c, { allowRefused: !confirmed });
+    checkVerification(w, c);
     if (c.placeholder) warn(`${w}: placeholder record`);
     if (confirmed) {
       if (s && s.source_kind !== 'company_site') fail(`${w}: own_site_confirmed needs a company_site source (got ${s.source_kind})`);
@@ -194,6 +208,9 @@ export function validateData(data, { schemaDir, today = new Date().toISOString()
     else if (c.evidence_level !== 'own_site_confirmed') fail(`${w}: ${f.company_id} is ${c.evidence_level}; fee rows need an own-site-confirmed company`);
     if (f.property_type && !ptIds.has(f.property_type)) fail(`${w}: unknown property_type ${f.property_type}`);
     const s = checkProv(w, f);
+    checkVerification(w, f);
+    if (f.verification_status === 'verified_own_site' && !f.verification_method) fail(`${w}: verified_own_site needs verification_method (agent_read or human_compared)`);
+    if (['network_wide', 'unconfirmed_mapping'].includes(f.scope) && !f.notes) fail(`${w}: scope ${f.scope} needs notes explaining the caveat shown to visitors`);
     if (s) {
       if (!['company_site', 'company_submission', 'official_reference', 'official_record'].includes(s.source_kind)) fail(`${w}: fee source kind ${s.source_kind} is not a value source`);
       if (f.verification_status === 'verified_own_site' && s.source_kind !== 'company_site') fail(`${w}: verified_own_site needs a company_site source`);

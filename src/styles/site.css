@@ -151,3 +151,4 @@ fieldset{border:0;padding:0;margin:0 0 var(--s4)}
 .err-list{margin:var(--s2) 0 0;padding-left:var(--s6)}
 .site-footer .small{margin-bottom:0}
 code{font-size:.9em}
+.caveat { font-size: .875rem; }

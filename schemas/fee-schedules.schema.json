@@ -50,6 +50,10 @@
       "source_urls": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/definitions/url" } },
       "captured_date": { "$ref": "common.schema.json#/definitions/date" },
       "last_verified_date": { "$ref": "common.schema.json#/definitions/date" },
+      "verification_method": { "enum": ["agent_read", "human_compared"], "description": "agent_read: an automated agent or fetcher read the company's page and the value matched. human_compared: a person compared the value with the live page. Shown to visitors as 'Read on the company's site' versus 'Checked by a person'." },
+      "verified_by": { "type": ["string", "null"], "pattern": "^[A-Za-z0-9 _.-]{2,40}$", "description": "Role or handle of the person who compared the value (no personal data beyond a handle). Required for human_compared." },
+      "human_verified_date": { "anyOf": [{ "$ref": "common.schema.json#/definitions/date" }, { "type": "null" }], "description": "Date a person compared the value with the live page. Null unless verification_method is human_compared." },
+      "scope": { "enum": ["columbus_specific", "network_wide", "unconfirmed_mapping"], "description": "columbus_specific (default): the page states these fees for Columbus or Ohio. network_wide: the pricing page covers many markets, not only Columbus. unconfirmed_mapping: plan labels are not confirmed next to the values. The last two display with a caveat and do not count toward the fee gates unless quality.json feeScopesCountingTowardGates lists them. Both require notes." },
       "placeholder": { "type": "boolean" }
     }
   }
