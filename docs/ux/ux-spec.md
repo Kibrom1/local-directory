@@ -61,7 +61,6 @@ No hero image, no carousel, no testimonials, no counts presented as market stats
 3. Filters: property type, "Only companies that publish fees"; link "Compare these companies in the fee table".
 4. Result count (`role=status`).
 5. Result list (cards, s5.1). 
-6. Reserved ad slot A (after list; s9).
 7. About-this-place facts (counties, nearby cities, related guides).
 8. Empty/zero-filter state (hidden until needed).
 
@@ -75,7 +74,6 @@ No hero image, no carousel, no testimonials, no counts presented as market stats
 7. Services and property types.
 8. Contact: published website and phone only, plain links; nothing routes through us; source note.
 9. Correct-or-remove box (info banner).
-10. Reserved ad slot B (right rail at 64rem+, after contact on mobile; s9).
 Freshness banner (s7.4) sits directly under the H1 when any fee is over 180 days.
 
 ### 4.4 Fee comparison
@@ -85,7 +83,6 @@ Freshness banner (s7.4) sits directly under the H1 when any fee is over 180 days
 4. Rent illustration input (optional).
 5. Compare controls (select 2 to 3, "Compare selected").
 6. Fee table (s6).
-7. Ad slot A (after table only).
 8. "Where do these numbers come from" + methodology + correct link.
 Per-property-type variant `/fees/<type>/` uses the same template, filtered.
 
@@ -97,7 +94,6 @@ Per-property-type variant `/fees/<type>/` uses the same template, filtered.
 5. Illustration in dollars at an example rent, labeled "illustration".
 6. "Published benchmarks (third party)": separate gray box, each line "Published by X (date), accessed Y", vendor-written sources labeled.
 7. Questions to ask a company.
-8. Ad slot B.
 9. Sources list (every figure above).
 10. Related fee guides and fee comparison.
 
@@ -106,12 +102,10 @@ Per-property-type variant `/fees/<type>/` uses the same template, filtered.
 2. TOC.
 3. Body: short sections, lists. At least one block of our own data or a cited official source ("What local companies list" using our dataset).
 4. Next-step card: Compare fees | See companies in <city>.
-5. Ad slot B (mid-article, after the second section on long guides only).
 6. Sources (required; build fails if empty).
 Legal-process topics (eviction, deposits) are Stage 2 and link to official sources.
 
 ### 4.7 About
-H1; who runs the site (owner decision) and the related-business disclosure in plain words; what it costs (free, no paid placement, no ads at launch); how data is collected (link Methodology); corrections and removal; contact. No ad slots.
 
 ### 4.8 Property-type page
 H1 "Property managers for single-family rentals in the Columbus area"; scope note; fee table for that type (reuses the fee table, filtered); companies serving it by city; what is different for this type (only from sourced facts); related guides. Gate: 3+ companies with a sourced fact for the type. STR fee basis is revenue, not rent: separate table with its own header.
@@ -204,14 +198,7 @@ Footer identity line, About disclosure, Methodology change log, "Correct or remo
 | Search with no results | "No results for X" + links to cities and fee comparison |
 | Placeholder data | Prototype-style "PLACEHOLDER" bar, noindex (already built) |
 
-## 9. Reserved ad slots (not built, labeled)
-Ads are not in the plan (traffic-value.md: about $1.50-$75/month). The layout reserves three places so adding them later does not shift layout, and so tables, forms and trust pages stay clean.
-| Slot | Where | Size reserved |
-|---|---|---|
-| A | After the result list (city), after the fee table (fees) | 250px high, full width |
-| B | Right rail at 64rem+ (profile, guides); after main content on mobile | 250px high |
-| (none) | Never: above the fold on mobile, inside tables or forms, on corrections, about, privacy, methodology, 404 | n/a |
-Rules if ever enabled: visible label "Advertisement"; dashed neutral box; never styled like a result; no ads from management companies in the same category placed as "recommended"; ads never affect order; update privacy policy and add the consent banner trigger (PRD s12) first. The prototype shows the boxes as "reserved, not built" for review only; production output contains no slot markup today.
+## 9. Ads: not planned
 
 ## 10. Search and filter UX over static data
 - **Site search (Pagefind)**: `/search/` page loads Pagefind UI on demand; the home page has a plain GET form to `/search/?q=` so no search JS loads on home. Index only `main` (`data-pagefind-body`); exclude nav, filters, footer (`data-pagefind-ignore`). Pagefind filters: `city`, `property_type`, `publishes_fees`, `page_type` set via `data-pagefind-filter` on profiles. Result title = H1, snippet from lede. Admin and placeholder pages excluded.
@@ -230,7 +217,7 @@ Semantic HTML first (one h1, landmarks, real tables, real lists, real buttons an
 - **Images**: none required (no logos, no company photos; the brief forbids copied images). If added: explicit width/height, AVIF/WebP, lazy-load below fold.
 - **LCP element** is the H1/lede text: no render-blocking third-party scripts above it.
 - **GA4**: load `async` after the `load` event; no Google Signals; keep out of `<head>` critical path. Budget it as the largest third-party cost (about 50 KB).
-- **CLS**: reserved ad-slot height; table captions and banners are server-rendered, not injected; no late-inserted banners (freshness banner is build-time).
+- **CLS**: table captions and banners are server-rendered, not injected; no late-inserted banners (freshness banner is build-time).
 - **INP**: filter and compare handlers touch fewer than 50 nodes; no layout thrash.
 - **Caching**: static hashed assets, `immutable`; HTML revalidated.
 - **Budgets in CI**: Lighthouse CI on home, city, profile, fee table: performance 95+, LCP under 2.0s on mobile throttling, total transfer under 150 KB per page excluding GA4.
