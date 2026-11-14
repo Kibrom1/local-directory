@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { SITE_NAME } from '../lib/brand.mjs';
 import { getSite, quality as q } from '../lib/site.mjs';
 const s = getSite();
 const conservative = s.feeRule === 'conservative';
@@ -39,7 +40,7 @@ const changes = [
   <p>The fee comparison and fee guides use only fees a company publishes on its own website, labelled &ldquo;companies we reviewed, not a market average&rdquo;. They are not a survey. Ranges and plans are shown as published and are never averaged. A rent estimate uses an example rent and is an illustration, not a quote.</p>
   {conservative && <p>A company's fees are included only if its own website also states a Columbus-area service area. Fees from a company with no stated service area are not shown until it states one.</p>}
 
-  {downloads && <><h2>Use the data</h2><p>The published fee rows are available as <a href="/fees-data/columbus-pm-fees.csv">CSV</a> and <a href="/fees-data/columbus-pm-fees.json">JSON</a>, with the source page and dates for every figure. It lists companies we reviewed, not a market average. Please cite &ldquo;Columbus PM Guide fee data, as of {s.today}&rdquo;.</p></>}
+  {downloads && <><h2>Use the data</h2><p>The published fee rows are available as <a href="/fees-data/columbus-pm-fees.csv">CSV</a> and <a href="/fees-data/columbus-pm-fees.json">JSON</a>, with the source page and dates for every figure. It lists companies we reviewed, not a market average. Please cite &ldquo;{SITE_NAME} fee data, as of {s.today}&rdquo;.</p></>}
 
   <h2>When a page exists</h2>
   <ul>

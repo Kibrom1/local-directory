@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Banner from '../../components/Banner.astro';
 import FeeTable from '../../components/FeeTable.astro';
 import { getSite } from '../../lib/site.mjs';
+import { SITE_NAME } from '../../lib/brand.mjs';
 import { buildFeeRows } from '../../lib/feetable.mjs';
 import { EXAMPLE_RENT } from '../../lib/estimate.mjs';
 import { FEE_GUIDES } from '../../lib/feeguides.mjs';
@@ -53,7 +54,7 @@ const ptPages = s.planned.filter((p) => p.type === 'property-type' && p.eligible
   <h2>Where do these numbers come from?</h2>
   <p>Each value comes from the company's own website on the date shown in its row, with a link to the page we read. Values older than {flag} days are flagged. Values older than 12 months are removed from this table until we re-check them{droppedOld > 0 ? ` (${droppedOld} ${droppedOld === 1 ? 'row is' : 'rows are'} removed right now)` : ''}. <a href="/methodology/">Methodology</a></p>
   {caveated > 0 && <p class="small">{caveated} {caveated === 1 ? 'row carries' : 'rows carry'} a note because the company's page is not specific to Columbus or its plan labels are unconfirmed. Those rows are shown as published and are not counted toward our thresholds.</p>}
-  <p><strong>Use this data:</strong> <a href="/fees-data/columbus-pm-fees.csv">CSV</a> or <a href="/fees-data/columbus-pm-fees.json">JSON</a> of the published rows, with the source page and dates for every figure. It lists companies we reviewed, not a market average. Please cite "Columbus PM Guide fee data, as of {s.today}" and link to this page.</p>
+  <p><strong>Use this data:</strong> <a href="/fees-data/columbus-pm-fees.csv">CSV</a> or <a href="/fees-data/columbus-pm-fees.json">JSON</a> of the published rows, with the source page and dates for every figure. It lists companies we reviewed, not a market average. Please cite "{SITE_NAME} fee data, as of {s.today}" and link to this page.</p>
   <p>Fee wrong or out of date? <a href="/corrections/">Correct or remove a listing</a>, free.</p>
   {(guides.length > 0 || ptPages.length > 0) && (
     <>

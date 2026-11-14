@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getSite } from '../lib/site.mjs';
+import { SITE_NAME } from '../lib/brand.mjs';
 const s = getSite();
 const cities = s.cityPages.filter((p) => p.tier === 'indexable');
 // Property types that at least one listed company serves (from sourced facts).
@@ -12,7 +13,7 @@ const recorded = s.data.companies.filter((c) => !c.placeholder && c.evidence_lev
 const publishedProfiles = s.companyPages.filter((x) => x.tier !== 'placeholder').length;
 const feeCompanies = s.companiesWithFees.size;
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
-const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Columbus PM Guide', url: new URL('/', Astro.site).href, potentialAction: { '@type': 'SearchAction', target: new URL('/search/?q={query}', Astro.site).href.replace('%7Bquery%7D', '{query}'), 'query-input': 'required name=query' } };
+const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: new URL('/', Astro.site).href, potentialAction: { '@type': 'SearchAction', target: new URL('/search/?q={query}', Astro.site).href.replace('%7Bquery%7D', '{query}'), 'query-input': 'required name=query' } };
 ---
 <Base title="Find and compare Columbus-area property managers" description="A free, independent directory of Columbus-area property management companies. Fees, services and service areas, each fact with its source and date." jsonLd={jsonLd} pageType="home">
   <h1>Find and compare Columbus-area property managers</h1>

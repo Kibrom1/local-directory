@@ -1,10 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getSite } from '../lib/site.mjs';
+import { SITE_NAME } from '../lib/brand.mjs';
 const s = getSite();
 const cities = s.cityPages.filter((p) => p.tier === 'indexable');
 ---
-<Base title="Search this site" description="Search companies, cities and guides on Columbus PM Guide." noindex pageType="search" crumbs={[]}>
+<Base title="Search this site" description={`Search companies, cities and guides on ${SITE_NAME}.`} noindex pageType="search" crumbs={[]}>
   <h1>Search this site</h1>
   <div id="search" data-pagefind-ignore></div>
   <p id="search-fallback" class="small">Search is not available right now. Browse the <a href="/site-map/">A to Z list of all pages</a>, or go to:

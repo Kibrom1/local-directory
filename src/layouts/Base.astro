@@ -1,6 +1,7 @@
 ---
 import '../styles/site.css';
 import { getSite } from '../lib/site.mjs';
+import { SITE_NAME } from '../lib/brand.mjs';
 import { fmtDate } from '../lib/fees.mjs';
 interface Crumb { name: string; href?: string }
 interface Props { title: string; description?: string; noindex?: boolean; robots?: string; jsonLd?: object | object[]; crumbs?: Crumb[]; pageType?: string; wide?: boolean; }
@@ -8,7 +9,7 @@ interface Props { title: string; description?: string; noindex?: boolean; robots
 const { title, description = '', noindex = false, robots, jsonLd, crumbs = [], pageType = 'page' } = Astro.props;
 const robotsValue = robots || (noindex ? 'noindex, nofollow' : '');
 const isNoindex = robotsValue.startsWith('noindex');
-const fullTitle = title.includes('Columbus PM Guide') ? title : `${title} | Columbus PM Guide`;
+const fullTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site).href;
 const gaId = import.meta.env.PUBLIC_GA_ID;
@@ -67,7 +68,7 @@ if (crumbs.length && !isNoindex) {
     <header class="site-header" data-pagefind-ignore>
       <div class="wrap">
         <div class="hdr">
-          <a class="brand" href="/">Columbus PM Guide</a>
+          <a class="brand" href="/">{SITE_NAME}</a>
           <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-list">Menu</button>
         </div>
         <nav class="site-nav" aria-label="Main">
@@ -92,7 +93,7 @@ if (crumbs.length && !isNoindex) {
     </main>
     <footer class="site-footer" data-pagefind-ignore>
       <div class="wrap">
-        <p><strong>Columbus PM Guide</strong>. Free and independent. No paid listings, no ads, no accounts. Facts come from public sources, each with a source and a date. Unknown values are left blank, never guessed.</p>
+        <p><strong>{SITE_NAME}</strong>. Free and independent. No paid listings, no ads, no accounts. Facts come from public sources, each with a source and a date. Unknown values are left blank, never guessed.</p>
         <ul>
           <li><a href="/corrections/">Correct or remove a listing</a></li>
           <li><a href="/methodology/">How we collect and rank (Methodology)</a></li>
