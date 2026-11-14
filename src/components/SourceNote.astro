@@ -1,11 +1,13 @@
 ---
 // "Source: <name>, captured <date>, last verified <date>. Open source" (UX spec 7.3). Visible text, never a tooltip.
 import { getSite } from '../lib/site.mjs';
-interface Props { sourceId: string; captured: string; verified: string; urls?: (string | null | undefined)[]; prefix?: string }
-const { sourceId, captured, verified, urls = [], prefix } = Astro.props;
+import { fmtDate } from '../lib/fees.mjs';
+// who: the company the source is about; it is added to each link as hidden text so "Open source" is never the same name twice (WCAG 2.4.4).
+interface Props { sourceId: string; captured: string; verified: string; urls?: (string | null | undefined)[]; prefix?: string; who?: string }
+const { sourceId, captured, verified, urls = [], prefix, who } = Astro.props;
 const s = getSite();
 const src = s.sourceById.get(sourceId);
 const company = src && src.source_kind === 'company_submission';
 const links = [...new Set(urls.filter(Boolean))];
 ---
-<span class="src">{prefix && <>{prefix} </>}{company ? `Provided by the company, ${captured}.` : `Source: ${src ? src.name : 'unknown'}, captured ${captured}, last verified ${verified}.`}{links.map((u, i) => <> <a href={u} rel="nofollow noopener">Open source{links.length > 1 ? ` ${i + 1}` : ''}</a></>)}</span>
+<span class="src">{prefix && <>{prefix} </>}{company ? <>Provided by the company, <time datetime={captured}>{fmtDate(captured)}</time>.</> : <>Source: {src ? src.name : 'unknown'}, captured <time datetime={captured}>{fmtDate(captured)}</time>, last verified <time datetime={verified}>{fmtDate(verified)}</time>.</>}{links.map((u, i) => <> <a href={u} rel="nofollow noopener">Open source{links.length > 1 ? ` ${i + 1}` : ''}{who && <span class="sr"> for {who}</span>}</a></>)}</span>

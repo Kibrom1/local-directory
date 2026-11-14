@@ -37,8 +37,31 @@ for (const [k, bg, key] of claims) { const c = tokens[k].contrast[key]; const r 
 // CSS custom properties must equal the tokens.
 const css2tok = { ink: T('ink'), muted: T('muted'), bg: T('bg'), surface: T('surface'), line: T('line'), ui: T('ui'), primary: T('primary'), focus: T('focus'), 'warn-bg': T('warn', 'bg'), 'warn-ink': T('warn', 'ink'), 'warn-line': T('warn', 'line'), 'ok-bg': T('success', 'bg'), 'ok-ink': T('success', 'ink'), 'bad-bg': T('danger', 'bg'), 'bad-ink': T('danger', 'ink'), 'info-bg': T('info', 'bg'), 'info-ink': T('info', 'ink'), 'ad-bg': T('neutralBadge', 'bg'), 'ad-ink': T('neutralBadge', 'ink'), 'unk-bg': T('unknown', 'bg'), 'foot-bg': T('footer', 'bg'), 'foot-ink': T('footer', 'ink') };
 for (const [v, hex] of Object.entries(css2tok)) { const m = css.match(new RegExp(`--${v}:(#[0-9a-fA-F]{6})`)); if (!m || m[1].toLowerCase() !== hex.toLowerCase()) { fail++; console.log(`CSS --${v} is ${m ? m[1] : 'missing'}, token says ${hex}`); } }
+// Dark theme: values come from the @media (prefers-color-scheme:dark) block in the CSS itself.
+const darkBlock = (css.match(/@media \(prefers-color-scheme:dark\)\{\s*:root\{([^}]*)\}/) || [])[1];
+if (!darkBlock) { fail++; console.log('CSS has no dark theme block'); }
+else {
+  const D = Object.fromEntries([...darkBlock.matchAll(/--([a-z-]+):(#[0-9a-fA-F]{6})/g)].map((m) => [m[1], m[2]]));
+  const need = ['ink', 'muted', 'bg', 'surface', 'ui', 'primary', 'focus', 'warn-bg', 'warn-ink', 'warn-line', 'ok-bg', 'ok-ink', 'bad-bg', 'bad-ink', 'info-bg', 'info-ink', 'ad-bg', 'ad-ink', 'unk-bg', 'foot-bg', 'foot-ink', 'foot-link', 'on-primary', 'primary-press'];
+  for (const k of need) if (!D[k]) { fail++; console.log(`dark theme is missing --${k}`); }
+  if (need.every((k) => D[k])) {
+    const dp = [
+      ['Body text', D.ink, D.bg, 4.5], ['Body text on panel', D.ink, D.surface, 4.5], ['Muted text', D.muted, D.bg, 4.5], ['Muted on panel', D.muted, D.surface, 4.5], ['Muted on unknown chip', D.muted, D['unk-bg'], 4.5],
+      ['Link', D.primary, D.bg, 4.5], ['Link on panel', D.primary, D.surface, 4.5], ['Link on info banner', D.primary, D['info-bg'], 4.5],
+      ['Primary button text', D['on-primary'], D.primary, 4.5], ['Button hover text', D['on-primary'], D['primary-press'], 4.5],
+      ['Input/card border', D.ui, D.bg, 3], ['Input border on panel', D.ui, D.surface, 3], ['Focus ring', D.focus, D.bg, 3], ['Focus ring on panel', D.focus, D.surface, 3],
+      ['Warning text', D['warn-ink'], D['warn-bg'], 4.5], ['Warning border', D['warn-line'], D.bg, 3], ['Error text on error bg', D['bad-ink'], D['bad-bg'], 4.5], ['Error text', D['bad-ink'], D.bg, 4.5],
+      ['Verified badge', D['ok-ink'], D['ok-bg'], 4.5], ['Verified badge border', D['ok-ink'], D.bg, 3], ['Info banner', D['info-ink'], D['info-bg'], 4.5],
+      ['Neutral badge', D['ad-ink'], D['ad-bg'], 4.5], ['Neutral badge border', D.ui, D['ad-bg'], 3], ['Unknown chip', D.muted, D['unk-bg'], 4.5],
+      ['Footer text', D['foot-ink'], D['foot-bg'], 4.5], ['Footer link and focus ring', D['foot-link'], D['foot-bg'], 4.5]
+    ];
+    console.log('\nDark theme');
+    for (const [l, f, b, n] of dp) { const r = ratio(f, b); const ok = r >= n; if (!ok) fail++; console.log(`${l.padEnd(44)} ${f} ${b} ${r.toFixed(2).padStart(5)}  ${n}  ${ok ? 'pass' : 'FAIL'}`); }
+    pairs.push(...dp);
+  }
+}
 // Any hex colour in the CSS outside the custom properties must be one of the tokens (or white/hover).
 const known = new Set([...Object.values(css2tok), '#ffffff', '#fff', '#08386d'].map((x) => x.toLowerCase()));
-for (const m of css.matchAll(/#[0-9a-fA-F]{3,6}\b/g)) if (!known.has(m[0].toLowerCase())) { fail++; console.log(`CSS uses colour ${m[0]} that is not a design token`); }
+for (const m of css.replace(/--[a-z-]+:#[0-9a-fA-F]{3,6}/g, '').matchAll(/#[0-9a-fA-F]{3,6}\b/g)) if (!known.has(m[0].toLowerCase())) { fail++; console.log(`CSS uses colour ${m[0]} that is not a design token`); }
 console.log(fail ? `\ncontrast FAILED (${fail})` : `\ncontrast passed: ${pairs.length} pairs, CSS matches tokens`);
 process.exit(fail ? 1 : 0);

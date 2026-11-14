@@ -6,7 +6,7 @@ import FeeValue from '../../components/FeeValue.astro';
 import SourceNote from '../../components/SourceNote.astro';
 import Unknown from '../../components/Unknown.astro';
 import { getSite } from '../../lib/site.mjs';
-import { describeFee, minimumsText, freshnessBadge, licenseBadge, LICENSE_EXPLANATION } from '../../lib/fees.mjs';
+import { describeFee, minimumsText, freshnessBadge, feeBadge, fmtDate, scopeCaveat, licenseBadge, LICENSE_EXPLANATION } from '../../lib/fees.mjs';
 import { formatFee, feeText } from '../../lib/format.mjs';
 export function getStaticPaths() {
   return getSite().companyPages.map((p) => ({ params: { slug: p.company.slug }, props: { page: p } }));
@@ -18,7 +18,7 @@ const fees = verifiedFeeRows; // verified, fresh, from an allowed source, with a
 const dropped = Astro.props.page.fees.filter((f) => !s.fresh(f.last_verified_date) && s.quality.verifiedFeeStatuses.includes(f.verification_status));
 const staleFee = fees.filter((f) => freshnessBadge(f.last_verified_date, s.today, flag).kind === 'stale');
 const newest = [...fees].sort((a, b) => b.last_verified_date.localeCompare(a.last_verified_date))[0];
-const fb = freshnessBadge(newest ? newest.last_verified_date : c.last_verified_date, s.today, flag);
+const fb = newest ? feeBadge(newest, s.today, flag) : freshnessBadge(c.last_verified_date, s.today, flag);
 const lb = licenseBadge(c.license, s.today);
 const FEE_ROWS = [['Management fee', 'management_pct'], ['Flat fee', 'flat_fee'], ['Leasing fee', 'leasing_fee'], ['Renewal fee', 'renewal_fee']];
 const addressText = c.address && (c.address.street || c.address.city) ? [c.address.street, c.address.city, c.address.state, c.address.zip].filter(Boolean).join(', ') : null;
@@ -49,7 +49,7 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
     <Badge kind={fb.kind} text={newest ? fb.text : `Listing ${fb.text.toLowerCase()}`} />
     <a href={correct}>Correct or remove this listing</a>
   </div>
-  {staleFee.length > 0 && <Banner kind="warn" lead={`Fees last verified ${freshnessBadge(staleFee[0].last_verified_date, s.today, flag).text.replace('Verified ', '')}.`}>They may have changed. Check the company site before relying on them.</Banner>}
+  {staleFee.length > 0 && <Banner kind="warn" lead={`Fees last ${staleFee[0].verification_method === 'human_compared' ? 'checked by a person' : 'read on the company site'} ${freshnessBadge(staleFee[0].last_verified_date, s.today, flag).text.replace('Verified ', '')}.`}>They may have changed. Check the company site before relying on them.</Banner>}
   <p class="lede">{lede}</p>
   <nav class="toc" aria-label="On this page"><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
 
@@ -64,6 +64,7 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
         return (
           <section>
             <h3>{pt ? `Fees for ${pt}` : 'Fees (no property type stated)'}</h3>
+            {scopeCaveat(f) && <Banner kind="warn" lead="Read this first.">{scopeCaveat(f)}</Banner>}
             <div class="fee-wrap">
               <table class="fee-table">
                 <caption class="sr">Published fees for {c.name}{pt ? `, ${pt}` : ''}</caption>
@@ -73,19 +74,19 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
                     <tr>
                       <th scope="row">{label}</th>
                       <td><span class="lbl">Amount and basis</span><FeeValue value={f[k]} showNotes /></td>
-                      <td><span class="lbl">Source and date</span><span class="v">{describeFee(f[k]) ? <SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} /> : <span class="src">Checked {f.last_verified_date}: not on the pages we read. <a href={f.source_urls[0]} rel="nofollow noopener">Open source</a></span>}</span></td>
+                      <td><span class="lbl">Source and date</span><span class="v">{describeFee(f[k]) ? <SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} who={c.name} /> : <span class="src">Checked {f.last_verified_date}: not on the pages we read. <a href={f.source_urls[0]} rel="nofollow noopener">Open source</a></span>}</span></td>
                     </tr>
                   ))}
                   <tr>
                     <th scope="row">Minimums</th>
                     <td><span class="lbl">Amount and basis</span><span class="v">{minimumsText(f.minimums) ?? <Unknown />}</span></td>
-                    <td><span class="lbl">Source and date</span><span class="v"><SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} /></span></td>
+                    <td><span class="lbl">Source and date</span><span class="v"><SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} who={c.name} /></span></td>
                   </tr>
                   {(f.other_fees || []).map((o) => (
                     <tr>
                       <th scope="row">{o.label || o.kind}</th>
                       <td><span class="lbl">Amount and basis</span><FeeValue value={o.amount} /></td>
-                      <td><span class="lbl">Source and date</span><span class="v"><SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} /></span></td>
+                      <td><span class="lbl">Source and date</span><span class="v"><SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} who={c.name} /></span></td>
                     </tr>
                   ))}
                 </tbody>
@@ -98,7 +99,7 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
     </>
   )}
   {dropped.map((f) => (
-    <p class="small">Last known: {FEE_ROWS.map(([label, k]) => feeText(f[k]) ? `${label} ${feeText(f[k])}` : null).filter(Boolean).join('; ')} (verified {f.last_verified_date}). Not shown in comparisons until re-checked.</p>
+    <p class="small">Last known: {FEE_ROWS.map(([label, k]) => feeText(f[k]) ? `${label} ${feeText(f[k])}` : null).filter(Boolean).join('; ')} (verified {fmtDate(f.last_verified_date)}). Not shown in comparisons until re-checked.</p>
   ))}
 
   <h2 id="license">License</h2>
@@ -106,7 +107,7 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
   {c.license && c.license.status === 'self_stated' && <p>The company's website says: &ldquo;{c.license.claim_text}&rdquo;{c.license.number ? ` (number given: ${c.license.number})` : ''}. We have not checked this against the state record.</p>}
   {c.license && ['active', 'inactive', 'none_found'].includes(c.license.status) && <p>Checked against {c.license.issuing_body || 'the state record'}{c.license.number ? `, number ${c.license.number}` : ''}.</p>}
   <p>{LICENSE_EXPLANATION} This is general information, not legal advice.</p>
-  {c.license && c.license.status !== 'unverified' ? <p><SourceNote sourceId={c.license.source_id} captured={c.license.captured_date} verified={c.license.last_verified_date} urls={[c.license.source_url]} /></p> : <p class="small muted">Nothing about a license was recorded from the company's website, and we have not checked the state record.</p>}
+  {c.license && c.license.status !== 'unverified' ? <p><SourceNote sourceId={c.license.source_id} captured={c.license.captured_date} verified={c.license.last_verified_date} urls={[c.license.source_url]} who={c.name} /></p> : <p class="small muted">Nothing about a license was recorded from the company's website, and we have not checked the state record.</p>}
 
   <h2 id="areas">Service areas</h2>
   {areas.length ? (
@@ -125,11 +126,11 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
   <h2 id="contact">Contact</h2>
   <p class="small muted">Public business details only, as the company publishes them. Nothing is routed through this site.</p>
   <ul>
-    <li>Website: {c.website ? <a href={c.website} rel="nofollow noopener">{host}</a> : <Unknown />}</li>
+    <li>Website: {c.website ? <a href={c.website} rel="nofollow noopener">Visit company website<span class="sr"> for {c.name}</span></a> <span class="muted">({host})</span> : <Unknown />}</li>
     <li>Phone: {c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, '')}`}>{c.phone}</a> : <Unknown />}</li>
     <li>Address: {addressText ?? <Unknown />}</li>
   </ul>
-  <p><SourceNote sourceId={c.source_id} captured={c.captured_date} verified={c.last_verified_date} urls={[c.source_url]} /></p>
+  <p><SourceNote sourceId={c.source_id} captured={c.captured_date} verified={c.last_verified_date} urls={[c.source_url]} who={c.name} /></p>
 
   <Banner kind="info" lead="Is this your company?" id="correct">
     Correct a fact or remove this listing, free and without an account. Correcting or claiming a listing never changes its position.

@@ -46,7 +46,11 @@
       "https://mynd.co/locations/ohio/columbus-property-management"
     ],
     "captured_date": "2026-11-11",
-    "last_verified_date": "2026-11-11"
+    "last_verified_date": "2026-11-11",
+    "verification_method": "agent_read",
+    "verified_by": null,
+    "human_verified_date": null,
+    "scope": "columbus_specific"
   },
   {
     "id": "fee_co_008_single_family",
@@ -82,7 +86,11 @@
       "https://www.columbuspropertymanagement.co/pricing"
     ],
     "captured_date": "2026-11-11",
-    "last_verified_date": "2026-11-11"
+    "last_verified_date": "2026-11-11",
+    "verification_method": "agent_read",
+    "verified_by": null,
+    "human_verified_date": null,
+    "scope": "columbus_specific"
   },
   {
     "id": "fee_co_023_all",
@@ -112,7 +120,11 @@
       "https://purehomeriver.com/locations/ohio/columbus/"
     ],
     "captured_date": "2026-11-11",
-    "last_verified_date": "2026-11-11"
+    "last_verified_date": "2026-11-11",
+    "verification_method": "agent_read",
+    "verified_by": null,
+    "human_verified_date": null,
+    "scope": "columbus_specific"
   },
   {
     "id": "fee_co_024_single_family",
@@ -176,7 +188,11 @@
       "https://roostrealestateco.com/monthly-property-management-fees-flat-vs-percentage-based/"
     ],
     "captured_date": "2026-11-11",
-    "last_verified_date": "2026-11-11"
+    "last_verified_date": "2026-11-11",
+    "verification_method": "agent_read",
+    "verified_by": null,
+    "human_verified_date": null,
+    "scope": "columbus_specific"
   },
   {
     "id": "fee_co_024_multifamily",
@@ -240,7 +256,11 @@
       "https://roostrealestateco.com/monthly-property-management-fees-flat-vs-percentage-based/"
     ],
     "captured_date": "2026-11-11",
-    "last_verified_date": "2026-11-11"
+    "last_verified_date": "2026-11-11",
+    "verification_method": "agent_read",
+    "verified_by": null,
+    "human_verified_date": null,
+    "scope": "columbus_specific"
   },
   {
     "id": "fee_co_020_all",
@@ -325,7 +345,11 @@
       "https://www.10xpropertymanagers.com/pricing"
     ],
     "captured_date": "2026-11-11",
-    "last_verified_date": "2026-11-11"
+    "last_verified_date": "2026-11-11",
+    "verification_method": "agent_read",
+    "verified_by": null,
+    "human_verified_date": null,
+    "scope": "unconfirmed_mapping"
   },
   {
     "id": "fee_co_025_all",
@@ -362,7 +386,11 @@
       "https://sites.google.com/view/ohio-elite-management/fees/leasing-fee"
     ],
     "captured_date": "2026-11-11",
-    "last_verified_date": "2026-11-11"
+    "last_verified_date": "2026-11-11",
+    "verification_method": "agent_read",
+    "verified_by": null,
+    "human_verified_date": null,
+    "scope": "columbus_specific"
   },
   {
     "id": "fee_co_014_all",
@@ -406,7 +434,11 @@
       "https://northpointam.com/property-management/columbusoh/columbus/services/property-management"
     ],
     "captured_date": "2026-11-11",
-    "last_verified_date": "2026-11-11"
+    "last_verified_date": "2026-11-11",
+    "verification_method": "agent_read",
+    "verified_by": null,
+    "human_verified_date": null,
+    "scope": "network_wide"
   },
   {
     "id": "fee_co_019_all",
@@ -487,7 +519,11 @@
       "https://www.swisspmg.com/pricing"
     ],
     "captured_date": "2026-11-11",
-    "last_verified_date": "2026-11-11"
+    "last_verified_date": "2026-11-11",
+    "verification_method": "agent_read",
+    "verified_by": null,
+    "human_verified_date": null,
+    "scope": "columbus_specific"
   },
   {
     "id": "fee_co_007_all",
@@ -513,6 +549,10 @@
       "https://www.rpmmidwest.com/pricing/"
     ],
     "captured_date": "2026-11-11",
-    "last_verified_date": "2026-11-11"
+    "last_verified_date": "2026-11-11",
+    "verification_method": "agent_read",
+    "verified_by": null,
+    "human_verified_date": null,
+    "scope": "columbus_specific"
   }
 ]

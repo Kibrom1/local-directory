@@ -1,7 +1,7 @@
 // Builds the rows for fee tables (comparison page, property-type pages) from gate output. Pure.
 import { rankPages } from './gate.mjs';
 import { variantsFor } from './estimate.mjs';
-import { freshnessBadge, minimumsText } from './fees.mjs';
+import { feeBadge, scopeCaveat, minimumsText } from './fees.mjs';
 
 // rows: fee-schedule rows already filtered by the gate (verified, fresh, allowed source). Default order is the ranking
 // rule (completeness, then name), never price. One row per company per property type.
@@ -16,7 +16,7 @@ export function buildFeeRows(site, rows, { revenueBasis = () => false } = {}) {
     out.push({
       key: f.id, fee: f, company: page.company, path: page.tier === 'indexable' || page.tier === 'listed' ? page.path : null,
       ptName: pt ? pt.name : null, est: variantsFor(f, { revenueBasis: revenueBasis(f) }), revenue: revenueBasis(f),
-      badge: freshnessBadge(f.last_verified_date, site.today, site.quality.freshness.displayFlagDays),
+      badge: feeBadge(f, site.today, site.quality.freshness.displayFlagDays), caveat: scopeCaveat(f),
       minimums: minimumsText(f.minimums), order: order.get(f.company_id) ?? 999
     });
   }

@@ -96,6 +96,6 @@ test('report carries fee rule, guides and utility pages', () => {
   assert.equal(r.fee_rule.active, 'conservative');
   assert.equal(r.guides.published, 1);
   assert.equal(r.guides.drafts_not_published_in_production, 1);
-  assert.deepEqual(r.utility_noindex_pages, ['/search/', '/404.html']);
+  assert.deepEqual(r.utility_noindex_pages, ['/search/', '/site-map/', '/404.html']);
   assert.ok(r.indexable_by_type['fee-comparison'] === 1);
 });

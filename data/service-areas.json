@@ -538,5 +538,75 @@
     "captured_date": "2026-11-11",
     "last_verified_date": "2026-11-11",
     "note": "Fee page states Columbus rates"
+  },
+  {
+    "id": "sa_co_019_bexley",
+    "company_id": "co_019",
+    "geography_id": "geo_bexley",
+    "source_id": "src_site_swisspmg",
+    "source_url": "https://www.swisspmg.com/",
+    "captured_date": "2026-11-14",
+    "last_verified_date": "2026-11-14",
+    "note": "Home page footer, \"Service Areas - Apartments & Houses in OH\" (one page read by a fetch tool on 2026-11-14; the footer lists 18 cities, only these seven were confirmed by name)"
+  },
+  {
+    "id": "sa_co_019_columbus",
+    "company_id": "co_019",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_swisspmg",
+    "source_url": "https://www.swisspmg.com/",
+    "captured_date": "2026-11-14",
+    "last_verified_date": "2026-11-14",
+    "note": "Home page footer, \"Service Areas - Apartments & Houses in OH\" (one page read by a fetch tool on 2026-11-14; the footer lists 18 cities, only these seven were confirmed by name)"
+  },
+  {
+    "id": "sa_co_019_dublin",
+    "company_id": "co_019",
+    "geography_id": "geo_dublin",
+    "source_id": "src_site_swisspmg",
+    "source_url": "https://www.swisspmg.com/",
+    "captured_date": "2026-11-14",
+    "last_verified_date": "2026-11-14",
+    "note": "Home page footer, \"Service Areas - Apartments & Houses in OH\" (one page read by a fetch tool on 2026-11-14; the footer lists 18 cities, only these seven were confirmed by name)"
+  },
+  {
+    "id": "sa_co_019_gahanna",
+    "company_id": "co_019",
+    "geography_id": "geo_gahanna",
+    "source_id": "src_site_swisspmg",
+    "source_url": "https://www.swisspmg.com/",
+    "captured_date": "2026-11-14",
+    "last_verified_date": "2026-11-14",
+    "note": "Home page footer, \"Service Areas - Apartments & Houses in OH\" (one page read by a fetch tool on 2026-11-14; the footer lists 18 cities, only these seven were confirmed by name)"
+  },
+  {
+    "id": "sa_co_019_hilliard",
+    "company_id": "co_019",
+    "geography_id": "geo_hilliard",
+    "source_id": "src_site_swisspmg",
+    "source_url": "https://www.swisspmg.com/",
+    "captured_date": "2026-11-14",
+    "last_verified_date": "2026-11-14",
+    "note": "Home page footer, \"Service Areas - Apartments & Houses in OH\" (one page read by a fetch tool on 2026-11-14; the footer lists 18 cities, only these seven were confirmed by name)"
+  },
+  {
+    "id": "sa_co_019_westerville",
+    "company_id": "co_019",
+    "geography_id": "geo_westerville",
+    "source_id": "src_site_swisspmg",
+    "source_url": "https://www.swisspmg.com/",
+    "captured_date": "2026-11-14",
+    "last_verified_date": "2026-11-14",
+    "note": "Home page footer, \"Service Areas - Apartments & Houses in OH\" (one page read by a fetch tool on 2026-11-14; the footer lists 18 cities, only these seven were confirmed by name)"
+  },
+  {
+    "id": "sa_co_019_worthington",
+    "company_id": "co_019",
+    "geography_id": "geo_worthington",
+    "source_id": "src_site_swisspmg",
+    "source_url": "https://www.swisspmg.com/",
+    "captured_date": "2026-11-14",
+    "last_verified_date": "2026-11-14",
+    "note": "Home page footer, \"Service Areas - Apartments & Houses in OH\" (one page read by a fetch tool on 2026-11-14; the footer lists 18 cities, only these seven were confirmed by name)"
   }
 ]

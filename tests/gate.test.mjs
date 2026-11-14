@@ -1,9 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { evaluate, buildReport, rankPages } from '../src/lib/gate.mjs';
-import quality from '../src/lib/quality.json' with { type: 'json' };
+import baseQuality from '../src/lib/quality.json' with { type: 'json' };
 import { baseData, clone, TODAY, D, fee, company, area, ptFact, siteSource } from './helpers.mjs';
 
+// Tier logic is tested with the listed tier published and terms reviews not required; the production switches have their own tests (tests/pm-findings.test.mjs).
+const quality = { ...baseQuality, publishListedTier: true, requireReviewedTermsForIndex: false };
 const ev = (d, q = quality, today = TODAY) => evaluate(d, q, { today });
 const page = (site, id) => site.companyPages.find((p) => p.id === id);
 const license = (n, status = 'active', sid = `src_c${n}`) => ({ status, number: '123', issuing_body: 'Ohio Division of Real Estate', claim_text: null, source_id: sid, source_url: `https://c${n}.example.com/`, captured_date: D, last_verified_date: D });

@@ -193,6 +193,9 @@ test('sources used for automation get a stale-check warning after 90 days', () =
 test('the real data directory validates', async () => {
   const { readData } = await import('../scripts/lib/validate-data.mjs');
   const { root } = await import('./helpers.mjs');
-  const r = validateData(readData(`${root}/data`), { schemaDir, today: TODAY });
+  // The real data may carry dates newer than the fixed test date: validate it as of the newest date it contains.
+  const real = readData(`${root}/data`);
+  const newest = JSON.stringify(real).match(/\d{4}-\d{2}-\d{2}/g).sort().at(-1);
+  const r = validateData(real, { schemaDir, today: newest > TODAY ? newest : TODAY });
   assert.deepEqual(r.errors, []);
 });

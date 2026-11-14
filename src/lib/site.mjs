@@ -2,7 +2,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import quality from './quality.json' with { type: 'json' };
-import { evaluate, buildReport as report } from './gate.mjs';
+import { evaluate } from './gate.mjs';
+import { fullReport } from './analysis.mjs';
 import { todayIso } from './freshness.mjs';
 import { loadGuides } from './guides.mjs';
 
@@ -37,5 +38,5 @@ export function getSite() {
   cache = evaluateSite();
   return cache;
 }
-export const buildReport = () => report(getSite());
+export const buildReport = () => fullReport(getSite());
 export { quality };

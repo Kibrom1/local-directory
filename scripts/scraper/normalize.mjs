@@ -121,6 +121,28 @@ export function proposeChanges({ candidates, data, source, today, schemaDir, exp
   return { changes, anomalies, rejected, proposed, changedFiles: [...changedFiles], validation, flagged: changes.filter((c) => c.flagged).length + anomalies.length };
 }
 
+// Minutes a person needs per item type (rough, from the runbook procedure: open the source page, compare, decide).
+const MINUTES = { validation: 10, anomaly: 6, flagged: 4, add_company: 12, add_fee_row: 8, modify: 3, add_service_area: 3, reverify: 0.5, unverify: 0 };
+// Prioritized checklist: blockers first, then the things most likely to be wrong, then the routine ones. Never skip a flagged item.
+export function reviewChecklist(result) {
+  const out = ['## Review checklist (do in this order)', ''];
+  const items = [];
+  const add = (priority, text, minutes) => items.push({ priority, text, minutes });
+  for (const e of result.validation.errors) add(1, `Validation error (blocks merge): ${e}`, MINUTES.validation);
+  for (const a of result.anomalies) add(2, `Anomaly ${a.kind} ${a.company_id}: ${a.detail}`, MINUTES.anomaly);
+  for (const c of result.changes.filter((x) => x.flagged && x.op !== 'unverify')) add(3, `Flagged ${c.op} ${c.label || ''} (${c.company_id})${c.flag_reason ? `: ${c.flag_reason}` : ''}`, c.op === 'add_company' ? MINUTES.add_company : c.op === 'add_fee_row' ? MINUTES.add_fee_row : MINUTES.flagged);
+  for (const c of result.changes.filter((x) => !x.flagged && ['modify', 'add_service_area'].includes(x.op))) add(4, `${c.op} ${c.label || ''} ${c.field || c.after || ''} (compare with the source page)`, MINUTES[c.op]);
+  const reverify = result.changes.filter((x) => x.op === 'reverify').length;
+  if (reverify) add(5, `${reverify} re-verify date bump(s): spot-check 3, then accept as a batch`, Math.max(2, Math.min(10, reverify * MINUTES.reverify)));
+  if (!items.length) out.push('_Nothing to review._', '');
+  items.sort((a, b) => a.priority - b.priority);
+  let n = 1;
+  for (const i of items) out.push(`${n++}. [ ] (~${Math.round(i.minutes)} min) ${i.text}`);
+  const total = Math.round(items.reduce((t, i) => t + i.minutes, 0));
+  out.push('', `Estimated review time: about ${total} minute${total === 1 ? '' : 's'}. New fee rows stay \`unverified\` until a person compares them with the page (set verification_method human_compared, verified_by and human_verified_date).`, '', '**Sign-off:** after reviewing, record it with `node scripts/scraper/review.mjs --run <this run folder> --by <your handle> --decision accepted|partially_accepted|rejected`. Until then this run shows up in `npm run queue`.', '');
+  return out;
+}
+
 export function renderDiffReport({ source, runAt, result, pageChanges = [], health = null }) {
   const L = [];
   L.push(`# Scraper proposal: ${source.id}`, '', `Run at ${runAt}. Source: ${source.name} (${source.url}). **Proposal only: nothing in data/ was changed.** Review each item, then copy the proposed files you accept into data/, run \`npm run validate\`, and commit.`, '');
@@ -128,6 +150,7 @@ export function renderDiffReport({ source, runAt, result, pageChanges = [], heal
   if (result.validation.errors.length) { L.push('## Validation errors (blocks merge)', ...result.validation.errors.map((e) => `- ${e}`), ''); }
   if (result.anomalies.length) { L.push('## Anomalies (explicit review required)', ...result.anomalies.map((a) => `- **${a.kind}** ${a.company_id}: ${a.detail}`), ''); }
   if (result.rejected.length) { L.push('## Rejected candidates', ...result.rejected.map((r) => `- ${r.name || r.url}: ${r.reason}`), ''); }
+  L.push(...reviewChecklist(result));
   L.push('## Changes');
   if (!result.changes.length) L.push('_None._');
   for (const c of result.changes) {

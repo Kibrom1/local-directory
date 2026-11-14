@@ -17,7 +17,7 @@ export function company(n, o = {}) {
     address: { street: `${n} Main St`, city: 'Columbus', county: 'Franklin', state: 'OH', zip: '43215' }, evidence_level: 'own_site_confirmed', tier: 'A', license: null, services: [], property_types_served: [], internal_notes: null,
     source_id: `src_c${n}`, source_url: `https://c${n}.example.com/`, captured_date: D, last_verified_date: D, ...o };
 }
-export const fee = (n, o = {}) => ({ id: `fee_t${n}`, company_id: `co_t${n}`, property_type: null, management_pct: { type: 'pct_of_rent', value: 8 }, flat_fee: null, leasing_fee: null, renewal_fee: null, minimums: null, other_fees: [], verification_status: 'verified_own_site', notes: null,
+export const fee = (n, o = {}) => ({ id: `fee_t${n}`, company_id: `co_t${n}`, property_type: null, management_pct: { type: 'pct_of_rent', value: 8 }, flat_fee: null, leasing_fee: null, renewal_fee: null, minimums: null, other_fees: [], verification_status: 'verified_own_site', verification_method: 'agent_read', verified_by: null, human_verified_date: null, scope: 'columbus_specific', notes: null,
   source_id: `src_c${n}`, source_urls: [`https://c${n}.example.com/pricing`], captured_date: D, last_verified_date: D, ...o });
 export const area = (n, geo, o = {}) => ({ id: `sa_t${n}_${geo}`, company_id: `co_t${n}`, geography_id: `geo_${geo}`, source_id: `src_c${n}`, source_url: `https://c${n}.example.com/`, note: null, captured_date: D, last_verified_date: D, ...o });
 export const ptFact = (n, pt = 'pt_single_family') => ({ property_type_id: pt, source_id: `src_c${n}`, source_url: null, captured_date: D, last_verified_date: D });

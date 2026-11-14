@@ -51,7 +51,7 @@ const jsonLd = type ? { '@context': 'https://schema.org', '@type': 'Article', he
     <h2 id="published">What companies we reviewed publish</h2>
     <Banner kind="info" lead="Companies we reviewed, not a market average.">{companiesN} companies publish a {g.short.toLowerCase()} on their own websites. It is not a survey and says nothing about companies that do not publish it.</Banner>
     <ul>{summary.map((x) => <li>{x.companies} of {companiesN} state it as {x.label}: {x.text}.</li>)}</ul>
-    <div class="fee-wrap" tabindex="0" role="region" aria-label={`${g.short} published by ${companiesN} companies. Scrolls sideways on small screens.`}>
+    <div class="fee-wrap" tabindex="0" role="region" aria-label={`${g.short} published by ${companiesN} companies`}>
       <table class="fee-table">
         <caption class="sr">{g.short} published by {companiesN} companies we reviewed</caption>
         <thead><tr><th scope="col">Company</th><th scope="col">Amount and basis</th><th scope="col">Fees for</th><th scope="col">Last verified and source</th></tr></thead>
@@ -61,7 +61,7 @@ const jsonLd = type ? { '@context': 'https://schema.org', '@type': 'Article', he
               <th scope="row">{r.path ? <a href={r.path}>{r.company.name}</a> : r.company.name}</th>
               <td><span class="lbl">Amount and basis</span><FeeValue value={r.fee[type]} showNotes /></td>
               <td><span class="lbl">Fees for</span><span class="v">{r.ptName ?? 'No property type stated'}</span></td>
-              <td><span class="lbl">Last verified and source</span><span class="v"><Badge kind={b.kind} text={b.text} /><SourceNote sourceId={r.fee.source_id} captured={r.fee.captured_date} verified={r.fee.last_verified_date} urls={r.fee.source_urls} /></span></td>
+              <td><span class="lbl">Last verified and source</span><span class="v"><Badge kind={b.kind} text={b.text} /><SourceNote sourceId={r.fee.source_id} captured={r.fee.captured_date} verified={r.fee.last_verified_date} urls={r.fee.source_urls} who={r.company.name} /></span></td>
             </tr>
           ); })}
         </tbody>
@@ -76,7 +76,7 @@ const jsonLd = type ? { '@context': 'https://schema.org', '@type': 'Article', he
     <ul>{g.questions.map((q) => <li>{q}</li>)}</ul>
 
     <h2 id="sources">Sources</h2>
-    <ul class="sources">{rows.map((r) => <li>{r.company.name}: <SourceNote sourceId={r.fee.source_id} captured={r.fee.captured_date} verified={r.fee.last_verified_date} urls={r.fee.source_urls} /></li>)}</ul>
+    <ul class="sources">{rows.map((r) => <li>{r.company.name}: <SourceNote sourceId={r.fee.source_id} captured={r.fee.captured_date} verified={r.fee.last_verified_date} urls={r.fee.source_urls} who={r.company.name} /></li>)}</ul>
 
     <h2>Related</h2>
     <ul>

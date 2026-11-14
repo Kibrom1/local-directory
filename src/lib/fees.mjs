@@ -62,6 +62,12 @@ export const UNKNOWN = {
   varies: 'Varies, ask company'
 };
 
+// 2026-11-11 -> "Nov 11, 2026". Fixed English month names, no locale or time zone, so the output never differs between builds.
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+export function fmtDate(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ''));
+  return m && MONTHS[Number(m[2]) - 1] ? `${MONTHS[Number(m[2]) - 1]} ${Number(m[3])}, ${m[1]}` : String(iso ?? '');
+}
 export const ageDays = (date, today) => daysBetween(date, today);
 export const monthsBetween = (date, today) => Math.max(0, Math.floor(ageDays(date, today) / 30));
 
@@ -69,7 +75,7 @@ export const monthsBetween = (date, today) => Math.max(0, Math.floor(ageDays(dat
 export function freshnessBadge(date, today, flagDays) {
   const age = ageDays(date, today);
   if (age > flagDays) return { kind: 'stale', text: `Verified ${monthsBetween(date, today)} months ago`, age };
-  return { kind: 'ok', text: `Verified ${date}`, age };
+  return { kind: 'ok', text: `Verified ${fmtDate(date)}`, age };
 }
 
 export const LICENSE_EXPLANATION = 'Ohio has no separate property manager license. Companies that manage rental property for a fee generally work under a real estate broker license from the state. A company stating a license on its own website is not the same as us checking the state record.';
@@ -78,7 +84,30 @@ export function licenseBadge(lic, today) {
   if (!lic || lic.status === 'unverified') return { kind: 'none', text: 'License: not checked' };
   if (lic.status === 'self_stated') return { kind: 'none', text: 'License: stated by company, not verified' };
   if (lic.status === 'active') return { kind: 'ok', text: 'License verified' };
-  if (lic.status === 'inactive') return { kind: 'bad', text: `License inactive (${lic.last_verified_date})` };
-  if (lic.status === 'none_found') return { kind: 'bad', text: `No matching license found (checked ${lic.last_verified_date})` };
+  if (lic.status === 'inactive') return { kind: 'bad', text: `License inactive (${fmtDate(lic.last_verified_date)})` };
+  if (lic.status === 'none_found') return { kind: 'bad', text: `No matching license found (checked ${fmtDate(lic.last_verified_date)})` };
   return { kind: 'none', text: 'License: not checked' };
+}
+
+// How a fee row was checked, in the words visitors see. An automated read is never described as a person's check.
+export const VERIFICATION_LABELS = {
+  agent_read: (date) => `Read on the company's site, ${date}. Confirm with the company`,
+  human_compared: (date) => `Checked by a person, ${date}`
+};
+export function feeBadge(f, today, flagDays) {
+  const human = f.verification_method === 'human_compared' && f.human_verified_date;
+  const date = human ? f.human_verified_date : f.last_verified_date;
+  const age = ageDays(f.last_verified_date, today);
+  if (age > flagDays) {
+    const n = monthsBetween(f.last_verified_date, today);
+    return { kind: 'stale', text: human ? `Checked by a person ${n} months ago` : `Read on the company's site ${n} months ago. Confirm with the company`, age, method: human ? 'human_compared' : 'agent_read' };
+  }
+  return { kind: 'ok', text: (human ? VERIFICATION_LABELS.human_compared : VERIFICATION_LABELS.agent_read)(fmtDate(date)), age, method: human ? 'human_compared' : 'agent_read' };
+}
+
+// Caveat shown next to fee rows whose scope keeps them out of the gate counts.
+export function scopeCaveat(f) {
+  if (f.scope === 'network_wide') return "This company's pricing page covers many markets, not only Columbus. Shown as published. It is not counted toward our fee comparison and fee guide thresholds.";
+  if (f.scope === 'unconfirmed_mapping') return "Plan labels on the company's page are not confirmed next to these values. Shown as published. It is not counted toward our fee comparison and fee guide thresholds.";
+  return null;
 }
