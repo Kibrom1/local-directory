@@ -122,13 +122,13 @@ test('validator: a non-default scope needs notes', () => {
 });
 test('badge wording separates an automated read from a person\'s check', () => {
   const agent = feeBadge({ verification_method: 'agent_read', last_verified_date: '2026-11-11' }, '2026-11-14', 180);
-  assert.equal(agent.text, "Read from the company's website by our tool on Nov 11, 2026; not yet checked by a person");
+  assert.equal(agent.text, "Read from the company's website by our tool on Nov 11, 2026");
   assert.equal(agent.kind, 'ok');
   const human = feeBadge({ verification_method: 'human_compared', human_verified_date: '2026-11-13', last_verified_date: '2026-11-13' }, '2026-11-14', 180);
   assert.equal(human.text, 'Checked by a person, Nov 13, 2026');
   const old = feeBadge({ verification_method: 'agent_read', last_verified_date: '2026-01-01' }, '2026-11-14', 180);
   assert.equal(old.kind, 'stale');
-  assert.match(old.text, /Read from the company's website by our tool \d+ months ago; not yet checked by a person/);
+  assert.match(old.text, /^Read from the company's website by our tool \d+ months ago$/);
   assert.ok(!/^Checked by a person/.test(old.text), 'an automated read never reads as a person\'s check');
   for (const b of [agent, human, old]) assert.ok(!/erified/.test(b.text), 'fee badges never use the word verified');
 });

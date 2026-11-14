@@ -37,7 +37,7 @@ Date: 2026-11-11. Ordered by what blocks the most work. PM recommendation in eac
 
 ## Resolved by the user (2026-11-14, via the PM session)
 - Site name: Central Ohio Property Management Guide.
-- Fee badge wording: UX designer's wording adopted ("Read from the company's website by our tool on DATE; not yet checked by a person").
+- Fee badge wording: UX designer's wording adopted ("Read from the company's website by our tool on DATE"). Owner decision 2026-11-14: the label no longer says "not yet checked by a person"; "Checked by a person, DATE" still appears where a person compared the row..
 - "Not recorded" added; "Not published" only where a check is recorded (`fields_checked`).
 - First-year cost range approved with named gaps.
 - Corrections: documents-by-email option and a public corrections log approved. Open detail: removals are logged without the company's name (developer default); PM to confirm.

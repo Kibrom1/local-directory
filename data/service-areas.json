@@ -608,5 +608,25 @@
     "captured_date": "2026-11-14",
     "last_verified_date": "2026-11-14",
     "note": "Home page footer, \"Service Areas - Apartments & Houses in OH\" (one page read by a fetch tool on 2026-11-14; the footer lists 18 cities, only these seven were confirmed by name)"
+  },
+  {
+    "id": "sa_co_020_columbus",
+    "company_id": "co_020",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_10xpropertymanagers",
+    "source_url": "https://www.10xpropertymanagers.com/about",
+    "captured_date": "2026-11-14",
+    "last_verified_date": "2026-11-14",
+    "note": "Own About page says \"across Columbus, Ohio and surrounding markets\"; the surrounding markets are not named, so only Columbus is recorded"
+  },
+  {
+    "id": "sa_co_025_columbus",
+    "company_id": "co_025",
+    "geography_id": "geo_columbus",
+    "source_id": "src_site_reafco_ohio_elite",
+    "source_url": "https://sites.google.com/view/ohio-elite-management/common-questions",
+    "captured_date": "2026-11-14",
+    "last_verified_date": "2026-11-14",
+    "note": "Own Common Questions page says \"We currently do not manage properties outside of Columbus, Ohio.\""
   }
 ]
