@@ -17,6 +17,8 @@ const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 export function readData(dataDir) {
   const data = {};
   for (const n of FILES) data[n] = readJson(path.join(dataDir, `${n}.json`));
+  const log = path.join(dataDir, 'corrections-log.json');
+  data['corrections-log'] = fs.existsSync(log) ? readJson(log) : [];
   return data;
 }
 
@@ -33,6 +35,8 @@ function getAjv(schemaDir) {
     ajv.addSchema(readJson(path.join(schemaDir, 'common.schema.json')));
     const validators = {};
     for (const n of FILES) validators[n] = ajv.compile(readJson(path.join(schemaDir, `${n}.schema.json`)));
+    const logSchema = path.join(schemaDir, 'corrections-log.schema.json');
+    if (fs.existsSync(logSchema)) validators['corrections-log'] = ajv.compile(readJson(logSchema));
     ajvCache.set(schemaDir, validators);
   }
   return ajvCache.get(schemaDir);
@@ -157,6 +161,21 @@ export function validateData(data, { schemaDir, today = new Date().toISOString()
   }
   const phase1Counties = new Set(data.geography.filter((g) => g.type === 'county').map((g) => g.name.replace(/ County$/, '').toLowerCase()));
   const phase1Cities = new Set(data.geography.filter((g) => g.type === 'city').map((g) => g.name.toLowerCase()));
+
+  // ---- public corrections log (no requester data)
+  if (Array.isArray(data['corrections-log'])) {
+    const lv = validators['corrections-log'];
+    if (lv && !lv(data['corrections-log'])) for (const e of lv.errors) fail(`corrections-log.json${e.instancePath}: ${e.message}`);
+    const seen = new Set();
+    for (const e of data['corrections-log']) {
+      const w = `corrections-log ${e.id}`;
+      if (seen.has(e.id)) fail(`${w}: duplicate id`); seen.add(e.id);
+      if (e.date > today) fail(`${w}: date ${e.date} is in the future`);
+      if (/@|https?:\/\/|\+?\d[\d\s().-]{8,}\d/.test(`${e.what_changed} ${e.company_name || ''}`)) fail(`${w}: text must not contain an email, link or phone number (no requester data)`);
+      if (e.type === 'removed' && (e.company_id || e.company_name)) fail(`${w}: a removal is logged without the company (company_id and company_name must be null)`);
+      if (e.company_id && !data.companies.some((c) => c.id === e.company_id)) fail(`${w}: unknown company_id ${e.company_id}`);
+    }
+  }
 
   // ---- companies
   for (const c of data.companies) {

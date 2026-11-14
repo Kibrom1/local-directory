@@ -16,7 +16,8 @@ const mailto = contactEmail ? `mailto:${contactEmail}?subject=${encodeURICompone
   <ol>
     <li>We reply to the email you give. We aim to answer within 3 business days.</li>
     <li>We check that you can speak for the company, for example by replying to an address on the company's own website domain or a published company contact.</li>
-    <li>We publish a correction when there is a public source for it. Removals are published at the next update, within 5 business days.</li>
+    <li>We publish a correction when there is a public source for it, or when your company sends it to us in writing (it is then shown as &ldquo;Provided by the company&rdquo; with the date). Removals are published at the next update, within 5 business days.</li>
+    <li>Every applied correction is listed, without any requester details, in the <a href="/corrections-log/">public corrections log</a>.</li>
   </ol>
   <p>Correcting or claiming a listing never changes its position. You do not need to pay or sign up.</p>
 
@@ -24,7 +25,7 @@ const mailto = contactEmail ? `mailto:${contactEmail}?subject=${encodeURICompone
     <Banner kind="bad" lead="This page cannot receive requests yet.">No form destination or contact address is configured for this build, so nothing you type here would reach anyone. Do not rely on this page.</Banner>
   )}
   {!formAction && contactEmail && (
-    <Banner kind="info" lead="Send your request by email.">Write to <a href={mailto}>{contactEmail}</a> and include: the company name or page address, whether to correct, add or remove, the fact and the correct value, and a link that shows it. A link is not needed for removal.</Banner>
+    <Banner kind="info" lead="Send your request by email.">Write to <a href={mailto}>{contactEmail}</a> and include: the company name or page address, whether to correct, add or remove, the fact and the correct value, and a link that shows it. A link is not needed for removal, and not needed if you will attach documents (such as a fee sheet) instead.</Banner>
   )}
 
   {formAction && (
@@ -53,9 +54,10 @@ const mailto = contactEmail ? `mailto:${contactEmail}?subject=${encodeURICompone
           </div>
           <div class="field">
             <label for="evidence">Link that shows the correct fact</label>
-            <p class="hint" id="ev-h">A page on your company website or another public source. Needed so we can publish a correction. Not needed to remove a listing.</p>
+            <p class="hint" id="ev-h">A page on your company website or another public source. Not needed to remove a listing, and not needed if you will email documents instead.</p>
             <input id="evidence" name="evidence" type="url" inputmode="url" aria-describedby="ev-h evidence-err" />
-            <p class="err" id="evidence-err" hidden>Enter a link starting with https://</p>
+            <p class="err" id="evidence-err" hidden>Enter a link starting with https://, or tick the box below.</p>
+            <label class="check"><input type="checkbox" name="will_email_documents" value="yes" id="will-email" />There is no public link. I will email documents (for example a fee sheet) when you reply.</label>
           </div>
         </div>
         <div class="field"><label for="requester_name">Your name</label><input id="requester_name" name="requester_name" type="text" autocomplete="name" /></div>

@@ -19,7 +19,7 @@ if (f) {
   const list = document.getElementById('error-list');
   const rules = [
     ['company', 'Enter the company name or the page address.', (el) => el.value.trim() !== ''],
-    ['evidence', 'Enter a link starting with https:// that shows the correct fact.', (el) => el.value.trim() !== '' && el.checkValidity()],
+    ['evidence', 'Enter a link starting with https:// that shows the correct fact, or tick that you will email documents.', (el) => (el.value.trim() !== '' && el.checkValidity()) || f.elements.will_email_documents.checked],
     ['requester_email', 'Enter your email, like name@company.com.', (el) => el.value.trim() !== '' && el.checkValidity()]
   ];
   f.addEventListener('submit', (e) => {

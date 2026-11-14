@@ -122,7 +122,7 @@ else {
 // The build report and the built pages must agree on what is indexable.
 if (report) {
   const want = new Set(report.indexable.map((x) => x.path));
-  const have = new Set(indexable.filter((p) => p.path !== '/404.html' && p.path !== '/search/' && p.path !== '/site-map/').map((p) => p.path));
+  const have = new Set(indexable.filter((p) => p.path !== '/404.html' && p.path !== '/search/' && p.path !== '/site-map/' && p.path !== '/corrections-log/').map((p) => p.path));
   for (const x of want) if (!have.has(x)) err(`build report says ${x} is indexable but dist has no indexable page there`);
   for (const x of have) if (!want.has(x)) err(`${x} is indexable in dist but not in the build report`);
 } else warn('reports/build-report.json not found; skipped report-vs-dist comparison');

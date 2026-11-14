@@ -88,3 +88,41 @@ test('fee table labels the column as an illustration and says what it assumes', 
   assert.match(page, /never an average/);
   assert.match(page, /not counted as zero/);
 });
+
+// ---- 5. corrections: documents by email and a public log
+const logEntry = (o = {}) => ({ id: 'cl_001', date: D, type: 'corrected', company_id: 'co_t1', company_name: 'Company A', what_changed: 'Renewal fee changed from $150 to $200.', ...o });
+test('corrections log: valid entry passes; requester data, links and unknown companies fail', () => {
+  let d = baseData(); d['corrections-log'] = [logEntry()];
+  assert.deepEqual(errs(d), []);
+  d = baseData(); d['corrections-log'] = [logEntry({ what_changed: 'Requested by jane@example.com: fee fixed' })];
+  assert.ok(errs(d).some((e) => /no requester data/.test(e)));
+  d = baseData(); d['corrections-log'] = [logEntry({ what_changed: 'See https://example.com/x for the new fee' })];
+  assert.ok(errs(d).some((e) => /no requester data/.test(e)));
+  d = baseData(); d['corrections-log'] = [logEntry({ company_id: 'co_missing' })];
+  assert.ok(errs(d).some((e) => /unknown company_id/.test(e)));
+  d = baseData(); d['corrections-log'] = [logEntry({ date: '2099-01-01' })];
+  assert.ok(errs(d).some((e) => /in the future/.test(e)));
+  d = baseData(); d['corrections-log'] = [logEntry(), logEntry()];
+  assert.ok(errs(d).some((e) => /duplicate id/.test(e)));
+  d = baseData(); d['corrections-log'] = [{ ...logEntry(), requester_email: 'a@b.co' }];
+  assert.ok(errs(d).length > 0, 'extra fields (requester details) are rejected by the schema');
+});
+test('corrections log: a removal is logged without naming the company', () => {
+  let d = baseData(); d['corrections-log'] = [logEntry({ type: 'removed' })];
+  assert.ok(errs(d).some((e) => /removal is logged without the company/.test(e)));
+  d = baseData(); d['corrections-log'] = [logEntry({ type: 'removed', company_id: null, company_name: null, what_changed: 'Listing removed at the request of the company.' })];
+  assert.deepEqual(errs(d), []);
+});
+test('corrections log: the real log validates, the page is a noindex utility page linked from corrections, footer and site map', async () => {
+  const { evaluateSite } = await import('../src/lib/site.mjs');
+  const s = evaluateSite({ today: '2026-11-14', prod: true });
+  assert.ok(s.utilityPages.includes('/corrections-log/'));
+  assert.ok(!s.indexable.some((p) => p.path === '/corrections-log/'));
+  assert.match(read('src/pages/corrections-log.astro'), /noindex/);
+  for (const f of ['src/pages/corrections.astro', 'src/layouts/Base.astro', 'src/pages/site-map.astro']) assert.match(read(f), /corrections-log/);
+  assert.ok(Array.isArray(JSON.parse(read('data/corrections-log.json'))));
+});
+test('corrections form: a company with no public link can say it will email documents', () => {
+  assert.match(read('src/pages/corrections.astro'), /name="will_email_documents"/);
+  assert.match(read('src/scripts/corrections.js'), /will_email_documents\.checked/);
+});
