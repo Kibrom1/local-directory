@@ -25,7 +25,10 @@ const mailto = contactEmail ? `mailto:${contactEmail}?subject=${encodeURICompone
     <Banner kind="bad" lead="This page cannot receive requests yet.">No form destination or contact address is configured for this build, so nothing you type here would reach anyone. Do not rely on this page.</Banner>
   )}
   {!formAction && contactEmail && (
-    <Banner kind="info" lead="Send your request by email.">Write to <a href={mailto}>{contactEmail}</a> and include: the company name or page address, whether to correct, add or remove, the fact and the correct value, and a link that shows it. A link is not needed for removal, and not needed if you will attach documents (such as a fee sheet) instead.</Banner>
+    <>
+      <Banner kind="info" lead="Send your request by email.">Write to <a href={mailto}>{contactEmail}</a> and include: the company name or page address, whether to correct, add or remove, the fact and the correct value, and a link that shows it. A link is not needed for removal, and not needed if you will attach documents (such as a fee sheet) instead.</Banner>
+      <p class="small">Not a correction? For any other question, write to the same address, <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.</p>
+    </>
   )}
 
   {formAction && (

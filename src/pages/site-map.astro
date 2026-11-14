@@ -6,7 +6,7 @@ import { SITE_NAME } from '../lib/brand.mjs';
 const s = getSite();
 const byName = (a, b) => a.name.localeCompare(b.name);
 const fixed = [
-  { name: 'About this site', href: '/about/' }, { name: 'Correct or remove a listing', href: '/corrections/' }, { name: 'Corrections log', href: '/corrections-log/' },
+  { name: 'About this site', href: '/about/' }, { name: 'Contact and corrections', href: '/corrections/' }, { name: 'Corrections log', href: '/corrections-log/' },
   { name: 'How we collect and rank (Methodology)', href: '/methodology/' }, { name: 'Privacy', href: '/privacy/' }, { name: 'Search', href: '/search/' }
 ];
 const cities = s.cityPages.filter((p) => p.tier !== 'skipped').map((p) => ({ name: `${p.geo.name}, ${p.geo.state}`, href: p.path })).sort(byName);
