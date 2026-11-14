@@ -43,9 +43,8 @@ States per field: default; focus (3px outline); filled; error (`aria-invalid`, 2
 Dark panel: identity statement, links (Correct or remove, Methodology, About, Privacy), counties, last data update date.
 States: link default (white underline), hover (thicker underline), focus (3px white outline; the default blue ring is only 1.47:1 on the dark panel, white is 14.76:1).
 
-## 11. Reserved ad slot (not built)
-Dashed gray box, 250px min height, label "Advertisement (reserved, not built)" in the prototype; production has no markup today. Slots A and B only (ux-spec s9).
-States if built later: empty (collapses only after load if no fill, with a placeholder to avoid CLS), filled, hidden for print, hidden on pages in the never-list.
+## 11. Never built
+No advertising, sponsored or "featured" styling, ratings or stars, review cards, lead-capture or "contact via us" buttons, and no highlight that ranks one company above another (the fee range bar is never coloured by value). The product constraint is no ads and no payments; nothing in this system reserves space for them.
 
 ## 12. Other small components
 - **Banner** (`info`, `warn`, `bad`): left accent border + text; info is the scope/labeling note ("Companies we reviewed, not a market average").

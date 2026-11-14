@@ -33,8 +33,8 @@ const jsonLd = page && page.tier === 'indexable' ? { '@context': 'https://schema
     <div class="prose" set:html={g.html} />
 
     {(s.nav.fees || city) && (
-      <div class="card" style="margin-top:2rem">
-        <h2 style="margin-top:0;font-size:1.125rem">Next step</h2>
+      <div class="card mt-8">
+        <h2 class="card-title">Next step</h2>
         <ul>
           {s.nav.fees && <li><a href="/fees/">Compare fees published by the companies we reviewed</a></li>}
           {city && <li><a href={city.path}>See companies that serve {city.geo.name}</a></li>}
@@ -43,7 +43,7 @@ const jsonLd = page && page.tier === 'indexable' ? { '@context': 'https://schema
     )}
 
     <h2 id="sources">Sources</h2>
-    <ul class="sources">{g.sources.map((x) => <li><a href={x.url} rel="nofollow noopener">{x.title}</a> <span class="src" style="display:inline">(captured {x.captured})</span></li>)}</ul>
+    <ul class="sources">{g.sources.map((x) => <li><a href={x.url} rel="nofollow noopener">{x.title}</a> <span class="src">(captured {x.captured})</span></li>)}</ul>
     <p class="small muted">Spot an error? <a href="/corrections/">Tell us</a>.</p>
   </Base>
 )}

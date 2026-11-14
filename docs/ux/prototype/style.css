@@ -101,9 +101,6 @@ fieldset{border:0;padding:0;margin:0 0 var(--s4)}
 .fee-table details summary{cursor:pointer;color:var(--primary);min-height:1.5rem}
 .est{background:var(--info-bg);color:var(--info-ink);padding:var(--s3) var(--s4);border-radius:var(--r);margin-bottom:var(--s4)}
 .legend{display:grid;gap:var(--s1);font-size:.875rem;margin-bottom:var(--s4)}
-/* ad slot (reserved, not built) */
-.ad-slot{background:var(--ad-bg);color:var(--ad-ink);border:2px dashed var(--ui);border-radius:var(--r);min-height:15.625rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin:var(--s6) 0;padding:var(--s4)}
-.ad-slot b{letter-spacing:.06em;text-transform:uppercase;font-size:.75rem}
 /* prose */
 .prose{max-width:42rem}
 .prose h2{margin-top:var(--s8)}
@@ -141,7 +138,7 @@ fieldset{border:0;padding:0;margin:0 0 var(--s4)}
 }
 @media (min-width:64rem){.two-col{display:grid;grid-template-columns:minmax(0,1fr) 18rem;gap:var(--s8);align-items:start}}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
-@media print{.site-header,.site-footer,.ad-slot,.filters{display:none}}
+@media print{.site-header,.site-footer,.filters{display:none}}
 .fee-table .v{text-align:right;min-width:0}
 @media (min-width:48rem){.fee-table .v{text-align:left}}
 .site-footer a:focus-visible{outline-color:#fff}

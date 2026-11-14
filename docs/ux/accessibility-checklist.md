@@ -24,8 +24,6 @@ Text needs 4.5:1 (large text 3:1). UI boundaries and focus indicators need 3:1. 
 | Verified badge text | #0f5c35 | #e6f4ec | 7.11 | 4.5 | yes |
 | Verified badge border | #0f5c35 | #ffffff | 8.07 | 3 | yes |
 | Info banner text | #0b3a6b | #e8f1fb | 10.05 | 4.5 | yes |
-| Unverified badge / ad slot text | #3d4148 | #eceef1 | 8.82 | 4.5 | yes |
-| Ad slot dashed border | #6b7280 | #eceef1 | 4.16 | 3 | yes |
 | "Not published" chip | #4a4f57 | #eef0f3 | 7.22 | 4.5 | yes |
 | Footer text | #e8ebef | #1f2933 | 12.34 | 4.5 | yes |
 | Footer link and footer focus ring (white) | #ffffff | #1f2933 | 14.76 | 4.5 / 3 | yes |
@@ -47,9 +45,7 @@ Rule: no information by color alone. Verified/stale/unverified badges carry word
 - [ ] `prefers-reduced-motion` honored; nothing moves automatically (2.2.2).
 - [ ] No content on hover only; no keyboard trap (1.4.13, 2.1.2).
 - [ ] Consistent navigation order and help location (the "Correct or remove a listing" link is in the same footer position on every page) (3.2.3, 3.2.6).
-- [ ] Reserved ad slot: if ever built, labelled "Advertisement", not focus-stealing, no autoplay, not inside `main` content flow of tables or forms; `aria-label` present. Absent from markup today.
 - [ ] Outbound links to company sites open in the same tab with `rel="nofollow noopener"`; no "new window" surprises.
-- [ ] Print stylesheet hides nav, filters and ad slots (nice to have).
 
 ## 3. Per template
 **Home.** [ ] Search form: both selects have visible `label`; submit button text "Show companies". [ ] City list is a real `ul` of links. [ ] Pagefind search input (live site) has a visible label and results announce count via `role="status"`.

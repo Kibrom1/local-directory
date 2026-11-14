@@ -27,14 +27,12 @@ const jsonLd = tier === 'indexable' ? {
   <p class="lede">{all.length} {all.length === 1 ? 'company serves' : 'companies serve'} {geo.name}. {withFees} {withFees === 1 ? 'publishes' : 'publish'} fees.</p>
   {tier === 'placeholder' && <Banner kind="warn" lead="Test data.">This page uses test records and is not indexed.</Banner>}
   {tier === 'listed' && <Banner kind="warn" lead={`We list only ${all.length} companies here so far.`}>This page is not indexed by search engines until more companies with sourced data serve {geo.name}.</Banner>}
-  <Banner kind="info" lead="Companies we reviewed, not a market average.">
-    Order: serves {geo.name}, then how complete and recent our data is, then A to Z. Fees and payment never affect order. <a href="/methodology/">How we collect and rank</a>
-  </Banner>
+  <p class="small muted">The companies we reviewed that serve {geo.name}. Order: serves {geo.name}, then how complete and recent our data is, then A to Z. Fees and payment never affect order. <a href="/methodology/">How we collect and rank</a></p>
 
   <form id="filters" class="filters js-only" aria-label="Group companies by property type">
-    <div class="field" style="margin:0"><label for="type">Group by property type</label>
+    <div class="field tight"><label for="type">Group by property type</label>
       <select id="type" name="type"><option value="">Any property type</option>{types.map((t) => <option value={t.slug}>{t.name}</option>)}</select></div>
-    <div class="field" style="margin:0"><label class="check" style="margin-top:1.5rem"><input type="checkbox" name="fees" />Only companies that publish fees</label></div>
+    <div class="field tight"><label class="check mt-6"><input type="checkbox" name="fees" />Only companies that publish fees</label></div>
   </form>
   {s.nav.fees && <p><a href="/fees/">Compare these companies in the fee table</a></p>}
   <p id="count" role="status" aria-live="polite" class="small js-only">{all.length} {all.length === 1 ? 'company' : 'companies'} shown</p>

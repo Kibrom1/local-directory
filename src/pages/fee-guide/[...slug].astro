@@ -36,7 +36,7 @@ const jsonLd = type ? { '@context': 'https://schema.org', '@type': 'Article', he
   <Base title="Fee guides: what Columbus managers publish" description="Guides to the fees Columbus-area property management companies publish: what each fee is, the range the companies we reviewed publish, and the source for every figure." pageType="fee-guide" crumbs={[{ name: 'Fee guides' }]}>
     <h1>Fee guides: what Columbus property managers publish</h1>
     <p class="lede">One guide per fee type. Each shows only what the companies we reviewed publish on their own websites, with the source and date for every figure.</p>
-    <Banner kind="info" lead="Companies we reviewed, not a market average.">We publish a guide for a fee type only when at least {s.quality.feeGuide.minCompaniesPerFeeType} companies publish it.</Banner>
+    <p class="small muted">A guide exists for a fee type once at least {s.quality.feeGuide.minCompaniesPerFeeType} companies we reviewed publish it.</p>
     <ul>{eligible.map((p) => <li><a href={p.path}>{FEE_GUIDES[p.fee_type].title}</a> ({p.count} companies)</li>)}</ul>
     <h2>How many companies publish each fee</h2>
     <ul>{gates.map((p) => <li>{FEE_GUIDES[p.fee_type].short}: {p.count} {p.count === 1 ? 'company' : 'companies'} publish it. {p.eligible ? <a href={p.path}>Read the guide</a> : `A guide is published at ${p.need} companies.`}</li>)}</ul>
@@ -50,7 +50,7 @@ const jsonLd = type ? { '@context': 'https://schema.org', '@type': 'Article', he
     <nav class="toc" aria-label="On this page"><ol>{TOC.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
 
     <h2 id="published">What companies we reviewed publish</h2>
-    <Banner kind="info" lead="Companies we reviewed, not a market average.">{companiesN} companies publish a {g.short.toLowerCase()} on their own websites. It is not a survey and says nothing about companies that do not publish it.</Banner>
+    <p class="small muted">{companiesN} companies we reviewed publish a {g.short.toLowerCase()} on their own websites. This says nothing about companies that do not publish it.</p>
     <ul>{summary.map((x) => <li>{x.companies} of {companiesN} state it as {x.label}: {x.text}.</li>)}</ul>
     <div class="fee-wrap" tabindex="0" role="region" aria-label={`${g.short} published by ${companiesN} companies`}>
       <table class="fee-table">

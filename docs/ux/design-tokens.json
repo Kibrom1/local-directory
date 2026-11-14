@@ -1,48 +1,48 @@
 {
-  "$description": "Design tokens for Columbus PM Guide (working name). Contrast ratios computed with the WCAG 2.x relative-luminance formula (docs/ux/accessibility-checklist.md). CSS custom properties in prototype/style.css mirror these values.",
+  "$description": "Design tokens for Central Ohio Property Management Guide. Contrast ratios computed with the WCAG 2.x relative-luminance formula (docs/ux/accessibility-checklist.md). CSS custom properties in prototype/style.css mirror these values.",
   "color": {
     "ink": {
-      "value": "#1a1a1a",
+      "value": "#16202a",
       "use": "body text",
       "contrast": {
-        "on bg #ffffff": 17.4,
-        "on surface #f4f6f8": 16.07
+        "on bg #ffffff": 16.48,
+        "on surface": 14.48
       }
     },
     "muted": {
-      "value": "#4a4f57",
+      "value": "#4b535d",
       "use": "secondary text, hints, source notes",
       "contrast": {
-        "on bg": 8.24,
-        "on surface": 7.61,
-        "on unknown-bg #eef0f3": 7.22
+        "on bg": 7.79,
+        "on surface": 6.85,
+        "on unknown-bg": 6.6
       }
     },
     "bg": {
-      "value": "#ffffff"
+      "value": "#fbfaf7"
     },
     "surface": {
-      "value": "#f4f6f8",
+      "value": "#f3f0e9",
       "use": "panels, filters, table header"
     },
     "line": {
-      "value": "#d9dde3",
+      "value": "#e2ddd2",
       "use": "decorative dividers only (not required for understanding)"
     },
     "ui": {
-      "value": "#6b7280",
+      "value": "#6b6f76",
       "use": "borders of inputs, buttons, cards (UI component boundary)",
       "contrast": {
-        "on bg (needs 3:1)": 4.83
+        "on bg (needs 3:1)": 4.84
       }
     },
     "primary": {
-      "value": "#0b4a8f",
+      "value": "#0f4c75",
       "use": "links, primary button background",
       "contrast": {
-        "on bg": 8.79,
-        "on surface": 8.11,
-        "white text on primary": 8.79
+        "on bg": 9.09,
+        "on surface": 7.98,
+        "white text on primary": 9.09
       }
     },
     "focus": {
@@ -50,77 +50,69 @@
       "use": "3px focus outline, 2px offset",
       "contrast": {
         "on bg": 10.04,
-        "on surface": 9.27
+        "on surface": 8.83
       }
     },
     "warn": {
-      "bg": "#fff4d6",
+      "bg": "#fff1cc",
       "ink": "#5a3b00",
       "line": "#8a5a00",
       "use": "freshness banner, stale badge",
       "contrast": {
-        "ink on bg": 9.3,
+        "ink on bg": 9.08,
         "line on white (needs 3:1)": 5.93
       }
     },
     "success": {
-      "bg": "#e6f4ec",
-      "ink": "#0f5c35",
+      "bg": "#e3f2e9",
+      "ink": "#0d5530",
       "use": "verified badge only",
       "contrast": {
-        "ink on bg": 7.11,
-        "ink on white": 8.07
+        "ink on bg": 7.69,
+        "ink on white": 8.9
       }
     },
     "danger": {
-      "bg": "#fdecea",
+      "bg": "#fbe9e6",
       "ink": "#9b1c10",
       "use": "form errors",
       "contrast": {
-        "ink on bg": 7.15,
+        "ink on bg": 6.97,
         "ink on white": 8.18
       }
     },
     "info": {
-      "bg": "#e8f1fb",
-      "ink": "#0b3a6b",
+      "bg": "#e6eff6",
+      "ink": "#16202a",
       "use": "scope/labeling notes (reviewed, not average)",
       "contrast": {
-        "ink on bg": 10.05
-      }
-    },
-    "sample": {
-      "bg": "#3b1d6e",
-      "ink": "#ffffff",
-      "use": "prototype SAMPLE marker only; not shipped",
-      "contrast": {
-        "ink on bg": 13.23
+        "ink on bg": 14.16
       }
     },
     "neutralBadge": {
-      "bg": "#eceef1",
-      "ink": "#3d4148",
-      "use": "unverified/not checked badge, reserved ad slot",
+      "bg": "#efece4",
+      "ink": "#4b535d",
+      "use": "unverified / not checked badge",
       "contrast": {
-        "ink on bg": 8.82,
-        "ad dashed border #6b7280 on ad bg (needs 3:1)": 4.16
+        "ink on bg": 6.6,
+        "border on bg (needs 3:1)": 4.28
       }
     },
     "unknown": {
-      "bg": "#eef0f3",
-      "ink": "#4a4f57",
+      "bg": "#efece4",
+      "ink": "#4b535d",
       "use": "\"Not published\" chip (always text, never color alone)",
       "contrast": {
-        "ink on bg": 7.22
+        "ink on bg": 6.6
       }
     },
     "footer": {
-      "bg": "#1f2933",
+      "bg": "#14202b",
       "ink": "#e8ebef",
       "link": "#ffffff",
       "contrast": {
-        "ink on bg": 12.34,
-        "link on bg": 14.76
+        "ink on bg": 13.81,
+        "link on bg": 16.52
       }
     }
   },
@@ -234,12 +226,6 @@
       "md": "table, sticky first column when it overflows",
       "rowPadding": "0.75rem",
       "headerBg": "surface"
-    },
-    "adSlot": {
-      "minHeight": "15.625rem (250px, reserves space so there is no layout shift if ever built)",
-      "border": "2px dashed ui",
-      "label": "required visible text 'Advertisement'",
-      "status": "reserved, not built; absent from production output"
     },
     "sourceNote": {
       "font": "0.8125rem",

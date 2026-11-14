@@ -16,7 +16,7 @@ const pairs = [
   ['Body text', T('ink'), T('bg'), 4.5], ['Body text on panel', T('ink'), T('surface'), 4.5],
   ['Muted text', T('muted'), T('bg'), 4.5], ['Muted on panel', T('muted'), T('surface'), 4.5], ['Muted on unknown chip', T('muted'), T('unknown', 'bg'), 4.5],
   ['Link', T('primary'), T('bg'), 4.5], ['Link on panel', T('primary'), T('surface'), 4.5], ['Link on info banner', T('primary'), T('info', 'bg'), 4.5],
-  ['Primary button text', W, T('primary'), 4.5], ['Button hover text (#08386d)', W, '#08386d', 4.5], ['Secondary button hover (link on info bg)', T('primary'), T('info', 'bg'), 4.5],
+  ['Primary button text', W, T('primary'), 4.5], ['Button hover text', W, '#0a3a5a', 4.5], ['Secondary button hover (link on info bg)', T('primary'), T('info', 'bg'), 4.5],
   ['Input/card border', T('ui'), T('bg'), 3], ['Input border on panel', T('ui'), T('surface'), 3], ['Focus ring', T('focus'), T('bg'), 3], ['Focus ring on panel', T('focus'), T('surface'), 3],
   ['Warning text', T('warn', 'ink'), T('warn', 'bg'), 4.5], ['Warning border', T('warn', 'line'), T('bg'), 3],
   ['Error text on error bg', T('danger', 'ink'), T('danger', 'bg'), 4.5], ['Error text on white', T('danger', 'ink'), T('bg'), 4.5],
@@ -61,7 +61,7 @@ else {
   }
 }
 // Any hex colour in the CSS outside the custom properties must be one of the tokens (or white/hover).
-const known = new Set([...Object.values(css2tok), '#ffffff', '#fff', '#08386d'].map((x) => x.toLowerCase()));
+const known = new Set([...Object.values(css2tok), '#ffffff', '#fff', '#0a3a5a'].map((x) => x.toLowerCase()));
 for (const m of css.replace(/--[a-z-]+:#[0-9a-fA-F]{3,6}/g, '').matchAll(/#[0-9a-fA-F]{3,6}\b/g)) if (!known.has(m[0].toLowerCase())) { fail++; console.log(`CSS uses colour ${m[0]} that is not a design token`); }
 console.log(fail ? `\ncontrast FAILED (${fail})` : `\ncontrast passed: ${pairs.length} pairs, CSS matches tokens`);
 process.exit(fail ? 1 : 0);

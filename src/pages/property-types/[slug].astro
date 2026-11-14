@@ -32,7 +32,7 @@ const nameNote = (pt.name.match(/\((.*)\)/) || [])[1] || null;
 <Base title={`Property managers for ${lc} rentals`} description={`${companies.length} Columbus-area property management companies state they serve ${lc} rentals. Published fees and sources for each.`} pageType="property-type" crumbs={[{ name: 'Property types' }, { name }]}>
   <h1>Property managers for {lc} rentals in the Columbus area</h1>
   <p class="lede">{companies.length} companies we reviewed state on their own websites that they serve this property type{nameNote ? ` (${pt.name})` : ''}.</p>
-  <Banner kind="info" lead="Companies we reviewed, not a market average.">Order: how complete and recent our data is, then A to Z. Fees and payment never affect order. <a href="/methodology/">How we collect and rank</a></Banner>
+  <p class="small muted">The companies we reviewed for this property type. Order: how complete and recent our data is, then A to Z. Fees and payment never affect order. <a href="/methodology/">How we collect and rank</a></p>
 
   <h2>Fees published by these companies</h2>
   {rows.length ? (
