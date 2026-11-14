@@ -25,17 +25,17 @@ const open = { ...quality, requireReviewedTermsForIndex: false, publishListedTie
 const at = (n, q = open) => evaluate(realData, q, { today: plus(n), prod: true });
 const count = (s, t) => s.indexable.filter((p) => p.type === t).length;
 
-test('aging: today the real data builds 18 pages with the terms gate off (the owner setting), 5 if it were switched on', () => {
+test('aging: today the real data builds 22 pages with the terms gate off (the owner setting), 5 if it were switched on', () => {
   assert.equal(quality.requireReviewedTermsForIndex, false, 'owner decision 2026-11-14: only a recorded prohibition excludes a source');
-  assert.equal(at(0).indexable.length, 18);
+  assert.equal(at(0).indexable.length, 22);
   assert.equal(evaluate(realData, { ...quality, requireReviewedTermsForIndex: true }, { today: REAL_DAY, prod: true }).indexable.length, 5);
 });
 test('aging +120 days: the fee-row warning window opens but no page drops yet', () => {
-  assert.equal(at(120).indexable.length, 18);
+  assert.equal(at(120).indexable.length, 22);
   assert.equal(staleQueue(realData, plus(120), quality.freshness).fee_rows_over_warn.length, 10);
 });
 test('aging +181 days: facts are flagged as old on pages (display flag), still no page drops', () => {
-  assert.equal(at(181).indexable.length, 18);
+  assert.equal(at(181).indexable.length, 22);
   assert.ok(staleQueue(realData, plus(181), quality.freshness).past_display_flag > 0);
   assert.equal(staleQueue(realData, plus(181), quality.freshness).past_drop, 0);
 });
@@ -49,13 +49,14 @@ test('aging +366 days: every data-backed page drops and only the static pages re
 // ---- findings 2, 8, 9, 10, 11, 12: the analysis
 test('analysis: terms gate, listed tier, scope, license route and resilience are reported for the real data', () => {
   const A = analyze(evaluateSite({ today: REAL_DAY, prod: true }));
-  assert.equal(A.terms_gate.removed_pages.length, 13);
+  assert.equal(A.terms_gate.removed_pages.length, 17);
   assert.equal(A.license_route.status, 'none available');
   assert.ok(A.listed_tier.would_be_listed > 0);
   assert.ok(A.scope_effect.rows_shown_but_not_counted.some((x) => x.scope === 'network_wide'));
   assert.ok(Array.isArray(A.unlocks) && A.unlocks.every((u) => u.smallest_change));
   assert.ok(A.resilience.pages.every((p) => Array.isArray(p.single_points_of_failure)));
-  assert.ok(A.fee_exclusions.excluded.some((e) => e.blockers.includes('area')), 'service-area exclusions are listed');
+  assert.ok(Array.isArray(A.fee_exclusions.excluded));
+  assert.ok(!A.fee_exclusions.excluded.some((e) => e.blockers.includes('area')), 'no company is left out of the fee comparison for a missing service area (10X and Reafco areas were recorded 2026-11-14)');
 });
 test('analysis: the gates are not relaxed (same site, no mutation)', () => {
   const s = evaluateSite({ today: REAL_DAY, prod: true });
