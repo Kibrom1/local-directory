@@ -90,6 +90,15 @@
           }
         }
       },
+      "fields_checked": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Per-field check state. A key here means we read the named source and recorded that the company does NOT state this field; the field then shows as 'Not published'. A missing key means we have no record of looking, and the field shows as 'Not recorded'. Never set a key for a field that has a value.",
+        "properties": {
+          "website": { "$ref": "common.schema.json#/definitions/fieldCheck" }, "phone": { "$ref": "common.schema.json#/definitions/fieldCheck" }, "address": { "$ref": "common.schema.json#/definitions/fieldCheck" },
+          "services": { "$ref": "common.schema.json#/definitions/fieldCheck" }, "property_types": { "$ref": "common.schema.json#/definitions/fieldCheck" }, "service_areas": { "$ref": "common.schema.json#/definitions/fieldCheck" }
+        }
+      },
       "internal_notes": { "type": ["string", "null"], "maxLength": 600, "description": "Maintainer notes (not rendered): conflicts, downgrades, open verification items." },
       "source_id": { "$ref": "common.schema.json#/definitions/sourceId" },
       "source_url": { "anyOf": [{ "$ref": "common.schema.json#/definitions/url" }, { "type": "null" }] },

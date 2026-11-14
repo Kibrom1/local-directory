@@ -146,7 +146,7 @@ export function evaluate(data, quality, options = {}) {
 
   // Static pages that always exist. Utility pages (search, 404) are noindex and never counted.
   const staticPages = ['/', '/about/', '/privacy/', '/corrections/', '/methodology/'].map((p) => ({ path: p, type: 'static', id: null }));
-  const utilityPages = ['/search/', '/site-map/', '/404.html'];
+  const utilityPages = ['/search/', '/site-map/', '/corrections-log/', '/404.html'];
 
   // Fee data. A company's fee rows count toward the comparison and the fee guides only when they are verified,
   // fresh and from an allowed source. Under the conservative rule (quality.feeComparison.requireStatedServiceArea)

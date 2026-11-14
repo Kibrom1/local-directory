@@ -57,7 +57,7 @@ export function minimumsText(m) {
 
 export const UNKNOWN = {
   not_published: 'Not published',
-  not_checked: 'Not checked yet',
+  not_recorded: 'Not recorded',
   not_offered: 'Not offered',
   varies: 'Varies, ask company'
 };
@@ -68,14 +68,17 @@ export function fmtDate(iso) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ''));
   return m && MONTHS[Number(m[2]) - 1] ? `${MONTHS[Number(m[2]) - 1]} ${Number(m[3])}, ${m[1]}` : String(iso ?? '');
 }
+// Which "unknown" text a company field gets: "Not published" only where we recorded that the company does not state it
+// (companies.fields_checked), otherwise "Not recorded" (we have no record of looking).
+export const unknownKind = (company, field) => (company && company.fields_checked && company.fields_checked[field] ? 'not_published' : 'not_recorded');
 export const ageDays = (date, today) => daysBetween(date, today);
 export const monthsBetween = (date, today) => Math.max(0, Math.floor(ageDays(date, today) / 30));
 
 // Verified / stale badge model for a dated fact.
 export function freshnessBadge(date, today, flagDays) {
   const age = ageDays(date, today);
-  if (age > flagDays) return { kind: 'stale', text: `Verified ${monthsBetween(date, today)} months ago`, age };
-  return { kind: 'ok', text: `Verified ${fmtDate(date)}`, age };
+  if (age > flagDays) return { kind: 'stale', text: `Listing read ${monthsBetween(date, today)} months ago`, age };
+  return { kind: 'ok', text: `Listing read ${fmtDate(date)}`, age };
 }
 
 export const LICENSE_EXPLANATION = 'Ohio has no separate property manager license. Companies that manage rental property for a fee generally work under a real estate broker license from the state. A company stating a license on its own website is not the same as us checking the state record.';
@@ -91,7 +94,7 @@ export function licenseBadge(lic, today) {
 
 // How a fee row was checked, in the words visitors see. An automated read is never described as a person's check.
 export const VERIFICATION_LABELS = {
-  agent_read: (date) => `Read on the company's site, ${date}. Confirm with the company`,
+  agent_read: (date) => `Read from the company's website by our tool on ${date}; not yet checked by a person`,
   human_compared: (date) => `Checked by a person, ${date}`
 };
 export function feeBadge(f, today, flagDays) {
@@ -100,7 +103,7 @@ export function feeBadge(f, today, flagDays) {
   const age = ageDays(f.last_verified_date, today);
   if (age > flagDays) {
     const n = monthsBetween(f.last_verified_date, today);
-    return { kind: 'stale', text: human ? `Checked by a person ${n} months ago` : `Read on the company's site ${n} months ago. Confirm with the company`, age, method: human ? 'human_compared' : 'agent_read' };
+    return { kind: 'stale', text: human ? `Checked by a person ${n} months ago` : `Read from the company's website by our tool ${n} months ago; not yet checked by a person`, age, method: human ? 'human_compared' : 'agent_read' };
   }
   return { kind: 'ok', text: (human ? VERIFICATION_LABELS.human_compared : VERIFICATION_LABELS.agent_read)(fmtDate(date)), age, method: human ? 'human_compared' : 'agent_read' };
 }

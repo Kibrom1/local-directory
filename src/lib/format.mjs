@@ -42,7 +42,7 @@ export function monthsAgo(date, today) {
 }
 export function provenanceLabel(source, captured, verified, today, flagDays = 180) {
   const company = source && source.source_kind === 'company_submission';
-  const base = company ? `Provided by the company, ${captured}` : `Source: ${source ? source.name : 'unknown'}, captured ${captured}, last verified ${verified}`;
+  const base = company ? `Provided by the company, ${captured}` : `Source: ${source ? source.name : 'unknown'}, captured ${captured}, last read ${verified}`;
   const age = daysBetween(verified, today);
-  return age > flagDays ? `${base} (last verified ${monthsAgo(verified, today)} months ago)` : base;
+  return age > flagDays ? `${base} (last read ${monthsAgo(verified, today)} months ago)` : base;
 }

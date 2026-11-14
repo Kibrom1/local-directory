@@ -1,7 +1,7 @@
 ---
 import { UNKNOWN } from '../lib/fees.mjs';
 // Four distinct unknown states (UX spec 6.3). Always text, never 0, a dash or empty.
-interface Props { kind?: 'not_published' | 'not_checked' | 'not_offered' | 'varies' }
+interface Props { kind?: 'not_published' | 'not_recorded' | 'not_offered' | 'varies' }
 const { kind = 'not_published' } = Astro.props;
 ---
 <span class="unk">{UNKNOWN[kind]}</span>

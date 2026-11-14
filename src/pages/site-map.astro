@@ -1,11 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getSite } from '../lib/site.mjs';
+import { SITE_NAME } from '../lib/brand.mjs';
 // A plain list of every page that exists, for visitors without JavaScript or a search index. Built from the same gate as the pages.
 const s = getSite();
 const byName = (a, b) => a.name.localeCompare(b.name);
 const fixed = [
-  { name: 'About this site', href: '/about/' }, { name: 'Correct or remove a listing', href: '/corrections/' },
+  { name: 'About this site', href: '/about/' }, { name: 'Correct or remove a listing', href: '/corrections/' }, { name: 'Corrections log', href: '/corrections-log/' },
   { name: 'How we collect and rank (Methodology)', href: '/methodology/' }, { name: 'Privacy', href: '/privacy/' }, { name: 'Search', href: '/search/' }
 ];
 const cities = s.cityPages.filter((p) => p.tier !== 'skipped').map((p) => ({ name: `${p.geo.name}, ${p.geo.state}`, href: p.path })).sort(byName);
@@ -15,7 +16,7 @@ const titleFor = (p) => (p.type === 'fee-comparison' ? 'Compare fees' : p.type =
 const more = others.map((p) => ({ name: titleFor(p), href: p.path })).sort(byName);
 const groups = [['This site', fixed], ['Cities', cities], ['Companies', companies], ['Fees, property types and guides', more]].filter(([, l]) => l.length);
 ---
-<Base title="All pages, A to Z" description="A plain list of every page on Columbus PM Guide." noindex pageType="sitemap" crumbs={[]}>
+<Base title="All pages, A to Z" description={`A plain list of every page on ${SITE_NAME}.`} noindex pageType="sitemap" crumbs={[]}>
   <h1>All pages, A to Z</h1>
   <p class="lede">Every page that exists today. This list is built with the site, so it never links to a page that is not there.</p>
   {groups.map(([title, list]) => (

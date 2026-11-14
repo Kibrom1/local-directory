@@ -51,6 +51,12 @@ npm run scraper:run -- --source src_site_example --adapter <adapter> --url https
 ## Mark a fee row as checked by a person
 Compare the row with the live pricing page. Then set `verification_method: "human_compared"`, `verified_by` (a role or handle, not an email), `human_verified_date` (today) and bump `last_verified_date`. The badge changes from "Read on the company's site, DATE. Confirm with the company" to "Checked by a person, DATE". `agent_read` rows must have both fields null; the validator enforces this.
 
+## Record that a company does not state a field ("Not published" versus "Not recorded")
+An empty phone, address, website, services, property types or service-area list reads "Not recorded" (we have no record of looking). Only after a person has read the company's own page and confirmed it does not state the field, add `fields_checked.<field>` = `{ "source_id": "<the company's site source>", "checked_date": "<today>" }` to the company in `data/companies.json`. The field then reads "Not published". The validator refuses this for a field that has a value.
+
+## Corrections log
+After applying a correction, add an entry to `data/corrections-log.json`: `id` (`cl_...`), `date` applied, `type` (`corrected`, `added`, `removed`), `company_id` and `company_name`, and `what_changed` in plain words (for example "Renewal fee changed from $150 to $200."). Never include the requester's name, email, role, a link or a phone number (the validator rejects them). For a removal set `company_id` and `company_name` to null. The public page is `/corrections-log/`.
+
 ## Fee row scope
 `scope` is `columbus_specific` (default), `network_wide` (the page covers many markets) or `unconfirmed_mapping` (plan labels not confirmed). The last two display with a caveat and need `notes`, but do not count toward the fee gates unless `feeScopesCountingTowardGates` in `src/lib/quality.json` lists them (an owner decision).
 

@@ -4,7 +4,8 @@ import FeeValue from './FeeValue.astro';
 import Badge from './Badge.astro';
 import SourceNote from './SourceNote.astro';
 import Unknown from './Unknown.astro';
-import { EXAMPLE_RENT, estimateText } from '../lib/estimate.mjs';
+import { EXAMPLE_RENT } from '../lib/estimate.mjs';
+import { yearText, yearNotes } from '../lib/firstyear.mjs';
 interface Props { rows: any[]; caption: string; compare?: boolean; flagDays: number }
 const { rows, caption, compare = false, flagDays } = Astro.props;
 const COLS = [['management_pct', 'Management %'], ['flat_fee', 'Flat fee'], ['leasing_fee', 'Leasing fee'], ['renewal_fee', 'Renewal fee']];
@@ -20,8 +21,8 @@ const COLS = [['management_pct', 'Management %'], ['flat_fee', 'Flat fee'], ['le
         <th scope="col">Leasing fee</th>
         <th scope="col">Renewal fee</th>
         <th scope="col">Minimums</th>
-        <th scope="col">Est. monthly cost<br /><small class="muted">at ${EXAMPLE_RENT.toLocaleString('en-US')} example rent</small></th>
-        <th scope="col">Last verified and source</th>
+        <th scope="col">First-year cost, an illustration<br /><small class="muted">from published figures, at ${EXAMPLE_RENT.toLocaleString('en-US')} example rent</small></th>
+        <th scope="col">How we checked it, and source</th>
       </tr>
     </thead>
     <tbody>
@@ -35,9 +36,9 @@ const COLS = [['management_pct', 'Management %'], ['flat_fee', 'Flat fee'], ['le
           </th>
           {COLS.map(([k, label]) => <td><span class="lbl">{label}</span><FeeValue value={r.fee[k]} /></td>)}
           <td><span class="lbl">Minimums</span><span class="v">{r.minimums ? r.minimums : <Unknown />}</span></td>
-          <td><span class="lbl">Est. monthly cost</span><span class="v">{r.est ? <span data-est={JSON.stringify(r.est)}>{estimateText(r.est, EXAMPLE_RENT)}</span> : (r.revenue ? 'Not converted: fee is based on booking revenue, not rent' : 'Not enough published data')}</span></td>
+          <td><span class="lbl">First-year cost</span><span class="v">{r.year ? <><span data-year={JSON.stringify(r.year)}>{yearText(r.year, EXAMPLE_RENT)}</span><small class="muted"><br />{yearNotes(r.year)}</small></> : (r.revenue ? 'Not converted: fee is based on booking revenue, not rent' : 'Not enough published data: no management percent or monthly flat fee')}</span></td>
           <td>
-            <span class="lbl">Last verified</span>
+            <span class="lbl">How we checked it</span>
             <span class="v"><Badge kind={r.badge.kind} text={r.badge.text} />
               {r.badge.kind === 'stale' && <span class="src">Over {flagDays} days old. Check the company site before relying on it.</span>}
               <SourceNote sourceId={r.fee.source_id} captured={r.fee.captured_date} verified={r.fee.last_verified_date} urls={r.fee.source_urls} who={r.company.name} />

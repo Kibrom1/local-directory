@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://directory.local/schemas/corrections-log.schema.json",
+  "title": "corrections-log.json",
+  "description": "Public log of corrections applied (page /corrections-log/). One entry per applied request. It never holds requester data: no names, emails, roles or the text of the request. For a removal, company_id and company_name stay null (the listing is gone; naming it would publish who asked).",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "id",
+      "date",
+      "type",
+      "company_id",
+      "company_name",
+      "what_changed"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^cl_[a-z0-9_]+$"
+      },
+      "date": {
+        "$ref": "common.schema.json#/definitions/date",
+        "description": "Date the correction was applied to the site."
+      },
+      "type": {
+        "enum": [
+          "corrected",
+          "added",
+          "removed"
+        ]
+      },
+      "company_id": {
+        "anyOf": [
+          {
+            "$ref": "common.schema.json#/definitions/companyId"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "company_name": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "maxLength": 120
+      },
+      "what_changed": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 300,
+        "description": "What changed on the site, in plain words, for example 'Renewal fee changed from $150 to $200.' Not the requester's message."
+      }
+    }
+  }
+}

@@ -9,7 +9,7 @@ import { loadGuides } from './guides.mjs';
 
 export function loadData(dir = path.join(process.cwd(), 'data')) {
   const load = (n) => JSON.parse(fs.readFileSync(path.join(dir, `${n}.json`), 'utf8'));
-  return { companies: load('companies'), 'fee-schedules': load('fee-schedules'), 'service-areas': load('service-areas'), 'property-types': load('property-types'), geography: load('geography'), sources: load('sources'), suppression: load('suppression') };
+  return { companies: load('companies'), 'fee-schedules': load('fee-schedules'), 'service-areas': load('service-areas'), 'property-types': load('property-types'), geography: load('geography'), sources: load('sources'), suppression: load('suppression'), 'corrections-log': fs.existsSync(path.join(dir, 'corrections-log.json')) ? load('corrections-log') : [] };
 }
 
 // Production unless Astro's dev server says otherwise (fail closed: drafts stay unpublished).

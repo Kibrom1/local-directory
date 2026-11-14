@@ -1,3 +1,4 @@
+import { SITE_NAME } from './brand.mjs';
 // Citable download of the published fee rows (CSV and JSON). Built only from rows the quality gate counts: verified, fresh, from an
 // allowed source with reviewed terms, Columbus-scoped. One record per published number. No averages, no derived values.
 const FEE_FIELDS = ['management_pct', 'flat_fee', 'leasing_fee', 'renewal_fee'];
@@ -41,10 +42,10 @@ export const toCsv = (rows) => [EXPORT_COLUMNS.join(','), ...rows.map((r) => EXP
 
 export function toJson(site, rows) {
   return JSON.stringify({
-    title: 'Columbus PM Guide fee data',
+    title: `${SITE_NAME} fee data`,
     as_of: site.today,
     scope: 'Fees published on the companies\' own websites, for companies we reviewed. Not a survey and not a market average. Ranges and plans are kept as published; nothing is averaged.',
-    cite_as: `Columbus PM Guide fee data, as of ${site.today}`,
+    cite_as: `${SITE_NAME} fee data, as of ${site.today}`,
     columns: EXPORT_COLUMNS,
     row_count: rows.length,
     rows

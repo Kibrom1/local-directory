@@ -1,5 +1,5 @@
 // Fee table: rent illustration and compare mode. The table is complete and readable without JavaScript.
-import { estimateText } from '../lib/estimate.mjs';
+import { yearText } from '../lib/firstyear.mjs';
 
 const tb = document.getElementById('fee-table');
 if (tb) {
@@ -9,10 +9,10 @@ if (tb) {
   const show = document.getElementById('show-selected');
   const reset = document.getElementById('show-all');
   const rent = document.getElementById('rent');
-  const out = [...tb.querySelectorAll('[data-est]')];
+  const out = [...tb.querySelectorAll('[data-year]')];
   const est = () => {
     const r = parseFloat(rent.value);
-    for (const el of out) el.textContent = estimateText(JSON.parse(el.dataset.est), r);
+    for (const el of out) el.textContent = yearText(JSON.parse(el.dataset.year), r);
   };
   if (rent && out.length) { rent.addEventListener('input', est); est(); }
   const sync = (changed) => {

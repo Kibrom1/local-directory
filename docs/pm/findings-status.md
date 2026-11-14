@@ -1,6 +1,6 @@
 # Principal-PM review: developer status (2026-11-14)
 
-Branch `pm-findings` (from `review-fixes`). Nothing is pushed. No payment, ads, Vercel plan or revenue item is in scope.
+Branch `pm-findings` (from `review-fixes`). Pull request: https://github.com/Kibrom1/local-directory/pull/1. Commits made after the PR was opened (the PM decisions below) are local until the user says to push. No payment, ads, Vercel plan or revenue item is in scope.
 Regenerate the numbers with `npm run report`, `npm run launch:check`, `npm run queue`.
 
 ## Result today (real data, production switches on)
@@ -48,3 +48,16 @@ Their reviews used the pre-branch build (17 indexable pages, listed tier visible
 - Not built, needs owner or PM: verification wording (UX F2), "Not recorded" versus "Not published" (F3), first-year cost range (F6), public corrections log and relaxed evidence rule (F8), guide merge (F4), site name, serif display type, license badge shortening, "N days ago" (the two designers disagree; absolute dates stay).
 - Waiting on data: fee cell and table rework, profile snapshot, result card. They need pages that exist only after the terms reviews.
 - Designers to remove: the reserved ad slot (design-system section 11, `design-tokens.json` adSlot, `prototype/city-dublin.html`, `prototype/fees.html`).
+
+
+## PM decisions (answered by the user) and what was built
+| # | Decision | Built |
+|---|---|---|
+| 1 | Site name: "Central Ohio Property Management Guide", no "Columbus" in the name | `src/lib/brand.mjs` default and `PUBLIC_SITE_NAME`; header, footer, titles, structured data, export, README and `.env.example` updated; a test fails if a template hard-codes a name. Design docs and the prototype under `docs/ux/` still say "Columbus PM Guide (working name)": the designers own those. The download file names (`columbus-pm-fees.csv`) are unchanged. |
+| 2 | Fee badge: "Read from the company's website by our tool on DATE; not yet checked by a person"; "Checked by a person, DATE" | Badge text, stale variant, result card, company banner, methodology ("How a fee was checked"). The word "verified" is no longer used for fees; source notes say "last read". License wording unchanged. |
+| 3 | "Not recorded" for fields never looked at; "Not published" only where the company is confirmed not to state it | `companies.fields_checked` (per field: source and date), validator rules (source exists, date not future, field really empty), `unknownKind()` used on the company page. "Not checked yet" is now "Not recorded". All current records have no checks recorded, so every empty contact field reads "Not recorded". |
+| 4 | First-year cost range, named gaps | `src/lib/firstyear.mjs`; fee table column "First-year cost, an illustration". Published figures only, range not average, missing fees named and never zero, open-ended fees not used, needs a published ongoing fee. Assumes one unit, rent collected, one renewal. Arithmetic hand-checked in tests. |
+| 5 | Corrections: documents by email, public log | Form checkbox "I will email documents"; `data/corrections-log.json`, schema, validator (no emails, links, phone numbers; removals logged without the company); `/corrections-log/` noindex page linked from the form, footer and site map. Policy I chose, for the PM to confirm: a removal is logged without the company's name. |
+| 6 | Keep the terms gate; launch small; keep the full license badge wording | No change to the gate (13 pages still held back); license badge unchanged. |
+
+Still needs a person: the 18 terms reads, human comparison of fee rows, scope overrides, 10X and Reafco service areas, launch settings, and recording `fields_checked` where a company's page really shows no phone, address or website.

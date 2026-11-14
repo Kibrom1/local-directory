@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Banner from '../../components/Banner.astro';
 import FeeTable from '../../components/FeeTable.astro';
 import { getSite } from '../../lib/site.mjs';
+import { SITE_NAME } from '../../lib/brand.mjs';
 import { buildFeeRows } from '../../lib/feetable.mjs';
 import { EXAMPLE_RENT } from '../../lib/estimate.mjs';
 import { FEE_GUIDES } from '../../lib/feeguides.mjs';
@@ -39,7 +40,7 @@ const ptPages = s.planned.filter((p) => p.type === 'property-type' && p.eligible
 
   <div class="est js-only">
     <label for="rent" style="margin-bottom:.25rem">Example monthly rent per unit</label>
-    <p class="hint" id="rent-h">Optional. ${EXAMPLE_RENT.toLocaleString('en-US')} is a round example, not a Columbus average or median. The estimate column applies each company's published management or flat fee to it. Illustration only, not a quote.</p>
+    <p class="hint" id="rent-h">Optional. ${EXAMPLE_RENT.toLocaleString('en-US')} is a round example, not a Columbus average or median. The first-year column adds up only the figures each company publishes (management, leasing and one renewal fee) at this rent. Illustration only, not a quote.</p>
     <input id="rent" type="number" inputmode="numeric" min="0" step="50" value={EXAMPLE_RENT} aria-describedby="rent-h" style="max-width:10rem" />
   </div>
   <div class="js-only">
@@ -48,12 +49,12 @@ const ptPages = s.planned.filter((p) => p.type === 'property-type' && p.eligible
   </div>
 
   <FeeTable rows={rows} caption="Published fees by company, companies we reviewed" compare flagDays={flag} />
-  <p class="small muted">The estimate column shows &ldquo;Not enough published data&rdquo; when a company publishes no management percent or monthly flat fee. Without JavaScript it is shown for a ${EXAMPLE_RENT.toLocaleString('en-US')} example rent. Leasing and renewal fees are one-time charges and are not in the estimate.</p>
+  <p class="small muted">The first-year column is an illustration built from published figures at a ${EXAMPLE_RENT.toLocaleString('en-US')} example rent (without JavaScript this is the only rent shown). It is a range from the lowest to the highest published combination, never an average. It assumes one unit, rent collected every month and one lease renewal. Any fee a company does not publish is named under its figure and is not counted as zero, so the real first-year cost can be higher. It needs a published management percent or monthly flat fee. It is not a quote.</p>
 
   <h2>Where do these numbers come from?</h2>
   <p>Each value comes from the company's own website on the date shown in its row, with a link to the page we read. Values older than {flag} days are flagged. Values older than 12 months are removed from this table until we re-check them{droppedOld > 0 ? ` (${droppedOld} ${droppedOld === 1 ? 'row is' : 'rows are'} removed right now)` : ''}. <a href="/methodology/">Methodology</a></p>
   {caveated > 0 && <p class="small">{caveated} {caveated === 1 ? 'row carries' : 'rows carry'} a note because the company's page is not specific to Columbus or its plan labels are unconfirmed. Those rows are shown as published and are not counted toward our thresholds.</p>}
-  <p><strong>Use this data:</strong> <a href="/fees-data/columbus-pm-fees.csv">CSV</a> or <a href="/fees-data/columbus-pm-fees.json">JSON</a> of the published rows, with the source page and dates for every figure. It lists companies we reviewed, not a market average. Please cite "Columbus PM Guide fee data, as of {s.today}" and link to this page.</p>
+  <p><strong>Use this data:</strong> <a href="/fees-data/columbus-pm-fees.csv">CSV</a> or <a href="/fees-data/columbus-pm-fees.json">JSON</a> of the published rows, with the source page and dates for every figure. It lists companies we reviewed, not a market average. Please cite "{SITE_NAME} fee data, as of {s.today}" and link to this page.</p>
   <p>Fee wrong or out of date? <a href="/corrections/">Correct or remove a listing</a>, free.</p>
   {(guides.length > 0 || ptPages.length > 0) && (
     <>

@@ -22,7 +22,7 @@ npm run redirects:sync   # regenerate vercel.json from config/redirects.json
 ```
 Requires Node 22. Build output: `dist/`. Reports are git-ignored under `reports/`. Operations: see `docs/developer/runbook.md`.
 
-Environment variables: `PUBLIC_FORM_ACTION`, `PUBLIC_CONTACT_EMAIL`, `PUBLIC_OPERATOR_NAME`, `PUBLIC_DISCLOSURE` (see `.env.example`), `PUBLIC_GA_ID` (GA4 ID; tag omitted when unset), `SITE_URL` (production origin for canonicals, sitemap, robots.txt), `SCRAPER_CONTACT_URL` (scraper only), `TODAY` (YYYY-MM-DD, overrides the date for reports and tests).
+Environment variables: `PUBLIC_SITE_NAME` (the site's public name, default "Central Ohio Property Management Guide"), `PUBLIC_FORM_ACTION`, `PUBLIC_CONTACT_EMAIL`, `PUBLIC_OPERATOR_NAME`, `PUBLIC_DISCLOSURE` (see `.env.example`), `PUBLIC_GA_ID` (GA4 ID; tag omitted when unset), `SITE_URL` (production origin for canonicals, sitemap, robots.txt), `SCRAPER_CONTACT_URL` (scraper only), `TODAY` (YYYY-MM-DD, overrides the date for reports and tests).
 
 ## Layout
 - `data/` JSON data files: companies, fee-schedules, service-areas, property-types, geography, sources, suppression

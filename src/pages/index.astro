@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getSite } from '../lib/site.mjs';
+import { SITE_NAME } from '../lib/brand.mjs';
 const s = getSite();
 const cities = s.cityPages.filter((p) => p.tier === 'indexable');
 // Property types that at least one listed company serves (from sourced facts).
@@ -12,7 +13,7 @@ const recorded = s.data.companies.filter((c) => !c.placeholder && c.evidence_lev
 const publishedProfiles = s.companyPages.filter((x) => x.tier !== 'placeholder').length;
 const feeCompanies = s.companiesWithFees.size;
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
-const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Columbus PM Guide', url: new URL('/', Astro.site).href, potentialAction: { '@type': 'SearchAction', target: new URL('/search/?q={query}', Astro.site).href.replace('%7Bquery%7D', '{query}'), 'query-input': 'required name=query' } };
+const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: new URL('/', Astro.site).href, potentialAction: { '@type': 'SearchAction', target: new URL('/search/?q={query}', Astro.site).href.replace('%7Bquery%7D', '{query}'), 'query-input': 'required name=query' } };
 ---
 <Base title="Find and compare Columbus-area property managers" description="A free, independent directory of Columbus-area property management companies. Fees, services and service areas, each fact with its source and date." jsonLd={jsonLd} pageType="home">
   <h1>Find and compare Columbus-area property managers</h1>
@@ -31,7 +32,7 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Co
     <label for="q">Search the site</label>
     <div class="searchrow"><input id="q" name="q" type="search" autocomplete="off" /><button class="btn secondary" type="submit">Search</button></div>
   </form>
-  <p class="small"><a href="/site-map/">All pages on this site, A to Z</a> (works without JavaScript)</p>
+  <p class="small"><a href="/site-map/">All pages on this site, A to Z</a></p>
 
   <section class="coverage" aria-labelledby="coverage-h">
     <h2 id="coverage-h">What this site covers today</h2>
@@ -41,14 +42,14 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Co
 
   <div class="grid cols-3 cols-gap">
     <div class="card"><h2 class="card-title">Fees side by side</h2><p>{s.nav.fees ? <>Published fees from the companies we reviewed, with the basis shown for every number. <a href="/fees/">Compare fees</a></> : 'A fee table appears here once enough companies publish comparable fees.'}</p></div>
-    <div class="card"><h2 class="card-title">Sources and dates</h2><p>No fact without a source line, a capture date and a last-verified date. <a href="/methodology/">How we collect facts</a></p></div>
+    <div class="card"><h2 class="card-title">Sources and dates</h2><p>No fact without a source line, a capture date and the date we last read it. <a href="/methodology/">How we collect facts</a></p></div>
     <div class="card"><h2 class="card-title">No pay to play</h2><p>No paid listings, no featured placement, no lead routing. Fees never change order. <a href="/about/">About this site</a></p></div>
   </div>
 
   <h2 id="cities">Browse by city</h2>
   {cities.length ? (
     <ul>{cities.map((p) => <li><a href={p.path}>{p.geo.name}, {p.geo.state}</a>: {p.companies.length + p.listedCompanies.length} {p.companies.length + p.listedCompanies.length === 1 ? 'company' : 'companies'} serve it, {p.withFees} publish fees</li>)}</ul>
-  ) : <p>City pages appear once at least three companies with verified data serve a city.</p>}
+  ) : <p>City pages appear once at least three companies with sourced data serve a city.</p>}
 
   {(guides.length > 0 || s.nav.feeGuides) && (
     <>

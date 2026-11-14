@@ -5,6 +5,7 @@ import Badge from '../../components/Badge.astro';
 import FeeValue from '../../components/FeeValue.astro';
 import SourceNote from '../../components/SourceNote.astro';
 import { getSite } from '../../lib/site.mjs';
+import { fmtDate } from '../../lib/fees.mjs';
 import { FEE_GUIDES, feeTypeBySlug } from '../../lib/feeguides.mjs';
 import { feeValuePopulated } from '../../lib/gate.mjs';
 import { buildFeeRows, rangeSummary } from '../../lib/feetable.mjs';
@@ -45,7 +46,7 @@ const jsonLd = type ? { '@context': 'https://schema.org', '@type': 'Article', he
   <Base title={g.title} description={`What ${companiesN} Columbus-area property management companies publish for ${g.short.toLowerCase()}, with the source and date for every figure.`} jsonLd={jsonLd} pageType="fee-guide" crumbs={[{ name: 'Fee guides', href: '/fee-guide/' }, { name: g.short }]}>
     <h1>{g.title}</h1>
     <p class="lede">{g.definition}</p>
-    <p class="small muted">Data last verified: <time datetime={latest}>{latest}</time>. <a href="/methodology/">Methodology</a>. General information, not legal advice.</p>
+    <p class="small muted">Data last read: <time datetime={latest}>{fmtDate(latest)}</time>. <a href="/methodology/">Methodology</a>. General information, not legal advice.</p>
     <nav class="toc" aria-label="On this page"><ol>{TOC.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
 
     <h2 id="published">What companies we reviewed publish</h2>
@@ -54,14 +55,14 @@ const jsonLd = type ? { '@context': 'https://schema.org', '@type': 'Article', he
     <div class="fee-wrap" tabindex="0" role="region" aria-label={`${g.short} published by ${companiesN} companies`}>
       <table class="fee-table">
         <caption class="sr">{g.short} published by {companiesN} companies we reviewed</caption>
-        <thead><tr><th scope="col">Company</th><th scope="col">Amount and basis</th><th scope="col">Fees for</th><th scope="col">Last verified and source</th></tr></thead>
+        <thead><tr><th scope="col">Company</th><th scope="col">Amount and basis</th><th scope="col">Fees for</th><th scope="col">How we checked it, and source</th></tr></thead>
         <tbody>
           {rows.map((r) => { const b = r.badge; return (
             <tr>
               <th scope="row">{r.path ? <a href={r.path}>{r.company.name}</a> : r.company.name}</th>
               <td><span class="lbl">Amount and basis</span><FeeValue value={r.fee[type]} showNotes /></td>
               <td><span class="lbl">Fees for</span><span class="v">{r.ptName ?? 'No property type stated'}</span></td>
-              <td><span class="lbl">Last verified and source</span><span class="v"><Badge kind={b.kind} text={b.text} /><SourceNote sourceId={r.fee.source_id} captured={r.fee.captured_date} verified={r.fee.last_verified_date} urls={r.fee.source_urls} who={r.company.name} /></span></td>
+              <td><span class="lbl">How we checked it, and source</span><span class="v"><Badge kind={b.kind} text={b.text} /><SourceNote sourceId={r.fee.source_id} captured={r.fee.captured_date} verified={r.fee.last_verified_date} urls={r.fee.source_urls} who={r.company.name} /></span></td>
             </tr>
           ); })}
         </tbody>

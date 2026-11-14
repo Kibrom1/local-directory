@@ -80,3 +80,10 @@ test('filter: choosing a type groups companies and hides nobody; "only fee publi
   sel.dispatchEvent(new dom.window.Event('change', { bubbles: true }));
   assert.deepEqual([...doc.querySelectorAll('#results h3')].map((h) => h.textContent), ['C0', 'C1', 'C2', 'C3', 'C4'], 'clearing the filter restores the original order');
 });
+
+test('brand: the site name lives in one module and no template hard-codes it', () => {
+  const hits = ['src/layouts/Base.astro', 'src/pages/index.astro', 'src/pages/search.astro', 'src/pages/site-map.astro', 'src/pages/methodology.astro', 'src/pages/fees/[...slug].astro', 'src/lib/export.mjs']
+    .filter((f) => read(f).includes('Columbus PM Guide'));
+  assert.deepEqual(hits, []);
+  assert.match(read('src/lib/brand.mjs'), /PUBLIC_SITE_NAME/);
+});

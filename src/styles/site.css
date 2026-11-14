@@ -1,4 +1,4 @@
-/* Columbus PM Guide. Mobile first. Custom properties mirror docs/ux/design-tokens.json (checked by npm run check:contrast). */
+/* Central Ohio Property Management Guide. Mobile first. Custom properties mirror docs/ux/design-tokens.json (checked by npm run check:contrast). */
 :root{--ink:#1a1a1a;--muted:#4a4f57;--bg:#ffffff;--surface:#f4f6f8;--line:#d9dde3;--ui:#6b7280;--primary:#0b4a8f;--focus:#0b3d91;
 --warn-bg:#fff4d6;--warn-ink:#5a3b00;--warn-line:#8a5a00;--ok-bg:#e6f4ec;--ok-ink:#0f5c35;--bad-bg:#fdecea;--bad-ink:#9b1c10;--info-bg:#e8f1fb;--info-ink:#0b3a6b;
 --ad-bg:#eceef1;--ad-ink:#3d4148;--unk-bg:#eef0f3;--foot-bg:#1f2933;--foot-ink:#e8ebef;--foot-link:#ffffff;--on-primary:#ffffff;--primary-press:#08386d;
