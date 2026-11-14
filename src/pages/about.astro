@@ -1,7 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import { readSiteEnv } from '../lib/env.mjs';
+import { getSite } from '../lib/site.mjs';
+import { fmtDate } from '../lib/fees.mjs';
 const { operator, disclosure, contactEmail } = readSiteEnv(import.meta.env);
+const s = getSite();
 ---
 <Base title="About this directory" description="Who runs this free Columbus property management directory, what it costs, how the data is collected and how to correct or remove a listing." pageType="about" crumbs={[{ name: 'About' }]}>
   <h1>About</h1>
@@ -12,18 +15,20 @@ const { operator, disclosure, contactEmail } = readSiteEnv(import.meta.env);
 
   <h2 id="how">What it costs and what we do not do</h2>
   <ul>
-    <li>Free to use. Free to be listed, corrected or removed.</li>
+    <li>Free to use. Listing, correcting and removal are free, and a company does not need to ask to be listed.</li>
     <li>No paid listings, no featured placement, no lead routing, no ads, no accounts.</li>
     <li>Fees, payment and claiming a listing never change a company's position.</li>
     <li>We are not a rental-listings site and do not refer tenants.</li>
+    <li>This is information from public sources, not a quote, recommendation or endorsement. Confirm fees with the company.</li>
   </ul>
 
   <h2>Where the data comes from</h2>
+  {s.lastDataUpdate && <p class="small muted">Site data last updated <time datetime={s.lastDataUpdate}>{fmtDate(s.lastDataUpdate)}</time>.</p>}
   <p>Facts (fees, services, service areas, license notes) come from publicly available sources, mainly each company's own website. Every fact shows its source, the date we captured it and the date we last read it. Unknown values are left blank and shown as &ldquo;Not published&rdquo; (the company does not state it) or &ldquo;Not recorded&rdquo; (we have no record of looking), never guessed. We collect facts, not company descriptions or images, and only business contact details a company has published. <a href="/methodology/">Read the methodology</a>.</p>
 
   <h2 id="corrections">Corrections and removal</h2>
   <p>To report an error, add a missing fact or have a listing removed, use <a href="/corrections/">the correction page</a>. Removal needs no reason. Removed companies are added to a suppression list and are not added back.</p>
 
-  <h2>Contact</h2>
+  <h2>Contact and corrections</h2>
   <p>{contactEmail ? <>Email <a href={`mailto:${contactEmail}`}>{contactEmail}</a>, or use <a href="/corrections/">the correction page</a>.</> : <>Use <a href="/corrections/">the correction page</a>.</>}</p>
 </Base>
