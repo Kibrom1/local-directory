@@ -34,4 +34,6 @@ export function formatProblems(problems) {
 export const DEFAULT_CONTACT_EMAIL = 'brightstepsdigitalllc@gmail.com';
 // Who runs the site (owner confirmed 2026-11-14). PUBLIC_OPERATOR_NAME overrides it.
 export const DEFAULT_OPERATOR_NAME = 'Bright Steps Digital LLC';
-export const readSiteEnv = (env = {}) => readLaunchEnv({ PUBLIC_CONTACT_EMAIL: DEFAULT_CONTACT_EMAIL, PUBLIC_OPERATOR_NAME: DEFAULT_OPERATOR_NAME, ...env });
+// Related-business disclosure (owner chose wording A on 2026-11-14: no related business that serves property managers). PUBLIC_DISCLOSURE overrides it.
+export const DEFAULT_DISCLOSURE = 'Bright Steps Digital LLC operates this site. It has no business relationship with any company listed here and receives no payment from any of them.';
+export const readSiteEnv = (env = {}) => readLaunchEnv({ PUBLIC_CONTACT_EMAIL: DEFAULT_CONTACT_EMAIL, PUBLIC_OPERATOR_NAME: DEFAULT_OPERATOR_NAME, PUBLIC_DISCLOSURE: DEFAULT_DISCLOSURE, ...env });
