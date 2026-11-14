@@ -9,11 +9,25 @@ import { yearText, yearNotes } from '../lib/firstyear.mjs';
 interface Props { rows: any[]; caption: string; compare?: boolean; flagDays: number }
 const { rows, caption, compare = false, flagDays } = Astro.props;
 const COLS = [['management_pct', 'Management %'], ['flat_fee', 'Flat fee'], ['leasing_fee', 'Leasing fee'], ['renewal_fee', 'Renewal fee']];
+// Range bar for the management percent: 0 to 12 percent scale, decorative (the number beside it is the fact).
+const SCALE_MAX = 12;
+const pctSpan = (v) => {
+  if (!v || v.type !== 'pct_of_rent') return null;
+  const n = [v.value, v.min, v.max, ...(v.plans || []).flatMap((p) => [p.value, p.min, p.max])].filter((x) => typeof x === 'number');
+  return n.length ? [Math.min(...n), Math.max(...n)] : null;
+};
+const bar = (v) => { const sp = pctSpan(v); if (!sp) return null; const lo = Math.min(sp[0], SCALE_MAX), hi = Math.min(sp[1], SCALE_MAX); return { left: (lo / SCALE_MAX) * 100, width: Math.max(((hi - lo) / SCALE_MAX) * 100, 4) }; };
 ---
 <div class="fee-wrap" tabindex="0" role="region" aria-label={caption}>
   <table class="fee-table sticky" id="fee-table">
     <caption class="sr">{caption}</caption>
     <thead>
+      <tr class="grp">
+        <th scope="col" aria-hidden="true"></th>
+        <th scope="colgroup" colspan="2" class="sep">Ongoing</th>
+        <th scope="colgroup" colspan="2" class="sep">One-time</th>
+        <th scope="col" colspan="3" class="sep" aria-hidden="true"></th>
+      </tr>
       <tr>
         <th scope="col">Company</th>
         <th scope="col">Management %<br /><small class="muted">basis as published</small></th>
@@ -34,10 +48,12 @@ const COLS = [['management_pct', 'Management %'], ['flat_fee', 'Flat fee'], ['le
             <br /><small class="muted">{r.ptName ? `Fees for: ${r.ptName}` : 'No property type stated for these fees'}</small>
             {r.caveat && <><br /><small class="caveat"><strong>Note:</strong> {r.caveat}</small></>}
           </th>
-          {COLS.map(([k, label]) => <td><span class="lbl">{label}</span><FeeValue value={r.fee[k]} /></td>)}
-          <td><span class="lbl">Minimums</span><span class="v">{r.minimums ? r.minimums : <Unknown />}</span></td>
-          <td><span class="lbl">First-year cost</span><span class="v">{r.year ? <><span data-year={JSON.stringify(r.year)}>{yearText(r.year, EXAMPLE_RENT)}</span><small class="muted"><br />{yearNotes(r.year)}</small></> : (r.revenue ? 'Not converted: fee is based on booking revenue, not rent' : 'Not enough published data: no management percent or monthly flat fee')}</span></td>
-          <td>
+          {COLS.map(([k, label], i) => { const b = k === 'management_pct' ? bar(r.fee[k]) : null; return (
+            <td class={i === 0 || i === 2 ? 'sep' : undefined}><span class="lbl">{label}</span><FeeValue value={r.fee[k]} />{b && <span class="scale" aria-hidden="true"><i style={`left:${b.left.toFixed(1)}%;width:${b.width.toFixed(1)}%`}></i></span>}</td>
+          ); })}
+          <td class="sep"><span class="lbl">Minimums</span><span class="v">{r.minimums ? r.minimums : <Unknown />}</span></td>
+          <td class="sep"><span class="lbl">First-year cost</span><span class="v">{r.year ? <><span data-year={JSON.stringify(r.year)}>{yearText(r.year, EXAMPLE_RENT)}</span><small class="muted"><br />{yearNotes(r.year)}</small></> : (r.revenue ? 'Not converted: fee is based on booking revenue, not rent' : 'Not enough published data: no management percent or monthly flat fee')}</span></td>
+          <td class="how sep">
             <span class="lbl">How we checked it</span>
             <span class="v"><Badge kind={r.badge.kind} text={r.badge.text} />
               {r.badge.kind === 'stale' && <span class="src">Over {flagDays} days old. Check the company site before relying on it.</span>}

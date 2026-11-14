@@ -46,7 +46,7 @@ if (crumbs.length && !isNoindex) {
     <title>{fullTitle}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="data:," />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {robotsValue && robotsValue !== 'index, follow' && <meta name="robots" content={robotsValue} />}
     <script is:inline>document.documentElement.classList.add('js')</script>
     {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029')} />)}
@@ -68,7 +68,10 @@ if (crumbs.length && !isNoindex) {
     <header class="site-header" data-pagefind-ignore>
       <div class="wrap">
         <div class="hdr">
-          <a class="brand" href="/">{SITE_NAME}</a>
+          <a class="brand" href="/">
+            <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="2" y="2" width="28" height="28" rx="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 22V12l7-5 7 5v10M13 22v-6h6v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            <span>{SITE_NAME}<small>Independent. Sourced. Dated.</small></span>
+          </a>
           <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-list">Menu</button>
         </div>
         <nav class="site-nav" aria-label="Main">
@@ -93,16 +96,29 @@ if (crumbs.length && !isNoindex) {
     </main>
     <footer class="site-footer" data-pagefind-ignore>
       <div class="wrap">
-        <p><strong>{SITE_NAME}</strong>. Free and independent. No paid listings, no ads, no accounts. Facts come from public sources, each with a source and a date. Unknown values are left blank, never guessed.</p>
-        <ul>
-          <li><a href="/corrections/">Correct or remove a listing</a></li>
-          <li><a href="/methodology/">How we collect and rank (Methodology)</a></li>
-          <li><a href="/about/">About this site</a></li>
-          <li><a href="/corrections-log/">Corrections log</a></li>
-          <li><a href="/privacy/">Privacy</a></li>
-          <li><a href="/site-map/">All pages, A to Z</a></li>
-        </ul>
-        <p class="small">Service areas: Franklin, Delaware, Fairfield and Licking counties, Ohio.{s.lastDataUpdate && <> Last site data update: <time datetime={s.lastDataUpdate}>{fmtDate(s.lastDataUpdate)}</time>.</>}</p>
+        <div class="cols">
+          <div>
+            <p><strong>{SITE_NAME}</strong></p>
+            <p>Free and independent. No paid listings, no ads, no accounts. Facts come from public sources, each with a source and a date. Unknown values are left blank, never guessed.</p>
+          </div>
+          <div>
+            <h2>Trust</h2>
+            <ul>
+              <li><a href="/methodology/">Methodology</a></li>
+              <li><a href="/corrections/">Correct or remove a listing</a></li>
+              <li><a href="/corrections-log/">Corrections log</a></li>
+              <li><a href="/privacy/">Privacy</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Explore</h2>
+            <ul>
+              <li><a href="/about/">About this site</a></li>
+              <li><a href="/site-map/">All pages, A to Z</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="small mt-6">Service areas: Franklin, Delaware, Fairfield and Licking counties, Ohio.{s.lastDataUpdate && <> Last site data update: <time datetime={s.lastDataUpdate}>{fmtDate(s.lastDataUpdate)}</time>.</>}</p>
       </div>
     </footer>
     <script>import '../scripts/nav.js';</script>

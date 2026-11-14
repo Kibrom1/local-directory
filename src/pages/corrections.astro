@@ -34,7 +34,7 @@ const mailto = contactEmail ? `mailto:${contactEmail}?subject=${encodeURICompone
         <strong id="error-title">Please fix these fields</strong>
         <ul id="error-list" class="err-list"></ul>
       </div>
-      <form id="correct-form" method="post" action={formAction} style="max-width:36rem" aria-label="Correct or remove a listing">
+      <form id="correct-form" method="post" action={formAction} class="form-narrow" aria-label="Correct or remove a listing">
         <fieldset>
           <legend>What do you want to do?</legend>
           <label class="check"><input type="radio" name="rtype" value="correct" checked />Correct a fact</label>
@@ -70,7 +70,7 @@ const mailto = contactEmail ? `mailto:${contactEmail}?subject=${encodeURICompone
         </div>
         <button class="btn" type="submit">Send request</button>
       </form>
-      {contactEmail && <p class="small" style="margin-top:2rem">Prefer email? <a href={mailto}>{contactEmail}</a></p>}
+      {contactEmail && <p class="small mt-8">Prefer email? <a href={mailto}>{contactEmail}</a></p>}
       <script>import '../scripts/corrections.js';</script>
     </>
   )}

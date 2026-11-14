@@ -44,13 +44,19 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
 <Base title={`${c.name}: fees and service areas`} description={`${c.name}: published fees with sources and dates, license note and service areas in the Columbus, Ohio area.`} robots={robots} jsonLd={jsonLd} pageType="company" crumbs={[{ name: c.name }]}>
   <h1>{c.name}</h1>
   {tier === 'placeholder' && <Banner kind="warn" lead="Test data.">This page uses test records and is not indexed.</Banner>}
-  <div class="meta" style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:1rem">
+  <div class="meta spaced">
     <Badge kind={lb.kind} text={lb.text} />
     <Badge kind={fb.kind} text={newest ? fb.text : `Listing ${fb.text.toLowerCase()}`} />
     <a href={correct}>Correct or remove this listing</a>
   </div>
   {staleFee.length > 0 && <Banner kind="warn" lead={`${feeBadge(staleFee[0], s.today, flag).text}.`}>They may have changed. Check the company site before relying on them.</Banner>}
   <p class="lede">{lede}</p>
+  <dl class="snap" aria-label="At a glance">
+    <div><dt class="k">Fees last read</dt><dd>{newest ? fmtDate(newest.last_verified_date) : 'Not recorded'}</dd></div>
+    <div><dt class="k">Fee types published</dt><dd>{fees.length ? `${FEE_ROWS.filter(([, k]) => fees.some((f) => describeFee(f[k]))).length} of ${FEE_ROWS.length}` : 'Not recorded'}</dd></div>
+    <div><dt class="k">Service areas</dt><dd>{areas.length ? areas.map((g) => g.name).join(', ') : 'Not recorded'}</dd></div>
+    <div><dt class="k">Property types</dt><dd>{types.length ? types.map((t) => t.name).join(', ') : 'Not recorded'}</dd></div>
+  </dl>
   <nav class="toc" aria-label="On this page"><ol>{toc.map(([id, t]) => <li><a href={`#${id}`}>{t}</a></li>)}</ol></nav>
 
   <h2 id="fees">Fees</h2>

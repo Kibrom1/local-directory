@@ -4,4 +4,4 @@ import { UNKNOWN } from '../lib/fees.mjs';
 interface Props { kind?: 'not_published' | 'not_recorded' | 'not_offered' | 'varies' }
 const { kind = 'not_published' } = Astro.props;
 ---
-<span class="unk">{UNKNOWN[kind]}</span>
+<span class={`unk ${kind}`}>{UNKNOWN[kind]}</span>
