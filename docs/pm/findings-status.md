@@ -67,3 +67,6 @@ Still needs a person: the 18 terms reads, human comparison of fee rows, scope ov
 
 ## 2026-11-14: terms gate off (owner decision)
 `requireReviewedTermsForIndex` is now false: a source is excluded only when its terms prohibit automated access (`use_allowed` false). Sources still at `not_checked` count toward indexable pages and the fee comparison. The review checklist in `docs/pm/terms-review-checklist.md` is now how prohibitions get found: any source found to prohibit automated access must be set to `use_allowed: false`, which removes its facts. `tos_decision` is still only ever set by a person who has read the terms. To undo: set the switch back to true.
+
+## 2026-11-14: second read of all ten fee rows
+Every fee row was read again from its own source page and compared with the recorded values (Mynd, Evernest, HomeRiver, ROOST single-family and multifamily, 10X, Reafco, NorthPoint, Swiss, RPM Midwest). All ten match. `last_verified_date` was moved to 2026-11-14. The rows stay `agent_read`: this was a second automated read, not a person's comparison, so none is marked `human_compared`. Note: the 10X pricing page also carries unrelated casino text in other languages, which looks like injected spam; worth telling the company.

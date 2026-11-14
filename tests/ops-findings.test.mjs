@@ -30,9 +30,9 @@ test('aging: today the real data builds 18 pages with the terms gate off (the ow
   assert.equal(at(0).indexable.length, 18);
   assert.equal(evaluate(realData, { ...quality, requireReviewedTermsForIndex: true }, { today: REAL_DAY, prod: true }).indexable.length, 5);
 });
-test('aging +120 days: the fee-row warning window opens but no page drops yet', () => {
+test('aging +121 days: the fee-row warning window opens but no page drops yet', () => {
   assert.equal(at(120).indexable.length, 18);
-  assert.equal(staleQueue(realData, plus(120), quality.freshness).fee_rows_over_warn.length, 10);
+  assert.equal(staleQueue(realData, plus(121), quality.freshness).fee_rows_over_warn.length, 10);
 });
 test('aging +181 days: facts are flagged as old on pages (display flag), still no page drops', () => {
   assert.equal(at(181).indexable.length, 18);
