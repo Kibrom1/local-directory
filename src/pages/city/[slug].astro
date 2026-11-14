@@ -31,8 +31,8 @@ const jsonLd = tier === 'indexable' ? {
     Order: serves {geo.name}, then how complete and recent our data is, then A to Z. Fees and payment never affect order. <a href="/methodology/">How we collect and rank</a>
   </Banner>
 
-  <form id="filters" class="filters js-only" aria-label="Filter companies">
-    <div class="field" style="margin:0"><label for="type">Property type</label>
+  <form id="filters" class="filters js-only" aria-label="Group companies by property type">
+    <div class="field" style="margin:0"><label for="type">Group by property type</label>
       <select id="type" name="type"><option value="">Any property type</option>{types.map((t) => <option value={t.slug}>{t.name}</option>)}</select></div>
     <div class="field" style="margin:0"><label class="check" style="margin-top:1.5rem"><input type="checkbox" name="fees" />Only companies that publish fees</label></div>
   </form>
@@ -40,12 +40,20 @@ const jsonLd = tier === 'indexable' ? {
   <p id="count" role="status" aria-live="polite" class="small js-only">{all.length} {all.length === 1 ? 'company' : 'companies'} shown</p>
 
   <h2>Companies serving {geo.name}</h2>
-  <ul class="results">
+  <ul class="results" id="results">
     {all.map((p) => <ResultCard page={p} />)}
   </ul>
+  <div id="groups" hidden>
+    <h3 class="group-head" id="match-head">Say they serve <span id="match-head-t"></span> (<span id="match-head-n">0</span>)</h3>
+    <ul class="results" id="g-match"></ul>
+    <h3 class="group-head" id="unstated-head">No property type stated (<span id="unstated-head-n">0</span>)</h3>
+    <ul class="results" id="g-unstated"></ul>
+    <h3 class="group-head" id="other-head">State other property types (<span id="other-head-n">0</span>)</h3>
+    <ul class="results" id="g-other"></ul>
+  </div>
   <div id="empty-state" hidden>
-    <h2>No companies match these filters</h2>
-    <p>We list {all.length} {all.length === 1 ? 'company' : 'companies'} for {geo.name}. Clear a filter, or <a href="/#cities">choose another city</a>. If a company is missing, <a href="/corrections/?type=add">suggest an addition</a>.</p>
+    <h2>No companies match this filter</h2>
+    <p>We list {all.length} {all.length === 1 ? 'company' : 'companies'} for {geo.name}. Clear the filter, or <a href="/#cities">choose another city</a>. If a company is missing, <a href="/corrections/?type=add">suggest an addition</a>.</p>
   </div>
 
   <h2>About this place</h2>

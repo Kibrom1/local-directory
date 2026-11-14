@@ -9,7 +9,7 @@ interface Props { rows: any[]; caption: string; compare?: boolean; flagDays: num
 const { rows, caption, compare = false, flagDays } = Astro.props;
 const COLS = [['management_pct', 'Management %'], ['flat_fee', 'Flat fee'], ['leasing_fee', 'Leasing fee'], ['renewal_fee', 'Renewal fee']];
 ---
-<div class="fee-wrap" tabindex="0" role="region" aria-label={`${caption}. Scrolls sideways on small screens.`}>
+<div class="fee-wrap" tabindex="0" role="region" aria-label={caption}>
   <table class="fee-table sticky" id="fee-table">
     <caption class="sr">{caption}</caption>
     <thead>
@@ -40,7 +40,7 @@ const COLS = [['management_pct', 'Management %'], ['flat_fee', 'Flat fee'], ['le
             <span class="lbl">Last verified</span>
             <span class="v"><Badge kind={r.badge.kind} text={r.badge.text} />
               {r.badge.kind === 'stale' && <span class="src">Over {flagDays} days old. Check the company site before relying on it.</span>}
-              <SourceNote sourceId={r.fee.source_id} captured={r.fee.captured_date} verified={r.fee.last_verified_date} urls={r.fee.source_urls} />
+              <SourceNote sourceId={r.fee.source_id} captured={r.fee.captured_date} verified={r.fee.last_verified_date} urls={r.fee.source_urls} who={r.company.name} />
             </span>
           </td>
         </tr>

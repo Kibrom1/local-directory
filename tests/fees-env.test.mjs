@@ -61,7 +61,7 @@ test('rangeSummary groups by how the fee is stated and gives low and high only',
 });
 
 test('freshness and license badges carry words', () => {
-  assert.deepEqual(freshnessBadge('2026-11-01', '2026-11-12', 180), { kind: 'ok', text: 'Verified 2026-11-01', age: 11 });
+  assert.deepEqual(freshnessBadge('2026-11-01', '2026-11-12', 180), { kind: 'ok', text: 'Verified Nov 1, 2026', age: 11 });
   assert.equal(freshnessBadge('2026-03-02', '2026-11-12', 180).kind, 'stale');
   assert.match(freshnessBadge('2026-03-02', '2026-11-12', 180).text, /months ago/);
   assert.equal(licenseBadge(null).text, 'License: not checked');

@@ -163,3 +163,5 @@ code{font-size:.9em}
 --warn-bg:#3a2e10;--warn-ink:#ffd98a;--warn-line:#c99a3a;--ok-bg:#12301f;--ok-ink:#8fdcad;--bad-bg:#3b1a17;--bad-ink:#ffb4aa;--info-bg:#15283d;--info-ink:#a9d0ff;
 --ad-bg:#272e36;--ad-ink:#cdd3da;--unk-bg:#242b33;--foot-bg:#0d1014;--foot-ink:#d5dae0;--foot-link:#ffffff;--on-primary:#0b1a2b;--primary-press:#b3d6ff}
 }
+.compact{margin:var(--s3) 0}
+.group-head{margin:var(--s6) 0 var(--s2)}

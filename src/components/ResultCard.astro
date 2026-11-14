@@ -20,12 +20,16 @@ const types = c.property_types_served.map((x) => s.ptById.get(x.property_type_id
 <li class="card result" data-types={types.map((t) => t.slug).join(' ')} data-fees={rows.length ? 'yes' : 'no'}>
   <h3><a href={page.path}>{c.name}</a></h3>
   <div class="meta"><Badge kind={lb.kind} text={lb.text} /><Badge kind={fb.kind} text={newest ? fb.text : `Listing ${fb.text.toLowerCase()}`} /></div>
+  {rows.length === 0 ? (
+    <p class="compact">No fee data recorded yet. Fees may exist on <a href={c.website || page.path} {...(c.website ? { rel: 'nofollow noopener' } : {})}>{c.website ? <>the company's own site<span class="sr"> ({c.name})</span></> : 'its profile'}</a>.</p>
+  ) : (
   <div class="facts">
     {FACTS.map(([k, label]) => { const f = pick(k); return (
       <div><span>{label}</span><span>{f ? <><FeeValue value={f[k]} />{f.property_type && <small class="muted"> ({s.ptById.get(f.property_type).name})</small>}</> : <span class="unk">{rows.length ? 'Not published' : 'Not checked yet'}</span>}</span></div>
     ); })}
   </div>
-  {newest ? <SourceNote sourceId={newest.source_id} captured={newest.captured_date} verified={newest.last_verified_date} urls={[]} /> : <span class="src">No fee data recorded yet. Fees may exist on the company's own site.</span>}
-  {fb.kind === 'stale' && newest && <p class="small">Fees last verified {fb.text.replace('Verified ', '')}. They may have changed. Check the company site before relying on them.</p>}
+  )}
+  {newest && <SourceNote sourceId={newest.source_id} captured={newest.captured_date} verified={newest.last_verified_date} urls={[]} who={c.name} />}
+  {fb.kind === 'stale' && newest && <p class="small">Fees last verified {fb.text.replace(/^Verified /, '').replace(/^Read on the company's site /, '')}. They may have changed. Check the company site before relying on them.</p>}
   {types.length > 0 && <p class="small muted">Property types: {types.map((t) => t.name).join(', ')}</p>}
 </li>
