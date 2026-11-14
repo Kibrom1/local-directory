@@ -28,3 +28,9 @@ Note: the fee data was captured by an automated read ("read by our tool"), which
 Subject: Unrelated text on your pricing page
 
 Hello, while reading your pricing page (https://www.10xpropertymanagers.com/pricing) we noticed unrelated text about online casinos in other languages. It looks like spam inserted into the page, possibly by a plugin or a compromised account. You may want to have your web provider check the site. We have not changed anything. This is the only reason for this message.
+
+## Owner decision (2026-11-14): keep everything published, remove on objection
+- Option 3 chosen. Mynd, HomeRiver and ROOST stay published. No data was changed and no `tos_decision` was set; those three sources stay at `not_checked` until a person records a decision.
+- Everything with the basic facts stays published. A fee a company does not state shows as "Not published".
+- **If a company or source objects:** remove it the same day. For a source: set `use_allowed: false` in `data/sources.json` (its facts drop off the site at the next build); for one company: use the removal path on the corrections page (suppression list). Log it in `data/corrections-log.json` without the company's name. Reply to the sender that it is done.
+- Revisit this if any objection arrives, or before any paid or promoted feature is added.
