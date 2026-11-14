@@ -4,7 +4,10 @@ import { getSite } from '../lib/site.mjs';
 import { SITE_NAME } from '../lib/brand.mjs';
 import { fmtDate } from '../lib/fees.mjs';
 const s = getSite();
-const cities = s.cityPages.filter((p) => p.tier === 'indexable');
+const cities = s.cityPages.filter((p) => p.tier !== 'placeholder');
+const byName = (a, b) => a.name.localeCompare(b.name);
+const companies = s.companyPages.filter((p) => p.tier !== 'placeholder').map((p) => ({ name: p.company.name, href: p.path })).sort(byName);
+const indexable = s.companyPages.filter((p) => p.tier === 'indexable').length;
 // Property types that at least one listed company serves (from sourced facts).
 const served = new Set(s.companyPages.filter((p) => p.tier !== 'placeholder').flatMap((p) => p.company.property_types_served.map((x) => x.property_type_id)));
 const types = [...s.ptById.values()].filter((t) => served.has(t.id));
@@ -46,7 +49,7 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: SIT
 
   <section class="coverage" aria-labelledby="coverage-h">
     <h2 id="coverage-h">What this site covers today</h2>
-    <p>{plural(recorded, 'company is', 'companies are')} in our records. {publishedProfiles === 0 ? 'None has a published profile yet' : `${plural(publishedProfiles, 'has a published profile', 'have published profiles')}`}, because a profile is published only when it has enough sourced, recent facts{s.termsGateOn ? ' and the terms of its sources have been read by a person' : ''}. {feeCompanies > 0 ? `${plural(feeCompanies, 'company publishes', 'companies publish')} fees we can compare.` : 'No fee comparison is published yet.'}</p>
+    <p>{plural(recorded, 'company is', 'companies are')} in our records. {publishedProfiles === 0 ? 'None has a published profile yet' : `${plural(publishedProfiles, 'has a published profile', 'have published profiles')}`}, because a profile is published only when it has enough sourced, recent facts. {s.termsGateOn && publishedProfiles > indexable ? 'Profiles whose sources\' terms a person has not read yet are published but kept out of search engines. ' : ''}{feeCompanies > 0 ? `${plural(feeCompanies, 'company publishes', 'companies publish')} fees we can compare.` : 'No fee comparison is published yet.'}</p>
     <p>Know a company we missed, or a fact that is wrong? <a href="/corrections/">Tell us</a>. No account is needed.</p>
   </section>
 
@@ -62,6 +65,14 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: SIT
       <a class="card city-card" href={p.path}><h3>{p.geo.name}, {p.geo.state}</h3><span class="n">{n}</span> {n === 1 ? 'company serves' : 'companies serve'} it, {p.withFees} publish fees</a>
     ); })}</div>
   ) : <p>City pages appear once at least three companies with sourced data serve a city.</p>}
+
+  {companies.length > 0 && (
+    <>
+      <h2 id="companies">Companies in our records</h2>
+      <p class="small muted">In A to Z order. Order never reflects fees, payment or quality.</p>
+      <ul class="pill-list">{companies.map((c) => <li><a href={c.href}>{c.name}</a></li>)}</ul>
+    </>
+  )}
 
   {(guides.length > 0 || s.nav.feeGuides) && (
     <>
