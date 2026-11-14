@@ -34,3 +34,11 @@ Date: 2026-11-11. Ordered by what blocks the most work. PM recommendation in eac
 23. **Listed pages.** `publishListedTier` is false in production (28 pages unpublished). Owner decides if and when to publish them.
 24. **License lookups.** Do manual Ohio eLicense lookups (runbook), or keep "stated by company, not verified".
 25. **Stray `/Users/Kb/Desktop/tsconfig.json`.** Owner: remove or move it so the build runs in this folder.
+
+## Resolved by the user (2026-11-14, via the PM session)
+- Site name: Central Ohio Property Management Guide.
+- Fee badge wording: UX designer's wording adopted ("Read from the company's website by our tool on DATE; not yet checked by a person").
+- "Not recorded" added; "Not published" only where a check is recorded (`fields_checked`).
+- First-year cost range approved with named gaps.
+- Corrections: documents-by-email option and a public corrections log approved. Open detail: removals are logged without the company's name (developer default); PM to confirm.
+- Terms gate stays on; launch small until a person reads the 18 sites' terms. Full license badge wording kept.
