@@ -25,9 +25,10 @@ const open = { ...quality, requireReviewedTermsForIndex: false, publishListedTie
 const at = (n, q = open) => evaluate(realData, q, { today: plus(n), prod: true });
 const count = (s, t) => s.indexable.filter((p) => p.type === t).length;
 
-test('aging: today the real data builds 18 pages with the terms gate off, 5 with it on', () => {
+test('aging: today the real data builds 18 pages with the terms gate off (the owner setting), 5 if it were switched on', () => {
+  assert.equal(quality.requireReviewedTermsForIndex, false, 'owner decision 2026-11-14: only a recorded prohibition excludes a source');
   assert.equal(at(0).indexable.length, 18);
-  assert.equal(evaluate(realData, quality, { today: REAL_DAY, prod: true }).indexable.length, 5);
+  assert.equal(evaluate(realData, { ...quality, requireReviewedTermsForIndex: true }, { today: REAL_DAY, prod: true }).indexable.length, 5);
 });
 test('aging +120 days: the fee-row warning window opens but no page drops yet', () => {
   assert.equal(at(120).indexable.length, 18);

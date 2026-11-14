@@ -64,3 +64,6 @@ Still needs a person: the 18 terms reads, human comparison of fee rows, scope ov
 
 ## 2026-11-14: listed tier published (owner decision)
 `publishListedTier` is now true. The 17 company profiles and 12 city pages that have enough sourced facts but whose sources' terms are not yet reviewed are published as `noindex, follow`. The terms gate (`requireReviewedTermsForIndex`) is unchanged, so none of them is indexable and none counts toward the fee comparison. To make pages indexable, review the sources in `docs/pm/terms-review-checklist.md`. To undo: set `publishListedTier` back to false in `src/lib/quality.json`.
+
+## 2026-11-14: terms gate off (owner decision)
+`requireReviewedTermsForIndex` is now false: a source is excluded only when its terms prohibit automated access (`use_allowed` false). Sources still at `not_checked` count toward indexable pages and the fee comparison. The review checklist in `docs/pm/terms-review-checklist.md` is now how prohibitions get found: any source found to prohibit automated access must be set to `use_allowed: false`, which removes its facts. `tos_decision` is still only ever set by a person who has read the terms. To undo: set the switch back to true.
