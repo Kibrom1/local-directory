@@ -94,7 +94,7 @@ export function licenseBadge(lic, today) {
 
 // How a fee row was checked, in the words visitors see. An automated read is never described as a person's check.
 export const VERIFICATION_LABELS = {
-  agent_read: (date) => `Read from the company's website by our tool on ${date}; not yet checked by a person`,
+  agent_read: (date) => `Read from the company's website by our tool on ${date}`,
   human_compared: (date) => `Checked by a person, ${date}`
 };
 export function feeBadge(f, today, flagDays) {
@@ -103,7 +103,7 @@ export function feeBadge(f, today, flagDays) {
   const age = ageDays(f.last_verified_date, today);
   if (age > flagDays) {
     const n = monthsBetween(f.last_verified_date, today);
-    return { kind: 'stale', text: human ? `Checked by a person ${n} months ago` : `Read from the company's website by our tool ${n} months ago; not yet checked by a person`, age, method: human ? 'human_compared' : 'agent_read' };
+    return { kind: 'stale', text: human ? `Checked by a person ${n} months ago` : `Read from the company's website by our tool ${n} months ago`, age, method: human ? 'human_compared' : 'agent_read' };
   }
   return { kind: 'ok', text: (human ? VERIFICATION_LABELS.human_compared : VERIFICATION_LABELS.agent_read)(fmtDate(date)), age, method: human ? 'human_compared' : 'agent_read' };
 }
