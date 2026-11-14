@@ -7,7 +7,7 @@ const cities = s.cityPages.filter((p) => p.tier === 'indexable');
 <Base title="Search this site" description="Search companies, cities and guides on Columbus PM Guide." noindex pageType="search" crumbs={[]}>
   <h1>Search this site</h1>
   <div id="search" data-pagefind-ignore></div>
-  <p id="search-fallback" class="small">Search needs JavaScript and a built search index. Without them, browse the <a href="/site-map/">A to Z list of all pages</a>, or go to:
+  <p id="search-fallback" class="small">Search is not available right now. Browse the <a href="/site-map/">A to Z list of all pages</a>, or go to:
     {cities.map((c, i) => <>{i > 0 && ', '}<a href={c.path}>{c.geo.name}</a></>)}{s.nav.fees && <>{cities.length > 0 && ', '}<a href="/fees/">fee comparison</a></>}.</p>
   <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
   <script is:inline src="/pagefind/pagefind-ui.js"></script>
