@@ -7,10 +7,9 @@ import { getSite, buildReport } from './src/lib/site.mjs';
 import { readSiteEnv, formatProblems } from './src/lib/env.mjs';
 
 const env = { ...loadEnv(process.env.NODE_ENV || 'production', process.cwd(), ''), ...process.env };
-// Public address: SITE_URL if set, else the production address Vercel exposes at build time, else the current Vercel address.
-// Set SITE_URL when a custom domain is attached. The placeholder (.example) is no longer used by the build.
-const vercelUrl = env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${env.VERCEL_PROJECT_PRODUCTION_URL}` : null;
-const site = env.SITE_URL || vercelUrl || 'https://local-directory-livid.vercel.app';
+// Public address: SITE_URL if set, else the site's own domain. (Vercel's production-URL variable is not used: it can resolve to the
+// vercel.app address even after a custom domain is attached.) Change the default here if the domain changes.
+const site = env.SITE_URL || 'https://centralohiopmguide.com';
 const isBuild = process.argv.includes('build');
 const strict = env.STRICT_BUILD === '1' || process.argv.includes('--strict');
 
