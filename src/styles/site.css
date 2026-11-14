@@ -113,7 +113,7 @@ fieldset{border:0;padding:0;margin:0 0 var(--s4)}
 .scale{display:block;position:relative;height:.5rem;background:var(--bar-bg);border-radius:99rem;margin:.4rem 0 .15rem;width:100%;max-width:7.5rem}
 .scale i{position:absolute;top:0;bottom:0;background:var(--bar);border-radius:99rem;min-width:.5rem}
 .fee-table details summary{cursor:pointer;color:var(--primary);min-height:1.5rem;font-size:.875rem;margin-top:.2rem}
-.fee-table details ul{margin:var(--s2) 0 0;padding:0;list-style:none;color:var(--muted)}
+.fee-table details ul,.fee-table details p{margin:var(--s2) 0 0;padding:0;list-style:none;color:var(--muted)}
 .fee-table details li{border-top:1px solid var(--line);padding:.15rem 0}
 /* result card */
 .results{list-style:none;padding:0;margin:0;display:grid;gap:var(--s4)}

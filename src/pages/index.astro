@@ -51,9 +51,9 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: SIT
   </section>
 
   <div class="grid cols-3 mt-8">
-    <div class="card"><h2 class="card-title">Fees side by side</h2><p>{s.nav.fees ? <>Published fees from the companies we reviewed, with the basis shown for every number. <a href="/fees/">Compare fees</a></> : 'A fee table appears here once enough companies publish comparable fees.'}</p></div>
-    <div class="card"><h2 class="card-title">Sources and dates</h2><p>No fact without a source line, a capture date and the date we last read it. <a href="/methodology/">How we collect facts</a></p></div>
-    <div class="card"><h2 class="card-title">No pay to play</h2><p>No paid listings, no featured placement, no lead routing. Fees never change order. <a href="/about/">About this site</a></p></div>
+    <div class="card"><h2 class="card-title">See what companies charge</h2><p>{s.nav.fees ? <>{plural(feeCompanies, 'company publishes', 'companies publish')} fees we can compare, each with its basis, source and date. <a href="/fees/">Compare fees</a></> : 'A fee table appears here once enough companies publish comparable fees.'}</p></div>
+    <div class="card"><h2 class="card-title">Find companies near you</h2><p>{cities.length ? <>{plural(cities.length, 'city page is', 'city pages are')} published so far. <a href="#cities">Browse by city</a></> : 'City pages appear once at least three companies with sourced data serve a city.'}</p></div>
+    <div class="card"><h2 class="card-title">Learn what a fee covers</h2><p>{s.nav.feeGuides || guides.length ? <>Plain-language guides built from what the companies we reviewed publish. <a href={s.nav.feeGuides ? '/fee-guide/' : guides[0].path}>{s.nav.feeGuides ? 'Fee guides' : 'Landlord guides'}</a></> : 'Guides appear here once enough sourced facts are published.'}</p></div>
   </div>
 
   <h2 id="cities">Browse by city</h2>
