@@ -41,6 +41,33 @@ npm run scraper:run -- --source src_site_example --adapter <adapter> --url https
 - Merge: copy accepted proposed files over `data/` (or hand-apply the accepted changes), `npm run validate`, `npm test`, `npm run build`, commit.
 - Health: `reports/scraper/history.json` keeps per-source runs. A source is stale after two failed runs in a row (success rate under 90%, or paused). A robots.txt or ToS change pauses the source: re-review both and re-record the decisions before the next run.
 
+### Reviewing a proposal (who reviewed it is recorded)
+1. Open `reports/scraper/<run>/diff-report.md`. Work the **Review checklist** at the top in order: validation errors, anomalies, flagged items, then routine changes. It lists an estimate in minutes for each item.
+2. Compare every item with the live source page. Never skip a flagged item.
+3. Record the decision: `npm run scraper:review -- --run <run id> --by <your handle> --decision accepted|partially_accepted|rejected [--note "text"]`. This writes `review.json` in the run folder (`reviewed_by`, decision, time). It refuses to accept a proposal that has validation errors or a paused source. Recording a review does not change `data/`.
+4. Only then apply the accepted changes by hand, `npm run validate`, `npm test`, commit. `npm run queue` lists runs that still have no `review.json`.
+5. New or changed fee rows stay `verification_method: agent_read` until a person compares them with the page (see "Mark a fee row as checked by a person").
+
+## Mark a fee row as checked by a person
+Compare the row with the live pricing page. Then set `verification_method: "human_compared"`, `verified_by` (a role or handle, not an email), `human_verified_date` (today) and bump `last_verified_date`. The badge changes from "Read on the company's site, DATE. Confirm with the company" to "Checked by a person, DATE". `agent_read` rows must have both fields null; the validator enforces this.
+
+## Fee row scope
+`scope` is `columbus_specific` (default), `network_wide` (the page covers many markets) or `unconfirmed_mapping` (plan labels not confirmed). The last two display with a caveat and need `notes`, but do not count toward the fee gates unless `feeScopesCountingTowardGates` in `src/lib/quality.json` lists them (an owner decision).
+
+## Stated service area: data-entry checklist
+A company is kept out of the fee comparison while `feeComparison.requireStatedServiceArea` is true and no service-area row exists. Do not change that rule. To include a company:
+1. Open the company's own site (not a directory) and find a page or footer that names the cities or counties it serves. An office address alone is not a service area.
+2. Add one `data/service-areas.json` row per city or county the page names, each with `source_id` (the company's site source), `source_url` (the page), `captured_date` and `last_verified_date` (today), and a note quoting where the page says it. Add a missing `geography` row only for a place the page names.
+3. Never infer an area from the address, the company name or a neighbouring company. If the page names none, record the question in `docs/pm/open-questions.md` and ask the company to state its area (a company-submitted source counts).
+4. `npm run validate`, then `npm run report` ("Fee comparison: companies kept out") shows the company has moved.
+
+## License verification (manual lookup)
+There is no automated route: the state portal blocks automated access and must not be scraped. The report says "license verification route: none available" and company pages keep "stated by company, not verified". To verify a license by hand:
+1. A person opens the Ohio eLicense lookup page in a browser, searches the company or broker name, and reads the result and the portal's terms.
+2. Add a source with `source_kind: official_reference`, `access_method: manual_public_lookup`, the lookup URL, `use_allowed: true` and `tos_decision: not_applicable`, and keep a note of what was searched and when.
+3. Set the company's `license.status` (`active` or `inactive`), `license.source_id` to that source, and `license.last_verified_date`. Quote the license number only as shown by the record.
+4. `npm run validate`; the page then counts a verified license toward indexing.
+
 ## Write an adapter
 Add `scripts/scraper/adapters/<name>.mjs` exporting `{ id, match(url), parse({ html, url, capturedDate }) }` that returns `{ company: { name, website, phone, address }, service_areas: [city names], fees: [{ property_type, source_url, management_pct, flat_fee, leasing_fee, renewal_fee, minimums }] }` using the fee value shapes in the README. Register it in `adapters/index.mjs`. Test it against a saved fixture page in `tests/fixtures/`; never test against live sites from CI. The sanitizer drops everything that is not a schema field, any string over 200 characters and anything with markup.
 
@@ -50,7 +77,14 @@ For companies whose site disallows automated fetching (RL Property Management Gr
 ## Stage budget and gates
 `src/lib/quality.json` holds all thresholds. `currentStage` caps indexable pages (stage 1: 30 to 45). The build fails when over the cap. Raise the stage only when the roadmap condition is met (70% of the prior batch indexed after 6 weeks, new pages clear the bar through new data). Being under the minimum is reported, not blocked; do not add thin pages to reach it. The fee comparison, fee guides and property-type pages are built; each is generated only when its gate is met (`planned_pages` in the report).
 
+## Operations commands
+- `npm run launch:check`: every open launch blocker with an owner and the next action; exits 1 while any blocker remains.
+- `npm run report`: gates, "What unlocks the next page", resilience (single source or company whose removal drops a page), fee exclusions, scope effect, terms gate effect, unpublished listed pages.
+- `npm run queue -- --weekly|--monthly [--json]`: corrections to process (set `CORRECTIONS_LOG` to the private CSV outside this repo), facts over 120/150 days, source checks older than 90 days, scraper proposals awaiting review, fee rows not yet checked by a person.
+- `npm run guides:check`: what blocks each draft guide (sources, dates, advice wording, links to pages that do not exist). It never publishes.
+
 ## Launch checklist (data side)
+- `npm run launch:check` exits 0.
 - `npm run validate:strict` passes: no placeholder records; every source used by published data has robots and ToS decisions recorded (company site terms are currently unread).
 - `npm run report`: stage budget not over; indexable count reviewed; no company published on directory-only evidence.
 - Licenses: none verified yet. Locate the Ohio Division of Real Estate licensee file URL, read its terms, record the source, then match listed companies.

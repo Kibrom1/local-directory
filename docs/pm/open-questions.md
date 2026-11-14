@@ -25,3 +25,12 @@ Date: 2026-11-11. Ordered by what blocks the most work. PM recommendation in eac
 16. **Companies whose robots.txt blocked fetching** (RL Property Management Group, I Heart Real Estate PM, FYVE unconfirmed): list them with fees blank, or omit? PM recommends list with facts from approved sources and fees blank, and invite them to supply fees via the correction form.
 17. **Month-count baseline.** Confirm T0 = first indexable pages live plus sitemap submitted, and that the 40-company timing (T0 + 6 months) and the 50% non-indexing stop rule are acceptable additions to `thresholds.md`.
 18. **Schema changes.** Fee ranges/plans and company-supplied-fact sources are not in the current schema (`backlog.csv`, Data model epic). Approve Developer work before launch?
+
+## Added by the developer (see `findings-status.md`)
+19. **Terms and robots reviews for 18 company-site sources.** Owner: person reading the terms. Unblocks 13 indexable pages through the terms gate.
+20. **Human comparison of the 10 fee rows.** Owner: reviewer. Until then every row reads "Read on the company's site ... Confirm with the company".
+21. **Fee scope.** NorthPoint (network-wide page) and 10X (unconfirmed plan mapping) are shown with a caveat and not counted. Owner decides: find better pages, or add the scope to `feeScopesCountingTowardGates`.
+22. **Service area for 10X and Reafco.** Company must state it on its site or submit it. Do not infer.
+23. **Listed pages.** `publishListedTier` is false in production (28 pages unpublished). Owner decides if and when to publish them.
+24. **License lookups.** Do manual Ohio eLicense lookups (runbook), or keep "stated by company, not verified".
+25. **Stray `/Users/Kb/Desktop/tsconfig.json`.** Owner: remove or move it so the build runs in this folder.

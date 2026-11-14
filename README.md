@@ -68,6 +68,13 @@ Environment variables: `PUBLIC_FORM_ACTION`, `PUBLIC_CONTACT_EMAIL`, `PUBLIC_OPE
 - Ordering on lists: completeness (populated fact groups of 6), then name. Nothing else can affect order.
 - `reports/build-report.json` carries: `indexable_count` and by type, `noindex_listed_*`, `skipped` with reasons, `stage_budget`, `companies` (by evidence level, Tier A, Phase 1 with an allowed source, verified fees, licenses), `fee_type_counts`, `freshness` (stale at 180 and 365 days, median age), `sources` (used with ToS/robots unreviewed), `planned_pages`.
 
+### Production switches (`src/lib/quality.json`)
+- `requireReviewedTermsForIndex` (default true): facts from a source whose `tos_decision` is `not_checked` do not count toward indexable pages in production. Development shows everything.
+- `publishListedTier` (default false): listed (noindex) company and city pages are not generated in production; the report still shows what they would be.
+- `feeScopesCountingTowardGates` (default `["columbus_specific"]`): fee rows with another `scope` display with a caveat but do not count toward gates.
+- Fee rows carry `verification_method` (`agent_read` or `human_compared`), `verified_by`, `human_verified_date` and `scope`. Verified fee rows are downloadable from the fee comparison page (`/fees-data/columbus-pm-fees.csv` and `.json`) once that page exists.
+- Commands: `npm run launch:check`, `npm run queue`, `npm run guides:check`, `npm run scraper:review`. See `docs/developer/runbook.md`.
+
 ## Scraper framework (`scripts/scraper/`)
 Registry-driven and manual-review only. It produces a reviewable diff report; it never writes into `data/`.
 - `allowlist.mjs`: a source is approved only if `use_allowed` is true, `access_method` is `scrape`/`api`/`bulk_download`, `robots_decision` is `allowed`/`no_robots_txt`, `tos_decision` is `allowed`/`silent`, both check dates are recorded and at most 90 days old. `node scripts/scraper/run.mjs --list-sources` shows approved and refused sources with reasons. Today no source is approved (company terms are unread).
