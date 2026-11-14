@@ -10,7 +10,8 @@ const cities = s.cityPages.filter((p) => p.tier !== 'placeholder');
   <div id="search" data-pagefind-ignore></div>
   <p id="search-fallback" class="small">Search is not available right now. Browse the <a href="/site-map/">A to Z list of all pages</a>, or go to:
     {cities.map((c, i) => <>{i > 0 && ', '}<a href={c.path}>{c.geo.name}</a></>)}{s.nav.fees && <>{cities.length > 0 && ', '}<a href="/fees/">fee comparison</a></>}.</p>
-  <p class="small">Company profiles that are still being reviewed are not in search yet. Find every company in the <a href="/#companies">A to Z list on the home page</a>.</p>
+  <p class="small">Search finds companies and cities. You can also see every company in the <a href="/#companies">A to Z list on the home page</a>.</p>
+  <style is:inline>#search{--pagefind-ui-primary:var(--primary);--pagefind-ui-text:var(--ink);--pagefind-ui-background:var(--bg);--pagefind-ui-border:var(--ui);--pagefind-ui-tag:var(--surface)}</style>
   <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
   <script is:inline src="/pagefind/pagefind-ui.js"></script>
   <script is:inline>

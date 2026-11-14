@@ -83,9 +83,9 @@ for (const p of real) {
     if (!/noindex/.test(p.robots)) err(`${p.path}: robots meta unexpected`);
     ldTypes(p);
   }
-  // Pagefind must not index noindex pages: main has data-pagefind-body only on indexable pages.
+  // On-site search (Pagefind) covers indexable pages and listed pages (noindex, follow). Placeholders, drafts and utility pages (noindex, nofollow) stay out.
   const body = !!d.querySelector('[data-pagefind-body]');
-  if (p.noindex && body) err(`${p.path}: noindex page is in the search index (data-pagefind-body present)`);
+  if (p.noindex && body && !/^noindex,\s*follow$/i.test(p.robots)) err(`${p.path}: ${p.robots} page is in the search index (data-pagefind-body present)`);
   if (!p.noindex && !body) err(`${p.path}: indexable page is missing data-pagefind-body`);
   // Duplicate ids
   const ids = [...d.querySelectorAll('[id]')].map((e) => e.id);
