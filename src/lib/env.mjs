@@ -28,3 +28,8 @@ export function formatProblems(problems) {
   const lines = problems.map((p) => `  [${p.level === 'error' ? 'BLOCKS LAUNCH' : 'warning'}] ${p.key}: ${p.message}`);
   return `\n${bar}\nLAUNCH CONFIGURATION INCOMPLETE\n${bar}\n${lines.join('\n')}\n${bar}\n`;
 }
+
+// The public contact address for corrections and privacy questions. It is public on the site anyway, so it lives here and
+// PUBLIC_CONTACT_EMAIL only overrides it. Everything in the site and its checks reads launch settings through readSiteEnv.
+export const DEFAULT_CONTACT_EMAIL = 'brightstepsdigitalllc@gmail.com';
+export const readSiteEnv = (env = {}) => readLaunchEnv({ PUBLIC_CONTACT_EMAIL: DEFAULT_CONTACT_EMAIL, ...env });

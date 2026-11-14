@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fullReport as buildReport } from '../src/lib/analysis.mjs';
 import { evaluateSite, quality } from '../src/lib/site.mjs';
-import { readLaunchEnv } from '../src/lib/env.mjs';
+import { readSiteEnv } from '../src/lib/env.mjs';
 import { loadEnv } from 'vite';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -59,7 +59,7 @@ console.log('\nGated page types (eligible pages are built; below-bar pages are n
 for (const p of r.planned_pages) console.log(`  ${p.eligible ? 'built     ' : 'not built '} ${p.path}  ${p.count}/${p.need}  [${p.type}]`);
 console.log('\nIndexable pages:');
 for (const p of r.indexable) console.log(`  ${p.type.padEnd(16)} ${p.path}`);
-const launch = readLaunchEnv({ ...loadEnv('production', root, ''), ...process.env });
+const launch = readSiteEnv({ ...loadEnv('production', root, ''), ...process.env });
 if (launch.problems.length) { console.log('\nLaunch configuration (strict builds fail on BLOCKS LAUNCH):'); for (const p of launch.problems) console.log(`  [${p.level === 'error' ? 'BLOCKS LAUNCH' : 'warning'}] ${p.key}`); }
 if (r.noindex_listed.length) { console.log('\nNoindex,follow:'); for (const s of r.noindex_listed) console.log(`  ${s.path}: ${s.reasons.join('; ')}`); }
 if (r.skipped.length) { console.log('\nSkipped:'); for (const s of r.skipped) console.log(`  ${s.path}: ${s.reasons.join('; ')}`); }

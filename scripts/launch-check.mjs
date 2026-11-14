@@ -4,7 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadEnv } from 'vite';
 import { readData, validateData } from './lib/validate-data.mjs';
-import { readLaunchEnv } from '../src/lib/env.mjs';
+import { readSiteEnv } from '../src/lib/env.mjs';
 import { evaluateSite } from '../src/lib/site.mjs';
 import { analyze } from '../src/lib/analysis.mjs';
 import { todayIso } from '../src/lib/freshness.mjs';
@@ -18,7 +18,7 @@ const items = [];
 const add = (level, owner, title, action) => items.push({ level, owner, title, action });
 
 // 1. Launch configuration (owner decisions)
-const env = readLaunchEnv({ ...loadEnv('production', root, ''), ...process.env });
+const env = readSiteEnv({ ...loadEnv('production', root, ''), ...process.env });
 for (const p of env.problems) add(p.level === 'error' ? 'BLOCKER' : 'warning', 'owner', `${p.key}: ${p.message}`, `Set ${p.key.split(' / ')[0]} in .env or the host's environment variables.`);
 
 // 2. Data validation, strict (the launch check): errors, placeholders, unreviewed terms and robots

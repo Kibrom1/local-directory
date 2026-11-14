@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import { readLaunchEnv } from '../lib/env.mjs';
-const { formAction, contactEmail } = readLaunchEnv(import.meta.env);
+import { readSiteEnv } from '../lib/env.mjs';
+const { formAction, contactEmail } = readSiteEnv(import.meta.env);
 const formHost = formAction ? new URL(formAction).host : null;
 ---
 <Base title="Privacy" description="What this site collects: aggregate analytics, correction requests you send us, and nothing else. No accounts, no ads, no sale of data." pageType="privacy" crumbs={[{ name: 'Privacy' }]}>
