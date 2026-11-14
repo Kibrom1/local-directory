@@ -8,6 +8,7 @@ import Unknown from '../../components/Unknown.astro';
 import { getSite } from '../../lib/site.mjs';
 import { describeFee, minimumsText, freshnessBadge, feeBadge, fmtDate, unknownKind, scopeCaveat, licenseBadge, LICENSE_EXPLANATION } from '../../lib/fees.mjs';
 import { formatFee, feeText } from '../../lib/format.mjs';
+import { FEE_GUIDES } from '../../lib/feeguides.mjs';
 export function getStaticPaths() {
   return getSite().companyPages.map((p) => ({ params: { slug: p.company.slug }, props: { page: p } }));
 }
@@ -32,6 +33,8 @@ const lede = [
   types.length ? `Property types stated: ${types.map((t) => t.name.toLowerCase()).join(', ')}.` : null,
   fees.length ? 'Fees below are as published by the company, not a quote.' : 'We have no fee data recorded for this company yet.'
 ].filter(Boolean).join(' ');
+// F9: questions come only from the gaps in our own data: each fee type with no published value becomes one question to ask the company.
+const gapQuestions = fees.length ? FEE_ROWS.filter(([, k]) => !fees.some((f) => describeFee(f[k]))).map(([, k]) => `What is your ${FEE_GUIDES[k].short.toLowerCase()}, and what does it cover?`) : [];
 const correct = `/corrections/?company=${encodeURIComponent(c.name)}`;
 const jsonLd = tier === 'indexable' ? {
   '@context': 'https://schema.org', '@type': 'LocalBusiness', '@id': new URL(Astro.url.pathname, Astro.site).href + '#business',
@@ -107,6 +110,14 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
   {dropped.map((f) => (
     <p class="small">Last known: {FEE_ROWS.map(([label, k]) => feeText(f[k]) ? `${label} ${feeText(f[k])}` : null).filter(Boolean).join('; ')} (last read {fmtDate(f.last_verified_date)}). Not shown in comparisons until re-checked.</p>
   ))}
+
+  {gapQuestions.length > 0 && (
+    <>
+      <h3>Not published by this company</h3>
+      <p class="small muted">We found no figure for these on the company's own pages, so they are worth asking about directly:</p>
+      <ul>{gapQuestions.map((q) => <li>{q}</li>)}</ul>
+    </>
+  )}
 
   <h2 id="license">License</h2>
   <p><Badge kind={lb.kind} text={lb.text} /></p>
