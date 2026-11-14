@@ -61,3 +61,6 @@ Their reviews used the pre-branch build (17 indexable pages, listed tier visible
 | 6 | Keep the terms gate; launch small; keep the full license badge wording | No change to the gate (13 pages still held back); license badge unchanged. |
 
 Still needs a person: the 18 terms reads, human comparison of fee rows, scope overrides, 10X and Reafco service areas, launch settings, and recording `fields_checked` where a company's page really shows no phone, address or website.
+
+## 2026-11-14: listed tier published (owner decision)
+`publishListedTier` is now true. The 17 company profiles and 12 city pages that have enough sourced facts but whose sources' terms are not yet reviewed are published as `noindex, follow`. The terms gate (`requireReviewedTermsForIndex`) is unchanged, so none of them is indexable and none counts toward the fee comparison. To make pages indexable, review the sources in `docs/pm/terms-review-checklist.md`. To undo: set `publishListedTier` back to false in `src/lib/quality.json`.

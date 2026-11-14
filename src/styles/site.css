@@ -7,9 +7,8 @@
 --card:#ffffff;--bar:#0f4c75;--bar-bg:#e6eff6;
 --font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--serif:ui-serif,"Iowan Old Style","Palatino Linotype",Georgia,serif;
 --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s6:1.5rem;--s8:2rem;--r:.625rem;--r-sm:.375rem;--max:70rem}
-html{color-scheme:light dark}
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{color-scheme:light dark;-webkit-text-size-adjust:100%;scroll-padding-top:5rem}
 body{margin:0;font:1rem/1.6 var(--font);color:var(--ink);background:var(--bg)}
 a{color:var(--primary);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
 a:hover{text-decoration-thickness:2px}
@@ -28,7 +27,7 @@ small,.small{font-size:.875rem}
 .muted{color:var(--muted)}
 .eyebrow{font:600 .8125rem/1 var(--font);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 var(--s3)}
 /* header + nav */
-.site-header{border-bottom:1px solid var(--line);background:var(--bg)}
+.site-header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--line);background:var(--bg)}
 .hdr{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);min-height:3.5rem}
 .brand{display:inline-flex;align-items:center;gap:.6rem;font:600 1.0625rem/1.15 var(--serif);color:var(--ink);text-decoration:none}
 .brand svg{flex:none;color:var(--primary)}
@@ -148,7 +147,6 @@ fieldset{border:0;padding:0;margin:0 0 var(--s4)}
 .fee-table .v small.caveat{color:var(--ink)}
 .est{background:var(--info-bg);color:var(--info-ink);padding:var(--s3) var(--s4);border-radius:var(--r);margin-bottom:var(--s4)}
 .est input{max-width:10rem}
-.est label{margin-bottom:var(--s1)}
 .legend{display:grid;gap:var(--s1);font-size:.875rem;color:var(--muted);margin-bottom:var(--s4)}
 /* prose */
 .prose{max-width:42rem}
@@ -180,7 +178,7 @@ fieldset{border:0;padding:0;margin:0 0 var(--s4)}
 .err-list{margin:var(--s2) 0 0;padding-left:var(--s6)}
 code{font-size:.9em}
 .caveat{font-size:.875rem}
-.w-10{max-width:10rem}.mt-6{margin-top:var(--s6)}.mt-8{margin-top:var(--s8)}
+.mt-6{margin-top:var(--s6)}.mt-8{margin-top:var(--s8)}
 @media (min-width:40rem){.grid.cols-2,.grid.cols-3{grid-template-columns:1fr 1fr}.filters{grid-template-columns:repeat(3,1fr)}}
 @media (min-width:48rem){
  .site-header>.wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s6)}

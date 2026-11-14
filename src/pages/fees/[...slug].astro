@@ -41,7 +41,7 @@ const ptPages = s.planned.filter((p) => p.type === 'property-type' && p.eligible
   <div class="est js-only">
     <label for="rent">Example monthly rent per unit</label>
     <p class="hint" id="rent-h">Optional. ${EXAMPLE_RENT.toLocaleString('en-US')} is a round example, not a Columbus average or median. The first-year column adds up only the figures each company publishes (management, leasing and one renewal fee) at this rent. Illustration only, not a quote.</p>
-    <input id="rent" type="number" inputmode="numeric" min="0" step="50" value={EXAMPLE_RENT} aria-describedby="rent-h" class="w-10" />
+    <input id="rent" type="number" inputmode="numeric" min="0" step="50" value={EXAMPLE_RENT} aria-describedby="rent-h" />
   </div>
   <div class="js-only">
     <p id="compare-msg" role="status" aria-live="polite" class="small">0 selected (choose 2 or 3).</p>
