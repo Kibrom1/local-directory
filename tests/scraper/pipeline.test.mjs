@@ -10,7 +10,7 @@ import { saveSnapshot, latestSnapshot, readSnapshotBody, readIndex } from '../..
 import { proposeChanges } from '../../scripts/scraper/normalize.mjs';
 import { runScrape } from '../../scripts/scraper/runner.mjs';
 import { recordRun, healthRow, loadHistory, isStale } from '../../scripts/scraper/health.mjs';
-import { detectPageChanges, checkWatch } from '../../scripts/scraper/changes.mjs';
+import { detectPageChanges, checkWatch, clearPause } from '../../scripts/scraper/changes.mjs';
 import { validateData } from '../../scripts/lib/validate-data.mjs';
 import { baseData, clone, siteSource, schemaDir, root, company, fee, area, D } from '../helpers.mjs';
 
@@ -199,9 +199,14 @@ test('runner: a changed robots.txt pauses the source; health marks a source stal
   assert.equal(b.run.robots_changed, true); assert.equal(b.run.paused, true);
   assert.match(b.run.pause_reason, /robots\.txt changed/);
   assert.equal(b.health.failed, true); assert.equal(b.health.stale, false);
-  const c = await go(3, 'c3');
+  assert.equal(b.result.changes.length, 0, 'nothing is proposed from a run that detected a robots.txt change');
+  const refused = await go(3, 'c3');
+  assert.equal(refused.refused, true, 'a paused source is refused until a human clears the pause');
+  assert.match(refused.reasons[0], /paused/);
+  assert.equal(clearPause(path.join(base, 'snap'), 'src_pm'), true);
+  const c = await go(4, 'c4');
   assert.equal(c.health.stale, true, 'two failed runs in a row');
-  assert.match(fs.readFileSync(path.join(base, 'reports', 'scraper', 'r3', 'run-report.json'), 'utf8'), /robots_disallowed/);
+  assert.match(fs.readFileSync(path.join(base, 'reports', 'scraper', 'r4', 'run-report.json'), 'utf8'), /robots_disallowed/);
 });
 
 test('health: success rate, parse-failure increase, stale rule', () => {

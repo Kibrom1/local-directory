@@ -1,5 +1,6 @@
 // Fee display helpers for tables: split a published fee value into amount, basis, tag and plans.
 // Ranges and plans are shown as published, never merged into one number or averaged. Pure.
+import { daysBetween } from './freshness.mjs';
 const num = (x) => typeof x === 'number';
 const usd = (n) => `$${Number.isInteger(n) ? n.toLocaleString('en-US') : n.toFixed(2)}`;
 const pct = (n) => `${n}%`;
@@ -61,8 +62,8 @@ export const UNKNOWN = {
   varies: 'Varies, ask company'
 };
 
-export const monthsBetween = (date, today) => Math.max(0, Math.floor(Math.round((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${date}T00:00:00Z`)) / 86400000) / 30));
-export const ageDays = (date, today) => Math.round((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${date}T00:00:00Z`)) / 86400000);
+export const ageDays = (date, today) => daysBetween(date, today);
+export const monthsBetween = (date, today) => Math.max(0, Math.floor(ageDays(date, today) / 30));
 
 // Verified / stale badge model for a dated fact.
 export function freshnessBadge(date, today, flagDays) {

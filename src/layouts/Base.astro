@@ -46,7 +46,7 @@ if (crumbs.length && !isNoindex) {
     <link rel="icon" href="data:," />
     {robotsValue && robotsValue !== 'index, follow' && <meta name="robots" content={robotsValue} />}
     <script is:inline>document.documentElement.classList.add('js')</script>
-    {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
+    {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029')} />)}
     {gaId && <script is:inline define:vars={{ gaId }}>
       // GA4 loads after the page has loaded, with Google signals and ad personalization off (privacy page).
       window.dataLayer = window.dataLayer || [];

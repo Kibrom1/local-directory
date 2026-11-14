@@ -15,6 +15,27 @@ export class SuppressedError extends Error { constructor(url, rec) { super(`${ur
 export class OffSourceError extends Error { constructor(url, source) { super(`${url} is outside source ${source.id}`); this.name = 'OffSourceError'; } }
 export class FetchError extends Error { constructor(m, status = null) { super(m); this.name = 'FetchError'; this.status = status; } }
 
+// Reads a response body with a hard byte cap, so an oversized response is never fully buffered.
+async function readCapped(res, max, label) {
+  const tooBig = () => new FetchError(`response for ${label} exceeds ${max} bytes`);
+  const declared = Number(res.headers && res.headers.get && res.headers.get('content-length'));
+  if (Number.isFinite(declared) && declared > max) { try { await res.body?.cancel?.(); } catch { /* ignore */ } throw tooBig(); }
+  if (res.body && typeof res.body.getReader === 'function') {
+    const reader = res.body.getReader(); const chunks = []; let total = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > max) { try { await reader.cancel(); } catch { /* ignore */ } throw tooBig(); }
+      chunks.push(value);
+    }
+    return Buffer.concat(chunks).toString('utf8');
+  }
+  const text = await res.text();
+  if (Buffer.byteLength(text) > max) throw tooBig();
+  return text;
+}
+
 const hostOf = (u) => new URL(u).hostname.toLowerCase();
 const stripWww = (h) => h.replace(/^www\./, '');
 const onSource = (url, source) => { const a = stripWww(hostOf(source.url)); const b = stripWww(hostOf(url)); return a === b || b.endsWith(`.${a}`); };
@@ -85,7 +106,8 @@ export class PoliteFetcher {
     try { res = await this.request(`${origin}/robots.txt`); } catch (e) { throw new RobotsUnavailableError(origin, e.message); }
     let entry;
     if (res.status >= 300 && res.status < 400) throw new RobotsUnavailableError(origin, `redirect (HTTP ${res.status})`);
-    if (res.status === 200) { const text = (await res.text()).slice(0, 512 * 1024); entry = { parsed: parseRobots(text), text, hash: sha256(text), status: 200 }; }
+    if (res.status === 200) { let text; try { text = await readCapped(res, 512 * 1024, `${origin}/robots.txt`); } catch (e) { throw new RobotsUnavailableError(origin, e.message); }
+       entry = { parsed: parseRobots(text), text, hash: sha256(text), status: 200 }; }
     else if (res.status === 404 || res.status === 410) entry = { parsed: parseRobots(''), text: '', hash: sha256(''), status: res.status };
     else if (res.status === 401 || res.status === 403) entry = { parsed: parseRobots('User-agent: *\nDisallow: /'), text: null, hash: null, status: res.status };
     else throw new RobotsUnavailableError(origin, `HTTP ${res.status}`);
@@ -111,15 +133,16 @@ export class PoliteFetcher {
       const sup = urlSuppressed(current, this.suppression);
       if (sup) throw new SuppressedError(current, sup);
       if (!onSource(current, source)) throw new OffSourceError(current, source);
-      const cached = this.readCache(current);
-      if (cached) { this.stats.cacheHits++; return { url, finalUrl: cached.finalUrl, status: cached.status, contentType: cached.contentType, body: cached.body, fromCache: true, fetchedAt: new Date(cached.fetchedAtMs).toISOString() }; }
+      // robots.txt is checked before the cache is used, so a cached page is never served for a path robots.txt now disallows
+      // and robots changes are noticed even on cache hits (robots.txt itself is cached in memory for robotsTtlMs).
       const robots = await this.robotsFor(current);
       const u = new URL(current);
       if (!isAllowed(robots.parsed, this.agentToken, `${u.pathname}${u.search}`)) throw new RobotsDisallowedError(current);
+      const cached = this.readCache(current);
+      if (cached) { this.stats.cacheHits++; return { url, finalUrl: cached.finalUrl, status: cached.status, contentType: cached.contentType, body: cached.body, fromCache: true, fetchedAt: new Date(cached.fetchedAtMs).toISOString() }; }
       const res = await this.request(current, { delaySec: crawlDelay(robots.parsed, this.agentToken) });
-      if (res.status >= 300 && res.status < 400 && res.headers.get('location')) { current = new URL(res.headers.get('location'), current).href; continue; }
-      const text = await res.text();
-      if (Buffer.byteLength(text) > this.maxBytes) throw new FetchError(`response for ${current} exceeds ${this.maxBytes} bytes`);
+      if (res.status >= 300 && res.status < 400 && res.headers.get('location')) { try { await res.body?.cancel?.(); } catch { /* ignore */ } current = new URL(res.headers.get('location'), current).href; continue; }
+      const text = await readCapped(res, this.maxBytes, current);
       const contentType = res.headers.get('content-type') || null;
       const rec = { finalUrl: current, status: res.status, contentType, body: text, fetchedAtMs: this.now() };
       if (res.status === 200) this.writeCache(url === current ? current : url, rec);

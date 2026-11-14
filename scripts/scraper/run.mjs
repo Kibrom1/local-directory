@@ -8,6 +8,7 @@ import { readData } from '../lib/validate-data.mjs';
 import { buildAllowlist } from './allowlist.mjs';
 import { runScrape } from './runner.mjs';
 import { adapters } from './adapters/index.mjs';
+import { clearPause, getPause } from './changes.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const argv = process.argv.slice(2);
@@ -26,11 +27,18 @@ if (argv.includes('--list-sources')) {
 }
 
 const [sourceId] = opt('source');
+if (argv.includes('--clear-pause')) {
+  if (!sourceId) { console.error('Usage: --source <src_id> --clear-pause'); process.exit(2); }
+  const p = getPause(path.join(root, 'snapshots'), sourceId);
+  console.log(p ? `Cleared pause on ${sourceId} (was: ${p.reason}). Only do this after re-reading robots.txt and the terms and updating the registry dates.` : `${sourceId} was not paused.`);
+  clearPause(path.join(root, 'snapshots'), sourceId);
+  process.exit(0);
+}
 const [adapterName] = opt('adapter');
 let urls = opt('url');
 const [urlsFile] = opt('urls');
 if (urlsFile) urls = urls.concat(fs.readFileSync(urlsFile, 'utf8').split('\n').map((s) => s.trim()).filter((s) => s && !s.startsWith('#')));
-if (!sourceId || !adapterName || !urls.length) { console.error('Usage: node scripts/scraper/run.mjs --source <src_id> --adapter <name> (--url <u> ... | --urls <file>) [--tos-url <u>] [--full-source] | --list-sources'); process.exit(2); }
+if (!sourceId || !adapterName || !urls.length) { console.error('Usage: node scripts/scraper/run.mjs --source <src_id> --adapter <name> (--url <u> ... | --urls <file>) [--tos-url <u>] [--full-source] | --list-sources | --source <src_id> --clear-pause'); process.exit(2); }
 const adapter = adapters[adapterName];
 if (!adapter) { console.error(`Unknown adapter ${adapterName}. Known: ${Object.keys(adapters).join(', ')}`); process.exit(2); }
 

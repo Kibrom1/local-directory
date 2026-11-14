@@ -23,3 +23,22 @@ export function checkWatch(root, sourceId, key, hash) {
   fs.writeFileSync(f, JSON.stringify(h, null, 2) + '\n');
   return { changed: !!previous && previous.hash !== hash, first_seen: !previous, previous };
 }
+
+// Pause state: a robots.txt or ToS change pauses the source until a human re-reviews it and clears the pause.
+// The pause is persisted (the watch hash alone is overwritten on first sight, so the next run would look "unchanged").
+const pauseFile = (root, sourceId) => path.join(root, sourceId, 'paused.json');
+export function getPause(root, sourceId) {
+  try { return JSON.parse(fs.readFileSync(pauseFile(root, sourceId), 'utf8')); } catch { return null; }
+}
+export function setPause(root, sourceId, reason) {
+  const f = pauseFile(root, sourceId);
+  const existing = getPause(root, sourceId);
+  if (existing) return existing;
+  fs.mkdirSync(path.dirname(f), { recursive: true });
+  const rec = { reason, paused_at: new Date().toISOString() };
+  fs.writeFileSync(f, JSON.stringify(rec, null, 2) + '\n');
+  return rec;
+}
+export function clearPause(root, sourceId) {
+  try { fs.unlinkSync(pauseFile(root, sourceId)); return true; } catch { return false; }
+}

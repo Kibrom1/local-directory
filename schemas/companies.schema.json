@@ -13,7 +13,7 @@
       "slug": { "$ref": "common.schema.json#/definitions/slug" },
       "name": { "type": "string", "minLength": 1 },
       "legal_name": { "type": ["string", "null"], "description": "Only when stated on the company's own site." },
-      "website": { "type": ["string", "null"], "format": "uri" },
+      "website": { "type": ["string", "null"], "format": "uri", "pattern": "^https?://" },
       "phone": { "type": ["string", "null"] },
       "address": {
         "anyOf": [

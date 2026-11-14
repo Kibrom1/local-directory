@@ -1,5 +1,6 @@
 // Formatting helpers for fee values (single numbers, ranges, plans) and provenance labels.
-const usd = (n) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
+import { daysBetween } from './freshness.mjs';
+const usd = (n) => `$${Number.isInteger(n) ? n.toLocaleString('en-US') : n.toFixed(2)}`;
 const pctText = (n) => `${n}%`;
 const PERIOD = { one_time: '', monthly: ' per month', per_unit_monthly: ' per unit per month', annual: ' per year' };
 
@@ -37,12 +38,11 @@ export function formatFee(v) {
 export const feeText = (v) => { const f = formatFee(v); return f ? f.text : null; };
 
 export function monthsAgo(date, today) {
-  const d = Math.round((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${date}T00:00:00Z`)) / 86400000);
-  return Math.max(0, Math.floor(d / 30));
+  return Math.max(0, Math.floor(daysBetween(date, today) / 30));
 }
 export function provenanceLabel(source, captured, verified, today, flagDays = 180) {
   const company = source && source.source_kind === 'company_submission';
   const base = company ? `Provided by the company, ${captured}` : `Source: ${source ? source.name : 'unknown'}, captured ${captured}, last verified ${verified}`;
-  const age = Math.round((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${verified}T00:00:00Z`)) / 86400000);
+  const age = daysBetween(verified, today);
   return age > flagDays ? `${base} (last verified ${monthsAgo(verified, today)} months ago)` : base;
 }

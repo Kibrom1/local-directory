@@ -4,7 +4,7 @@
   "title": "Shared definitions",
   "definitions": {
     "date": { "type": "string", "format": "date" },
-    "url": { "type": "string", "format": "uri" },
+    "url": { "type": "string", "format": "uri", "pattern": "^https?://" },
     "sourceId": { "type": "string", "pattern": "^src_[a-z0-9_]+$" },
     "companyId": { "type": "string", "pattern": "^co_[a-z0-9_]+$" },
     "geographyId": { "type": "string", "pattern": "^geo_[a-z0-9_]+$" },

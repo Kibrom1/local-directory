@@ -74,6 +74,15 @@ export function proposeChanges({ candidates, data, source, today, schemaDir, exp
         changes.push({ op: 'add_fee_row', file: 'fee-schedules', company_id: co.id, label: co.name, after: Object.fromEntries(FEE_FIELDS.map((k) => [k, f[k]])), ...prov(url, capturedDate), flagged: true, flag_reason: 'new fee row: set verification_status only after a human compares it with the page' });
         continue;
       }
+      // A row owned by another source (a company submission, an official page) or already reviewed is never overwritten
+      // by scraped values: report the difference and leave the row for a human.
+      const ownedElsewhere = row.source_id !== source.id && row.verification_status !== 'unverified';
+      if (ownedElsewhere) {
+        const differs = FEE_FIELDS.filter((k) => f[k] !== null && !same(row[k], f[k]));
+        if (differs.length) anomalies.push({ kind: 'source_conflict', company_id: co.id, detail: `${row.id}: scraped ${differs.join(', ')} differs from the ${row.verification_status} row from ${row.source_id}; NOT changed in the proposal, review manually` });
+        continue;
+      }
+      const statusBefore = row.verification_status;
       let changedAny = false;
       for (const k of FEE_FIELDS) {
         const before = row[k]; const after = f[k];
@@ -92,7 +101,7 @@ export function proposeChanges({ candidates, data, source, today, schemaDir, exp
       }
       if (changedAny) {
         row.verification_status = 'unverified'; row.source_id = source.id; row.source_urls = [f.source_url || url]; row.captured_date = capturedDate; row.last_verified_date = capturedDate;
-        changes.push({ op: 'unverify', file: 'fee-schedules', company_id: co.id, label: co.name, field: `${row.id}.verification_status`, before: 'verified', after: 'unverified', ...prov(url, capturedDate), flagged: true, flag_reason: 'scraped changes are never auto-verified' });
+        if (statusBefore !== 'unverified') changes.push({ op: 'unverify', file: 'fee-schedules', company_id: co.id, label: co.name, field: `${row.id}.verification_status`, before: statusBefore, after: 'unverified', ...prov(url, capturedDate), flagged: true, flag_reason: 'scraped changes are never auto-verified' });
       } else if (row.source_id === source.id && row.last_verified_date !== capturedDate) {
         changes.push({ op: 'reverify', file: 'fee-schedules', company_id: co.id, label: co.name, field: `${row.id}.last_verified_date`, before: row.last_verified_date, after: capturedDate, ...prov(url, capturedDate) });
         row.last_verified_date = capturedDate;

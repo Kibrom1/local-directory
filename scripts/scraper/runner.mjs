@@ -7,7 +7,7 @@ import { PoliteFetcher, RobotsDisallowedError, RobotsUnavailableError, Suppresse
 import { saveSnapshot, sha256 } from './snapshots.mjs';
 import { sanitizeCandidate } from './sanitize.mjs';
 import { proposeChanges, renderDiffReport } from './normalize.mjs';
-import { detectPageChanges, checkWatch } from './changes.mjs';
+import { detectPageChanges, checkWatch, getPause, setPause } from './changes.mjs';
 import { recordRun, healthRow, loadHistory } from './health.mjs';
 import { validateData } from '../lib/validate-data.mjs';
 
@@ -15,6 +15,10 @@ export async function runScrape({ data, sourceId, adapter, urls, tosUrls = [], s
   const source = data.sources.find((s) => s.id === sourceId);
   const gate = evaluateSource(source, { today });
   if (!gate.allowed) return { refused: true, reasons: gate.reasons };
+
+  // A robots.txt or ToS change paused this source earlier: refuse until a human re-reviews and clears it (run.mjs --clear-pause).
+  const pause = getPause(snapshotRoot, sourceId);
+  if (pause) return { refused: true, reasons: [`source is paused since ${pause.paused_at}: ${pause.reason}. Re-review robots.txt and the terms, update the registry dates, then run with --clear-pause`] };
 
   const runStart = now().toISOString();
   const runAt = runStart;
@@ -59,6 +63,14 @@ export async function runScrape({ data, sourceId, adapter, urls, tosUrls = [], s
       const w = checkWatch(snapshotRoot, sourceId, `tos:${t}`, sha256(res.body));
       if (w.changed) { run.paused = true; run.pause_reason = `terms page changed: ${t}`; }
     } catch (e) { errors.push({ url: t, kind: 'tos_watch_failure', message: e.message }); }
+  }
+
+  // A change detected during this run means the pages above were fetched under unreviewed rules: persist the pause
+  // and drop this run's candidates so nothing is proposed from them.
+  if (run.paused) {
+    setPause(snapshotRoot, sourceId, run.pause_reason);
+    errors.push({ url: null, kind: 'paused', message: `${run.pause_reason}; ${candidates.length} candidate(s) discarded, source paused until re-reviewed` });
+    candidates.length = 0;
   }
 
   const pageChanges = detectPageChanges(snapshotRoot, sourceId, fetched, runStart);

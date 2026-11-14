@@ -5,6 +5,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
+import { daysBetween } from '../../src/lib/freshness.mjs';
+import { feeValuePopulated } from '../../src/lib/gate.mjs';
+
+export { daysBetween, feeValuePopulated };
 
 export const FILES = ['companies', 'fee-schedules', 'service-areas', 'property-types', 'geography', 'sources', 'suppression'];
 export const FEE_FIELDS = ['management_pct', 'flat_fee', 'leasing_fee', 'renewal_fee'];
@@ -18,7 +22,8 @@ export function readData(dataDir) {
 
 export const normName = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 export const domainOf = (u) => { try { return new URL(u).hostname.replace(/^www\./, '').toLowerCase(); } catch { return null; } };
-export const daysBetween = (a, b) => Math.round((Date.parse(`${b}T00:00:00Z`) - Date.parse(`${a}T00:00:00Z`)) / 86400000);
+// Same rule the scraper uses: the suppressed domain or any subdomain of it.
+export const domainMatches = (dom, suppressed) => { const d = (suppressed || '').toLowerCase().replace(/^www\./, ''); return !!dom && !!d && (dom === d || dom.endsWith(`.${d}`)); };
 
 let ajvCache = new Map();
 function getAjv(schemaDir) {
@@ -31,13 +36,6 @@ function getAjv(schemaDir) {
     ajvCache.set(schemaDir, validators);
   }
   return ajvCache.get(schemaDir);
-}
-
-// True when a fee value carries a number, a range or at least one plan.
-export function feeValuePopulated(v) {
-  if (!v) return false;
-  const num = (x) => typeof x === 'number';
-  return num(v.value) || num(v.min) || num(v.max) || (Array.isArray(v.plans) && v.plans.some((p) => num(p.value) || num(p.min) || num(p.max)));
 }
 
 function checkFeeValue(where, v, fail) {
@@ -224,7 +222,7 @@ export function validateData(data, { schemaDir, today = new Date().toISOString()
     const w = `suppression ${s.id}`;
     if (!s.company_id && !s.domain && !s.name) fail(`${w}: needs at least one of company_id, domain, name`);
     for (const c of data.companies) {
-      const hit = (s.company_id && c.id === s.company_id) || (s.domain && domainOf(c.website) === s.domain.toLowerCase().replace(/^www\./, '')) || (s.name && normName(c.name) === normName(s.name));
+      const hit = (s.company_id && c.id === s.company_id) || (s.domain && domainMatches(domainOf(c.website), s.domain)) || (s.name && normName(c.name) === normName(s.name));
       if (hit) fail(`${w}: suppressed company still present in companies.json as ${c.id}`);
     }
     if (s.company_id) {

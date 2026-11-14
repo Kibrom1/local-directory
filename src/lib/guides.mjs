@@ -14,6 +14,8 @@ const ISO = /^\d{4}-\d{2}-\d{2}$/;
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const validDate = (d) => typeof d === 'string' && ISO.test(d) && !Number.isNaN(Date.parse(`${d}T00:00:00Z`)) && new Date(`${d}T00:00:00Z`).toISOString().slice(0, 10) === d;
 
+const escAttr = (v) => String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
 export function slugify(text) {
   return String(text).toLowerCase().replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'section';
 }
@@ -65,7 +67,10 @@ export function renderMarkdown(body) {
       link({ href, title, tokens }) {
         const inner = this.parser.parseInline(tokens);
         const external = /^https?:\/\//i.test(href);
-        return `<a href="${href}"${title ? ` title="${title}"` : ''}${external ? ' rel="nofollow noopener"' : ''}>${inner}</a>`;
+        // Only http(s), mailto, site-relative and in-page links are allowed; anything else (javascript:, data:) is rendered as plain text.
+        const safe = external || /^mailto:/i.test(href) || /^(\/(?!\/)|#|\.\.?\/)/.test(href);
+        if (!safe) return inner;
+        return `<a href="${escAttr(href)}"${title ? ` title="${escAttr(title)}"` : ''}${external ? ' rel="nofollow noopener"' : ''}>${inner}</a>`;
       },
       // Raw HTML in guides is escaped, not passed through.
       html({ text }) { return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }

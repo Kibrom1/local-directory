@@ -18,8 +18,8 @@ const otherCities = s.cityPages.filter((p) => p.geo.id !== geo.id && p.tier !== 
 const feeGuides = s.planned.filter((p) => p.type === 'fee-guide' && p.eligible);
 const jsonLd = tier === 'indexable' ? {
   '@context': 'https://schema.org', '@type': 'ItemList', name: `Property management companies serving ${geo.name}, ${geo.state}`,
-  numberOfItems: all.length,
-  itemListElement: all.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(p.path, Astro.site).href, name: p.company.name }))
+  numberOfItems: companies.length,
+  itemListElement: companies.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(p.path, Astro.site).href, name: p.company.name }))
 } : undefined;
 ---
 <Base title={`Property management companies in ${geo.name}, ${geo.state}`} description={`${all.length} property management ${all.length === 1 ? 'company serves' : 'companies serve'} ${geo.name}, ${geo.state}. ${withFees} publish fees. Each fact shows its source and date.`} robots={robots} jsonLd={jsonLd} pageType="city" crumbs={[{ name: 'Cities', href: '/#cities' }, { name: geo.name }]}>
