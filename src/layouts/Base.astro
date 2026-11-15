@@ -91,7 +91,7 @@ if (crumbs.length && !isNoindex) {
         </nav>
       </div>
     )}
-    <main id="main" class="wrap" {...(isNoindex && robotsValue !== 'noindex, follow' ? {} : { 'data-pagefind-body': '', 'data-pagefind-filter': `page_type:${pageType}` })}>
+    <main id="main" class="wrap" {...(isNoindex && robotsValue !== 'noindex, follow' ? {} : { 'data-pagefind-body': '', 'data-pagefind-filter': `section:${pageType}` })}>
       <slot />
     </main>
     <footer class="site-footer" data-pagefind-ignore>
