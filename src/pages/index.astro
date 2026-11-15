@@ -62,7 +62,7 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: SIT
   <h2 id="cities">Browse by city</h2>
   {cities.length ? (
     <>
-    <div class="grid cols-3">{cities.filter((p) => p.withFees > 0).map((p) => { const n = p.companies.length + p.listedCompanies.length; return (
+    <div class="grid cols-3 city-grid">{cities.filter((p) => p.withFees > 0).map((p) => { const n = p.companies.length + p.listedCompanies.length; return (
       <a class="card city-card" href={p.path}><h3>{p.geo.name}, {p.geo.state}</h3><span class="n">{n}</span> {n === 1 ? 'company serves' : 'companies serve'} it, {p.withFees} {p.withFees === 1 ? 'publishes' : 'publish'} fees</a>
     ); })}</div>
     {cities.some((p) => p.withFees === 0) && <><p class="mt-6">Cities where we have not yet read any published fees:</p><ul class="pill-list">{cities.filter((p) => p.withFees === 0).map((p) => <li><a href={p.path}>{p.geo.name} ({p.companies.length + p.listedCompanies.length})</a></li>)}</ul></>}

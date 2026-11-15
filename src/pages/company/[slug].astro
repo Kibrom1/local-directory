@@ -83,7 +83,7 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
                   {FEE_ROWS.map(([label, k]) => (
                     <tr>
                       <th scope="row">{label}</th>
-                      <td><span class="lbl">Amount and basis</span><FeeValue value={f[k]} showNotes />{!describeFee(f[k]) && <span class="src">Checked {fmtDate(f.last_verified_date)}: not on the pages we read.</span>}</td>
+                      <td><span class="lbl">Amount and basis</span>{describeFee(f[k]) ? <FeeValue value={f[k]} showNotes /> : <span class="v"><FeeValue value={f[k]} showNotes /><span class="src">Checked {fmtDate(f.last_verified_date)}: not on the pages we read.</span></span>}</td>
                     </tr>
                   ))}
                   <tr>

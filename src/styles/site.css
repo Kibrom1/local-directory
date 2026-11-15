@@ -42,7 +42,7 @@ small,.small{font-size:.875rem}
 .nav-list a:hover{text-decoration:underline}
 .site-nav{padding-bottom:var(--s2)}
 /* breadcrumbs */
-.crumbs{font-size:.875rem;margin:var(--s3) 0 0}
+.crumbs{font-size:.875rem;margin:var(--s3) 0 0}.crumbs a,.toc a{display:inline-block;padding-block:.35rem}
 .crumbs ol{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:var(--s1)}
 .crumbs li+li::before{content:"/";margin-right:.25rem;color:var(--muted)}
 /* banners */
@@ -67,7 +67,7 @@ small,.small{font-size:.875rem}
 .finder{display:grid;gap:var(--s3);background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:var(--s4);margin-top:var(--s6);max-width:46rem}
 @media (min-width:40rem){.finder{grid-template-columns:1fr 1fr auto;align-items:end}}
 .finder .field{margin:0}.finder .btn{margin-top:.75rem}
-.city-card{display:block;min-height:6.5rem;text-decoration:none;color:inherit}
+.city-grid{grid-template-columns:1fr 1fr}.city-card{display:block;min-height:6.5rem;text-decoration:none;color:inherit}
 .city-card h3{margin:0 0 var(--s1)}
 .city-card .n{font:600 1.75rem/1 var(--serif);color:var(--primary);display:block}
 .coverage{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:var(--s4) 1.25rem;margin:var(--s6) 0}
@@ -191,8 +191,7 @@ code{font-size:.9em}
  .fee-table th,.fee-table td,.fee-table th[scope=row]{display:table-cell;padding:.85rem .7rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
  .fee-table .lbl{display:none}
  .fee-table .v{text-align:left}
- .fee-table td.how .lbl{display:none}
- .fee-table td.how{display:table-cell;min-width:10rem}.fee-table th[scope=row]{max-width:14rem}
+ .fee-table td.how{display:table-cell;min-width:10rem}.fee-table th[scope=row]{max-width:14rem;overflow-wrap:anywhere}
  .fee-table thead th{background:var(--surface);border-bottom:1px solid var(--ui);font-size:.8125rem;font-weight:600;color:var(--muted)}
  .fee-table thead tr.grp th{text-align:center;color:var(--ink);letter-spacing:.03em;text-transform:uppercase;font-size:.6875rem;border-bottom:1px solid var(--line)}
  .fee-table .sep{border-left:1px solid var(--line)}

@@ -32,7 +32,6 @@ const types = c.property_types_served.map((x) => s.ptById.get(x.property_type_id
     ); })}
   </div>
   )}
-  {oneType && <p class="small muted">Fees shown are for {oneType}.</p>}
   {newest && <SourceNote sourceId={newest.source_id} captured={newest.captured_date} verified={newest.last_verified_date} urls={[]} who={c.name} />}
   {fb.kind === 'stale' && newest && <p class="small">{fb.text}. They may have changed. Check the company site before relying on them.</p>}
   {types.length > 0 && <p class="small muted">Property types: {types.map((t) => t.name).join(', ')}</p>}
