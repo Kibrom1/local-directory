@@ -31,19 +31,20 @@ const ptPages = s.planned.filter((p) => p.type === 'property-type' && p.eligible
     Fee amount never changes a company's position. <a href="/methodology/">How we collect and rank</a>
   </Banner>
 
+  <details><summary>How to read this table</summary>
   <div class="legend" role="group" aria-label="How to read this table">
     <span><span class="unk">Not published</span> We read the company's page and it shows no figure. The company may still charge it. Ask them.</span>
     <span><span class="range-tag">range</span> The company publishes a range, shown as published. We do not average it.</span>
     <span><span class="range-tag">plans</span> The company publishes several plans. Open the plans list to see each one.</span>
     <span><strong>Basis</strong> is shown with every number: percent of rent, percent of one month's rent, or flat dollars.</span>
-  </div>
+  </div></details>
 
   <div class="est js-only">
-    <label for="rent">Example monthly rent per unit</label>
-    <p class="hint" id="rent-h">Optional. ${EXAMPLE_RENT.toLocaleString('en-US')} is a round example, not a Columbus average or median. The first-year column adds up only the figures each company publishes (management, leasing and one renewal fee) at this rent. Illustration only, not a quote.</p>
+    <label for="rent">Example monthly rent per unit ($ per month)</label>
+    <p class="hint" id="rent-h">Optional. ${EXAMPLE_RENT.toLocaleString('en-US')} is a round example, not a Columbus average. Illustration only, not a quote.</p>
     <input id="rent" type="number" inputmode="numeric" min="0" step="50" value={EXAMPLE_RENT} aria-describedby="rent-h" />
   </div>
-  <div class="js-only">
+  <div class="js-only cmp">
     <p id="compare-msg" role="status" aria-live="polite" class="small">0 selected (choose 2 or 3).</p>
     <p><button class="btn" id="show-selected" type="button" disabled aria-disabled="true">Compare selected</button> <button class="btn secondary" id="show-all" type="button" hidden>Show all</button></p>
   </div>

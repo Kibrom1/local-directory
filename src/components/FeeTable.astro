@@ -15,14 +15,6 @@ const site = getSite();
 const gloss = (k) => { const g = FEE_GUIDES[k]; const pg = site.planned.find((p) => p.type === 'fee-guide' && p.fee_type === k && p.eligible); return { text: g.definition, href: pg ? pg.path : null }; };
 const hostOf = (u) => { try { return new URL(u).host.replace(/^www\./, ''); } catch { return null; } };
 const COLS = [['management_pct', 'Management %'], ['flat_fee', 'Flat fee'], ['leasing_fee', 'Leasing fee'], ['renewal_fee', 'Renewal fee']];
-// Range bar for the management percent: 0 to 12 percent scale, decorative (the number beside it is the fact).
-const SCALE_MAX = 12;
-const pctSpan = (v) => {
-  if (!v || v.type !== 'pct_of_rent') return null;
-  const n = [v.value, v.min, v.max, ...(v.plans || []).flatMap((p) => [p.value, p.min, p.max])].filter((x) => typeof x === 'number');
-  return n.length ? [Math.min(...n), Math.max(...n)] : null;
-};
-const bar = (v) => { const sp = pctSpan(v); if (!sp) return null; const lo = Math.min(sp[0], SCALE_MAX), hi = Math.min(sp[1], SCALE_MAX); return { left: (lo / SCALE_MAX) * 100, width: Math.max(((hi - lo) / SCALE_MAX) * 100, 4) }; };
 ---
 <div class="fee-wrap" tabindex="0" role="region" aria-label={caption}>
   <table class="fee-table sticky" id="fee-table">
@@ -36,13 +28,13 @@ const bar = (v) => { const sp = pctSpan(v); if (!sp) return null; const lo = Mat
       </tr>
       <tr>
         <th scope="col">Company</th>
-        <th scope="col">Management %<br /><small class="muted">basis as published</small><details><summary>What is this?</summary><p class="small">{gloss('management_pct').text}{gloss('management_pct').href && <> <a href={gloss('management_pct').href}>Read the guide</a></>}</p></details></th>
-        <th scope="col">Flat fee<br /><small class="muted">period as published</small><details><summary>What is this?</summary><p class="small">{gloss('flat_fee').text}{gloss('flat_fee').href && <> <a href={gloss('flat_fee').href}>Read the guide</a></>}</p></details></th>
+        <th scope="col">Management %<details><summary>What is this?</summary><p class="small">{gloss('management_pct').text}{gloss('management_pct').href && <> <a href={gloss('management_pct').href}>Read the guide</a></>}</p></details></th>
+        <th scope="col">Flat fee<details><summary>What is this?</summary><p class="small">{gloss('flat_fee').text}{gloss('flat_fee').href && <> <a href={gloss('flat_fee').href}>Read the guide</a></>}</p></details></th>
         <th scope="col">Leasing fee<details><summary>What is this?</summary><p class="small">{gloss('leasing_fee').text}{gloss('leasing_fee').href && <> <a href={gloss('leasing_fee').href}>Read the guide</a></>}</p></details></th>
         <th scope="col">Renewal fee<details><summary>What is this?</summary><p class="small">{gloss('renewal_fee').text}{gloss('renewal_fee').href && <> <a href={gloss('renewal_fee').href}>Read the guide</a></>}</p></details></th>
         <th scope="col">Minimums</th>
-        <th scope="col">First-year cost, an illustration<br /><small class="muted">from published figures, at ${EXAMPLE_RENT.toLocaleString('en-US')} example rent</small></th>
-        <th scope="col">How we checked it, and source</th>
+        <th scope="col">First-year cost, an illustration<br /><small class="muted">at ${EXAMPLE_RENT.toLocaleString('en-US')} rent</small></th>
+        <th scope="col">Source and check</th>
       </tr>
     </thead>
     <tbody>
@@ -55,8 +47,8 @@ const bar = (v) => { const sp = pctSpan(v); if (!sp) return null; const lo = Mat
             {r.company.website && hostOf(r.company.website) && <><br /><small><a href={r.company.website} rel="nofollow noopener">{hostOf(r.company.website)}<span class="sr"> (company website for {r.company.name})</span></a></small></>}
             {r.caveat && <><br /><small class="caveat"><strong>Note:</strong> {r.caveat}</small></>}
           </th>
-          {COLS.map(([k, label], i) => { const b = k === 'management_pct' ? bar(r.fee[k]) : null; return (
-            <td class={i === 0 || i === 2 ? 'sep' : undefined}><span class="lbl">{label}</span><FeeValue value={r.fee[k]} />{b && <span class="scale" aria-hidden="true"><i style={`left:${b.left.toFixed(1)}%;width:${b.width.toFixed(1)}%`}></i></span>}</td>
+          {COLS.map(([k, label], i) => { return (
+            <td class={i === 0 || i === 2 ? 'sep' : undefined}><span class="lbl">{label}</span><FeeValue value={r.fee[k]} /></td>
           ); })}
           <td class="sep"><span class="lbl">Minimums</span><span class="v">{r.minimums ? r.minimums : <Unknown />}</span></td>
           <td class="sep"><span class="lbl">First-year cost</span><span class="v">{r.year ? <><span data-year={JSON.stringify(r.year)}>{yearText(r.year, EXAMPLE_RENT)}</span><small class="muted"><br />{yearNotes(r.year)}</small></> : (r.revenue ? 'Not converted: fee is based on booking revenue, not rent' : 'Not enough published data: no management percent or monthly flat fee')}</span></td>

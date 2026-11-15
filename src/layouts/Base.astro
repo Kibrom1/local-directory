@@ -91,7 +91,7 @@ if (crumbs.length && !isNoindex) {
         </nav>
       </div>
     )}
-    <main id="main" class="wrap" {...(isNoindex && robotsValue !== 'noindex, follow' ? {} : { 'data-pagefind-body': '', 'data-pagefind-filter': `page_type:${pageType}` })}>
+    <main id="main" class="wrap" {...(isNoindex && robotsValue !== 'noindex, follow' ? {} : { 'data-pagefind-body': '', 'data-pagefind-filter': `section:${pageType}` })}>
       <slot />
     </main>
     <footer class="site-footer" data-pagefind-ignore>
@@ -99,7 +99,7 @@ if (crumbs.length && !isNoindex) {
         <div class="cols">
           <div>
             <p><strong>{SITE_NAME}</strong></p>
-            <p>Free and independent. No paid listings, no ads, no accounts. Facts come from public sources, each with a source and a date. Unknown values are left blank, never guessed.</p>
+            <p>Free and independent. No paid listings, no ads, no accounts. Facts come from public sources, each with a source and a date. Unknown values show as &ldquo;Not published&rdquo;, never guessed.</p>
           </div>
           <div>
             <h2>Trust</h2>
@@ -113,6 +113,8 @@ if (crumbs.length && !isNoindex) {
           <div>
             <h2>Explore</h2>
             <ul>
+              {s.nav.fees && <li><a href="/fees/">Compare fees</a></li>}
+              {s.nav.feeGuides && <li><a href="/fee-guide/">Fee guides</a></li>}
               <li><a href="/about/">About this site</a></li>
               <li><a href="/site-map/">All pages, A to Z</a></li>
             </ul>

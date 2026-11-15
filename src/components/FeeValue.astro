@@ -8,8 +8,8 @@ const d = describeFee(value);
 ---
 {d ? (
   <span class="v">
-    <span class="fee-val">{d.main}</span>{d.tag && <span class="range-tag">{d.tag}</span>}{d.basis && <> <small>{d.basis}</small></>}
-    {d.minimum && <><br /><small>{d.minimum}</small></>}
+    <span class="fee-val">{d.main}</span>{d.tag && <> <span class="range-tag">{d.tag}</span></>}{d.basis && <> <small>{d.basis}</small></>}
+    {d.minimum && <><small>{d.minimum}</small></>}
     {d.plans.length > 0 && (
       <details><summary>{d.tag === 'range' ? 'Plans' : 'Show plans'}</summary>
         <ul class="small">{d.plans.map((p) => <li>{p.label}: {p.text}{p.extra ? ` (${p.extra})` : ''}</li>)}</ul>
