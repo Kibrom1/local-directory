@@ -78,30 +78,28 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
             <div class="fee-wrap">
               <table class="fee-table">
                 <caption class="sr">Published fees for {c.name}{pt ? `, ${pt}` : ''}</caption>
-                <thead><tr><th scope="col">Item</th><th scope="col">Amount and basis</th><th scope="col">Source and date</th></tr></thead>
+                <thead><tr><th scope="col">Item</th><th scope="col">Amount and basis</th></tr></thead>
                 <tbody>
                   {FEE_ROWS.map(([label, k]) => (
                     <tr>
                       <th scope="row">{label}</th>
-                      <td><span class="lbl">Amount and basis</span><FeeValue value={f[k]} showNotes /></td>
-                      <td><span class="lbl">Source and date</span><span class="v">{describeFee(f[k]) ? <SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} who={c.name} /> : <span class="src">Checked {f.last_verified_date}: not on the pages we read. <a href={f.source_urls[0]} rel="nofollow noopener">Open source</a></span>}</span></td>
+                      <td><span class="lbl">Amount and basis</span><FeeValue value={f[k]} showNotes />{!describeFee(f[k]) && <span class="src">Checked {fmtDate(f.last_verified_date)}: not on the pages we read.</span>}</td>
                     </tr>
                   ))}
                   <tr>
                     <th scope="row">Minimums</th>
                     <td><span class="lbl">Amount and basis</span><span class="v">{minimumsText(f.minimums) ?? <Unknown />}</span></td>
-                    <td><span class="lbl">Source and date</span><span class="v"><SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} who={c.name} /></span></td>
                   </tr>
                   {(f.other_fees || []).map((o) => (
                     <tr>
                       <th scope="row">{o.label || o.kind}</th>
                       <td><span class="lbl">Amount and basis</span><FeeValue value={o.amount} /></td>
-                      <td><span class="lbl">Source and date</span><span class="v"><SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} who={c.name} /></span></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+            <SourceNote sourceId={f.source_id} captured={f.captured_date} verified={f.last_verified_date} urls={f.source_urls} who={c.name} prefix="All rows above." />
             {f.notes && <p class="small muted">Note: {f.notes}</p>}
           </section>
         );

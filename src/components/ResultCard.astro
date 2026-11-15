@@ -14,6 +14,8 @@ const rows = page.verifiedFeeRows;
 const pick = (k) => { for (const f of rows) if (describeFee(f[k])) return f; return null; };
 const newest = [...rows].sort((a, b) => b.last_verified_date.localeCompare(a.last_verified_date))[0];
 const fb = newest ? feeBadge(newest, s.today, s.quality.freshness.displayFlagDays) : freshnessBadge(c.last_verified_date, s.today, s.quality.freshness.displayFlagDays);
+const factTypes = new Set(FACTS.map(([k]) => pick(k)).filter(Boolean).map((f) => f.property_type));
+const oneType = factTypes.size === 1 && [...factTypes][0] ? s.ptById.get([...factTypes][0]).name : null;
 const lb = licenseBadge(c.license, s.today);
 const host = c.website ? new URL(c.website).host.replace(/^www\./, '') : null;
 const types = c.property_types_served.map((x) => s.ptById.get(x.property_type_id)).filter(Boolean);
@@ -26,10 +28,11 @@ const types = c.property_types_served.map((x) => s.ptById.get(x.property_type_id
   ) : (
   <div class="facts">
     {FACTS.map(([k, label]) => { const f = pick(k); return (
-      <div><span>{label}</span><span>{f ? <><FeeValue value={f[k]} />{f.property_type && <small class="muted"> ({s.ptById.get(f.property_type).name})</small>}</> : <span class="unk">{rows.length ? 'Not published' : 'Not checked yet'}</span>}</span></div>
+      <div><span>{label}</span><span>{f ? <><FeeValue value={f[k]} />{f.property_type && !oneType && <small class="muted"> ({s.ptById.get(f.property_type).name})</small>}</> : <span class="unk">{rows.length ? 'Not published' : 'Not checked yet'}</span>}</span></div>
     ); })}
   </div>
   )}
+  {oneType && <p class="small muted">Fees shown are for {oneType}.</p>}
   {newest && <SourceNote sourceId={newest.source_id} captured={newest.captured_date} verified={newest.last_verified_date} urls={[]} who={c.name} />}
   {fb.kind === 'stale' && newest && <p class="small">{fb.text}. They may have changed. Check the company site before relying on them.</p>}
   {types.length > 0 && <p class="small muted">Property types: {types.map((t) => t.name).join(', ')}</p>}

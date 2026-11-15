@@ -168,7 +168,7 @@ fieldset{border:0;padding:0;margin:0 0 var(--s4)}
 [hidden]{display:none!important}
 .js-only{display:none}
 .js .js-only{display:block}
-.js .js-only.inline{display:inline-block}
+.js .js-only.inline{display:inline-block}@media (max-width:47.9rem){.js .cmp,.js .inline{display:none}}
 .pill-list{list-style:none;padding:0;margin:0 0 var(--s4);display:flex;flex-wrap:wrap;gap:var(--s2)}
 .pill-list a{display:inline-flex;align-items:center;min-height:2.75rem;padding:0 var(--s3)}
 .err-list{margin:var(--s2) 0 0;padding-left:var(--s6)}
@@ -203,7 +203,6 @@ code{font-size:.9em}
  .fee-table.sticky th[scope=row],.fee-table.sticky thead th:first-child{position:sticky;left:0;background:var(--card);z-index:1;box-shadow:1px 0 0 var(--line)}
  .fee-table.sticky thead th:first-child{background:var(--surface)}
 }
-@media (min-width:64rem){.two-col{display:grid;grid-template-columns:minmax(0,1fr) 18rem;gap:var(--s8);align-items:start}}
 @media print{.site-header,.site-footer,.filters,.js-only{display:none}.fee-table tr.grp{display:none}}
 /* Dark theme: follows the system setting. Every text pair is checked by npm run check:contrast. */
 @media (prefers-color-scheme:dark){
