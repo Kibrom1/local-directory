@@ -13,6 +13,7 @@ const { rows, caption, compare = false, flagDays } = Astro.props;
 const site = getSite();
 // F19: the one-sentence definition from the fee guide wording, as a keyboard-operable disclosure (no hover tooltip). Links to the guide only when it is published.
 const gloss = (k) => { const g = FEE_GUIDES[k]; const pg = site.planned.find((p) => p.type === 'fee-guide' && p.fee_type === k && p.eligible); return { text: g.definition, href: pg ? pg.path : null }; };
+const hostOf = (u) => { try { return new URL(u).host.replace(/^www\./, ''); } catch { return null; } };
 const COLS = [['management_pct', 'Management %'], ['flat_fee', 'Flat fee'], ['leasing_fee', 'Leasing fee'], ['renewal_fee', 'Renewal fee']];
 // Range bar for the management percent: 0 to 12 percent scale, decorative (the number beside it is the fact).
 const SCALE_MAX = 12;
@@ -51,6 +52,7 @@ const bar = (v) => { const sp = pctSpan(v); if (!sp) return null; const lo = Mat
             {compare && <input class="js-only inline" type="checkbox" aria-label={`Select ${r.company.name}${r.ptName ? ` (${r.ptName})` : ''} to compare`} />}
             {r.path ? <a href={r.path}>{r.company.name}</a> : r.company.name}
             <br /><small class="muted">{r.ptName ? `Fees for: ${r.ptName}` : 'No property type stated for these fees'}</small>
+            {r.company.website && hostOf(r.company.website) && <><br /><small><a href={r.company.website} rel="nofollow noopener">{hostOf(r.company.website)}<span class="sr"> (company website for {r.company.name})</span></a></small></>}
             {r.caveat && <><br /><small class="caveat"><strong>Note:</strong> {r.caveat}</small></>}
           </th>
           {COLS.map(([k, label], i) => { const b = k === 'management_pct' ? bar(r.fee[k]) : null; return (

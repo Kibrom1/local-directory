@@ -50,6 +50,7 @@ const toc = [['fees', 'Fees'], ['license', 'License'], ['areas', 'Service areas'
   <div class="meta spaced">
     <Badge kind={lb.kind} text={lb.text} />
     <Badge kind={fb.kind} text={newest ? fb.text : `Listing ${fb.text.toLowerCase()}`} />
+    {c.website && <a href={c.website} rel="nofollow noopener">Visit company website<span class="sr"> for {c.name}</span> ({host})</a>}
     <a href={correct}>Correct or remove this listing</a>
   </div>
   {staleFee.length > 0 && <Banner kind="warn" lead={`${feeBadge(staleFee[0], s.today, flag).text}.`}>They may have changed. Check the company site before relying on them.</Banner>}
