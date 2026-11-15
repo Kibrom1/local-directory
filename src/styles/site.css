@@ -4,7 +4,7 @@
 :root{--ink:#16202a;--muted:#4b535d;--bg:#fbfaf7;--surface:#f3f0e9;--line:#e2ddd2;--ui:#6b6f76;--primary:#0f4c75;--focus:#0b3d91;
 --warn-bg:#fff1cc;--warn-ink:#5a3b00;--warn-line:#8a5a00;--ok-bg:#e3f2e9;--ok-ink:#0d5530;--bad-bg:#fbe9e6;--bad-ink:#9b1c10;--info-bg:#e6eff6;--info-ink:#16202a;
 --unk-bg:#efece4;--foot-bg:#14202b;--foot-ink:#e8ebef;--foot-link:#ffffff;--on-primary:#ffffff;--primary-press:#0a3a5a;
---card:#ffffff;--bar:#0f4c75;--bar-bg:#e6eff6;
+--card:#ffffff;
 --font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--serif:ui-serif,"Iowan Old Style","Palatino Linotype",Georgia,serif;
 --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s6:1.5rem;--s8:2rem;--r:.625rem;--r-sm:.375rem;--max:70rem}
 *{box-sizing:border-box}
@@ -31,7 +31,7 @@ small,.small{font-size:.875rem}
 .hdr{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);min-height:3.5rem}
 .brand{display:inline-flex;align-items:center;gap:.6rem;font:600 1.0625rem/1.15 var(--serif);color:var(--ink);text-decoration:none}
 .brand svg{flex:none;color:var(--primary)}
-.brand small{display:block;font:500 .75rem/1.2 var(--font);color:var(--muted)}
+.brand small{display:none;font:500 .75rem/1.2 var(--font);color:var(--muted)}
 .nav-toggle{display:none;min-height:2.75rem;min-width:2.75rem;padding:0 var(--s3);background:var(--bg);color:var(--ink);border:1px solid var(--ui);border-radius:var(--r-sm);font:inherit;cursor:pointer;align-items:center;justify-content:center}
 .js .nav-toggle{display:inline-flex}
 .nav-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
@@ -66,7 +66,7 @@ small,.small{font-size:.875rem}
 .trust-row svg{color:var(--ok-ink);flex:none}
 .finder{display:grid;gap:var(--s3);background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:var(--s4);margin-top:var(--s6);max-width:46rem}
 @media (min-width:40rem){.finder{grid-template-columns:1fr 1fr auto;align-items:end}}
-.finder .field{margin:0}
+.finder .field{margin:0}.finder .btn{margin-top:.75rem}
 .city-card{display:block;min-height:6.5rem;text-decoration:none;color:inherit}
 .city-card h3{margin:0 0 var(--s1)}
 .city-card .n{font:600 1.75rem/1 var(--serif);color:var(--primary);display:block}
@@ -108,8 +108,6 @@ fieldset{border:0;padding:0;margin:0 0 var(--s4)}
 .fee-val{font-variant-numeric:tabular-nums;font-size:1.125rem;font-weight:650;letter-spacing:-.01em;white-space:nowrap}
 .v small{display:block;font-size:.8125rem;color:var(--muted);line-height:1.35;margin-top:.1rem}
 .range-tag{font:600 .6875rem/1 var(--font);text-transform:uppercase;color:var(--muted);border:1px solid var(--ui);border-radius:99rem;padding:.2rem .4rem;margin-left:.3rem}
-.scale{display:block;position:relative;height:.5rem;background:var(--bar-bg);border-radius:99rem;margin:.4rem 0 .15rem;width:100%;max-width:7.5rem}
-.scale i{position:absolute;top:0;bottom:0;background:var(--bar);border-radius:99rem;min-width:.5rem}
 .fee-table details summary{cursor:pointer;color:var(--primary);min-height:1.5rem;font-size:.875rem;margin-top:.2rem}
 .fee-table details ul,.fee-table details p{margin:var(--s2) 0 0;padding:0;list-style:none;color:var(--muted)}
 .fee-table details li{border-top:1px solid var(--line);padding:.15rem 0}
@@ -130,7 +128,7 @@ fieldset{border:0;padding:0;margin:0 0 var(--s4)}
 .snap dd{margin:0;font-weight:600}.snap .k{display:block;font-size:.8125rem;color:var(--muted);margin-bottom:.15rem}
 @media (min-width:48rem){.snap{grid-template-columns:repeat(4,1fr)}}
 /* fee table: cards on mobile, a real table from 48rem */
-.fee-wrap{margin:0 0 var(--s4)}
+.fee-wrap{margin:0 0 var(--s4);position:relative}
 .fee-table{width:100%;border-collapse:collapse}
 .fee-table caption{text-align:left;font-weight:600;padding:var(--s2) 0}
 .fee-table thead{position:absolute;left:-9999px}
@@ -154,7 +152,7 @@ fieldset{border:0;padding:0;margin:0 0 var(--s4)}
 .sources li{margin-bottom:var(--s2)}
 .sources .src{display:inline}
 /* footer */
-.site-footer{background:var(--foot-bg);color:var(--foot-ink);margin-top:4rem;padding:var(--s8) 0;font-size:.9375rem}
+.site-footer{border-top:1px solid var(--line);background:var(--foot-bg);color:var(--foot-ink);margin-top:4rem;padding:var(--s8) 0;font-size:.9375rem}
 .site-footer a{color:var(--foot-link)}
 .site-footer a:focus-visible{outline-color:var(--foot-link)}
 .site-footer .cols{display:grid;gap:var(--s6)}
@@ -177,7 +175,7 @@ fieldset{border:0;padding:0;margin:0 0 var(--s4)}
 code{font-size:.9em}
 .caveat{font-size:.875rem}
 .mt-6{margin-top:var(--s6)}.mt-8{margin-top:var(--s8)}
-@media (min-width:40rem){.grid.cols-2,.grid.cols-3{grid-template-columns:1fr 1fr}.filters{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:40rem){.brand small{display:block}.grid.cols-2,.grid.cols-3{grid-template-columns:1fr 1fr}.filters{grid-template-columns:repeat(3,1fr)}}
 @media (min-width:48rem){
  .site-header>.wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s6)}
  .nav-toggle,.js .nav-toggle{display:none}
@@ -190,11 +188,11 @@ code{font-size:.9em}
  .fee-table{border-collapse:separate;border-spacing:0;min-width:62rem}
  .fee-table thead{position:static}
  .fee-table tr{display:table-row;border:0;border-radius:0;background:none;padding:0;margin:0}
- .fee-table th,.fee-table td,.fee-table th[scope=row]{display:table-cell;padding:.85rem .9rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+ .fee-table th,.fee-table td,.fee-table th[scope=row]{display:table-cell;padding:.85rem .7rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
  .fee-table .lbl{display:none}
  .fee-table .v{text-align:left}
  .fee-table td.how .lbl{display:none}
- .fee-table td.how{display:table-cell;min-width:15rem}
+ .fee-table td.how{display:table-cell;min-width:10rem}.fee-table th[scope=row]{max-width:14rem}
  .fee-table thead th{background:var(--surface);border-bottom:1px solid var(--ui);font-size:.8125rem;font-weight:600;color:var(--muted)}
  .fee-table thead tr.grp th{text-align:center;color:var(--ink);letter-spacing:.03em;text-transform:uppercase;font-size:.6875rem;border-bottom:1px solid var(--line)}
  .fee-table .sep{border-left:1px solid var(--line)}
@@ -212,5 +210,5 @@ code{font-size:.9em}
 :root{--ink:#e9eef3;--muted:#b4bec8;--bg:#0f171e;--surface:#16212b;--line:#2a3846;--ui:#8e9aa6;--primary:#8ec5f2;--focus:#ffd479;
 --warn-bg:#33270c;--warn-ink:#ffd98a;--warn-line:#d9a441;--ok-bg:#12301f;--ok-ink:#8fe0b1;--bad-bg:#3a1a17;--bad-ink:#ffb3a8;--info-bg:#17303f;--info-ink:#e9eef3;
 --unk-bg:#1f2b36;--foot-bg:#0a1117;--foot-ink:#c9d2da;--foot-link:#ffffff;--on-primary:#08202f;--primary-press:#b5d9f7;
---card:#1a2631;--bar:#8ec5f2;--bar-bg:#17303f}
+--card:#1a2631}
 }

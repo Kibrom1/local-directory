@@ -62,7 +62,7 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: SIT
   <h2 id="cities">Browse by city</h2>
   {cities.length ? (
     <div class="grid cols-3">{cities.map((p) => { const n = p.companies.length + p.listedCompanies.length; return (
-      <a class="card city-card" href={p.path}><h3>{p.geo.name}, {p.geo.state}</h3><span class="n">{n}</span> {n === 1 ? 'company serves' : 'companies serve'} it, {p.withFees} publish fees</a>
+      <a class="card city-card" href={p.path}><h3>{p.geo.name}, {p.geo.state}</h3><span class="n">{n}</span> {n === 1 ? 'company serves' : 'companies serve'} it, {p.withFees} {p.withFees === 1 ? 'publishes' : 'publish'} fees</a>
     ); })}</div>
   ) : <p>City pages appear once at least three companies with sourced data serve a city.</p>}
 
