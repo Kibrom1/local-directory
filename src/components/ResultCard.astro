@@ -15,11 +15,12 @@ const pick = (k) => { for (const f of rows) if (describeFee(f[k])) return f; ret
 const newest = [...rows].sort((a, b) => b.last_verified_date.localeCompare(a.last_verified_date))[0];
 const fb = newest ? feeBadge(newest, s.today, s.quality.freshness.displayFlagDays) : freshnessBadge(c.last_verified_date, s.today, s.quality.freshness.displayFlagDays);
 const lb = licenseBadge(c.license, s.today);
+const host = c.website ? new URL(c.website).host.replace(/^www\./, '') : null;
 const types = c.property_types_served.map((x) => s.ptById.get(x.property_type_id)).filter(Boolean);
 ---
 <li class="card result" data-types={types.map((t) => t.slug).join(' ')} data-fees={rows.length ? 'yes' : 'no'}>
   <h3><a href={page.path}>{c.name}</a></h3>
-  <div class="meta"><Badge kind={lb.kind} text={lb.text} /><Badge kind={fb.kind} text={fb.text} /></div>
+  <div class="meta"><Badge kind={lb.kind} text={lb.text} /><Badge kind={fb.kind} text={fb.text} />{c.website && <a class="small" href={c.website} rel="nofollow noopener">{host}<span class="sr"> (company website for {c.name})</span></a>}</div>
   {rows.length === 0 ? (
     <p class="compact">No fee data recorded yet. Fees may exist on <a href={c.website || page.path} {...(c.website ? { rel: 'nofollow noopener' } : {})}>{c.website ? <>the company's own site<span class="sr"> ({c.name})</span></> : 'its profile'}</a>.</p>
   ) : (
